@@ -1,5 +1,13 @@
 # REM — agent memory on a background co-processor
 
+![status](https://img.shields.io/badge/status-research%20·%20pre--1.0-1f74c4)
+![license](https://img.shields.io/badge/license-Apache--2.0-10355f)
+![hardware](https://img.shields.io/badge/hardware-Strix%20Halo%20·%20XDNA2%20NPU-5aa9e6)
+![decode loss](https://img.shields.io/badge/iGPU%20decode%20loss-3.81%25%20(vs%204.77%25%20CPU)-1f74c4)
+![throughput](https://img.shields.io/badge/drain-~73%20tok%2Fs-1f74c4)
+
+> **📊 [Visual results report →](index.html)** — an interactive page with the contention, throughput, and thermal charts. Open `index.html` locally, or view it on GitHub Pages once the repo is published.
+
 **Status:** research, pre-1.0 · **License:** Apache-2.0 · Strix Halo (AMD Ryzen AI)
 
 **One line:** While the big model is *awake* on the iGPU, the NPU *sleeps on it* —
