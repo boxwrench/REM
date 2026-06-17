@@ -1,0 +1,28 @@
+```
+[
+  {
+    "kind": "decision",
+    "source_turn_id": 1,
+    "subject": "invoice",
+    "attribute": "owner",
+    "value": "billing team",
+    "is_correction": false
+  },
+  {
+    "kind": "entity",
+    "source_turn_id": 1,
+    "subject": "invoice",
+    "attribute": "owner",
+    "value": "billing team",
+    "is_correction": false
+  },
+  {
+    "kind": "entity",
+    "source_turn_id": 2,
+    "subject": "invoice",
+    "attribute": "owner",
+    "value": "billing team",
+    "is_correction": false
+  }
+]
+```

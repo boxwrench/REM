@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rem"
+version = "0.1.0"
+description = "REM: Co-Processor Memory Maintenance for On-Device LLM Agents"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.11"
+dependencies = [
+    "httpx",
+    "pydantic",
+    "pydantic-settings",
+    "filelock",
+    "json-repair==0.60.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "respx",
+    "ruff",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "npu: tests that require the physical NPU hardware to run",
+    "slow: slow running tests",
+]
+addopts = "-q -m 'not npu'"
+asyncio_mode = "auto"

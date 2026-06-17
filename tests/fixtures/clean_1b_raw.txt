@@ -1,0 +1,20 @@
+```
+[
+  {
+    "kind": "entity",
+    "source_turn_id": 1,
+    "subject": "invoice",
+    "attribute": "review",
+    "value": "Q3",
+    "is_correction": false
+  },
+  {
+    "kind": "decision",
+    "source_turn_id": 2,
+    "subject": "billing team",
+    "attribute": "owner",
+    "value": "billing team",
+    "is_correction": false
+  }
+]
+```

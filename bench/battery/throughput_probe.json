@@ -1,0 +1,108 @@
+{
+  "config": {
+    "model": "gemma4-it:e2b",
+    "budget": 4000,
+    "compact_span_turns": 6,
+    "keep_recent_turns": 8,
+    "npu_max_tokens": 800,
+    "items": 1,
+    "max_turns_per_item": 60
+  },
+  "wall_total_s": 201.9,
+  "summary": {
+    "n_compaction_calls": 9,
+    "n_compacted": 9,
+    "n_fallback": 0,
+    "drain_tok_per_s": 74.86,
+    "per_call_wall_s": {
+      "mean": 22.433,
+      "median": 18.605,
+      "max": 53.417
+    },
+    "tokens_absorbed_total": 15113,
+    "tokens_produced_total": 1526,
+    "compression_ratio": 9.9,
+    "stability_gate": {
+      "slow_agent_10tps": {
+        "arrival_tok_per_s": 10.0,
+        "keeps_up": true,
+        "headroom_x": 7.49
+      },
+      "typical_agent_30tps": {
+        "arrival_tok_per_s": 30.0,
+        "keeps_up": true,
+        "headroom_x": 2.5
+      },
+      "fast_agent_60tps": {
+        "arrival_tok_per_s": 60.0,
+        "keeps_up": true,
+        "headroom_x": 1.25
+      }
+    }
+  },
+  "samples": [
+    {
+      "absorbed_tokens": 1434,
+      "wall_s": 17.779595804051496,
+      "summary_tokens": 194,
+      "facts": 4,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1851,
+      "wall_s": 53.417030615964904,
+      "summary_tokens": 278,
+      "facts": 16,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1800,
+      "wall_s": 26.356448672013357,
+      "summary_tokens": 192,
+      "facts": 6,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1866,
+      "wall_s": 17.89426444808487,
+      "summary_tokens": 128,
+      "facts": 3,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1981,
+      "wall_s": 18.75315763207618,
+      "summary_tokens": 191,
+      "facts": 3,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1765,
+      "wall_s": 13.370929477037862,
+      "summary_tokens": 90,
+      "facts": 3,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1633,
+      "wall_s": 20.53010876395274,
+      "summary_tokens": 170,
+      "facts": 6,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1739,
+      "wall_s": 18.604666250990704,
+      "summary_tokens": 136,
+      "facts": 4,
+      "compacted": true
+    },
+    {
+      "absorbed_tokens": 1044,
+      "wall_s": 15.190054720034823,
+      "summary_tokens": 147,
+      "facts": 3,
+      "compacted": true
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Test / tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local memory state / runtime vaults
+vault/
+
+# Secrets & local config
+.env
+*.local
+
+# Datasets (download separately; never commit)
+*longmemeval*.json
+datasets/
+
+# Internal-only working docs (must never ship)
+*_internal.md
