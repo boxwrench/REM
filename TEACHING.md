@@ -10,6 +10,13 @@ this. Jargon is defined the first time it appears and collected in `GLOSSARY.md`
 It is the *teaching* companion to the technical docs; when this doc and a spec
 disagree, the spec wins and this doc should be corrected.
 
+> **Note on figures.** Some lesson sections below narrate *earlier* experiment runs
+> and their numbers may predate the current committed benchmarks. The authoritative,
+> artifact-backed figures are in `README.md`, `docs/npu-placement-benchmark.md`, and
+> `bench/` — e.g. compaction drains at **~73 tok/s** (committed
+> `bench/battery/throughput_probe.json`), not the older 132.4 tok/s narrative. Treat
+> this doc as explanation, not as the results of record.
+
 **How to read it:** start at Lesson 1. Each "🔎 Plain-language" box restates the
 hard part in everyday terms. Each "✅ Editor's note" box flags where this doc was
 corrected from an earlier draft and why — those are good places to learn the nuance.
@@ -330,8 +337,8 @@ generating your answer.
 └────────────────────┘   └────────────────────┘   └────────────────────┘
 ```
 
-(These map to the formal specs in `paths/A-compaction-channel/`,
-`paths/B-wiki-memory/`, `paths/C-scheduler-substrate/`.)
+(These three threads — the compaction channel, the wiki-style memory store, and
+the contention-aware scheduler — are the project's working subsystems.)
 
 ### Phase A — the compaction channel (working & episodic memory)
 
@@ -419,8 +426,7 @@ and check the model can still find it. **RSB-3** is our specific, harder version
 # Lesson 2 — The five things we found (explained simply)
 
 While planning REM we turned up five tools/facts. Here's each in everyday terms, with
-why it matters to us. (Full technical write-ups: `research/toolchain-npu-stack.md` and
-`research/tooling-gap-scan.md`.)
+why it matters to us.
 
 ### 1. llvm-aie ("Peano") — the translator for the NPU
 
@@ -514,7 +520,7 @@ Here is what we measured:
 *   **Prefill Speedup (34.03 seconds saved):** When the big model reads the baseline prompt from scratch, it takes **34.16 seconds** of prefill delay before it can write the first word of its answer. With REM's compacted prompt, this prefill delay drops to just **0.12 seconds**!
 *   **The "Re-prefill Tax" (30.27 seconds):** There is a catch. When we swap from our main chat to a compacted context, we change the prompt prefix, which completely wipes the big model's short-term scratchpad (the KV cache). Re-reading the new compacted context on that swap turn costs **30.27 seconds**.
 *   **Net Prefill Savings (+3.77 seconds):** Even after paying that hefty 30.27-second swap tax, REM's total prefill cost (30.27s tax + 0.12s prompt prefill = 30.39s) is still faster than the baseline's 34.16s prefill. We saved **3.77 seconds net**!
-*   **NPU Compactor Speed (4.41x keep-up rate):** The NPU compactor processed text at **132.4 tokens per second**. Since conversational transcripts only grow at about 30 tokens per second, the NPU has a **4.41x keep-up rate** — it can easily tidy up memory during the brief pauses between chat turns.
+*   **NPU Compactor Speed (keep-up rate):** *(Updated to the committed benchmark.)* The NPU compactor drains context at **~73 tokens per second** (`bench/battery/throughput_probe.json`). Since a typical conversational transcript grows at ~30 tokens per second, that is a **~2.5× keep-up margin** (and ~7.5× vs a slow 10 tok/s agent) — enough to tidy memory in the background without falling behind. *(An earlier narrative quoted 132.4 tok/s; the committed probe supersedes it.)*
 
 ---
 
@@ -529,5 +535,5 @@ These bugs have been diagnosed and scheduled for refactoring. The underlying mod
 
 ---
 
-*Sources for the hardware figures and the 2026 papers cited here are in*
-`research/sources.md` *and* `research/papers/`.
+*Hardware figures trace to the committed artifacts under `bench/` and the
+methodology in `docs/npu-placement-benchmark.md`.*

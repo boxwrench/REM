@@ -3,15 +3,17 @@
 import json
 import logging
 import threading
+from pathlib import Path
 from typing import Callable, Any
 import http.server
 import httpx
+from filelock import FileLock
 
 from rem.config import Settings
 from rem.npu_client import NpuClient
 from rem.memory.tiers import MemoryState, Turn, count_tokens
 from rem.memory.assembler import assemble_messages
-from rem.memory.compactor import should_compact, run_background
+from rem.memory.compactor import should_compact, run_background, state_lock_path
 
 logger = logging.getLogger("rem.memory.sidecar")
 
@@ -60,14 +62,8 @@ class MemorySidecar:
             session_id = "default"
 
         state_path = f"{self.settings.vault_dir}/{session_id}_memory_state.json"
-        
-        # Load state
-        try:
-            state = MemoryState.load(state_path)
-        except Exception:
-            state = MemoryState()
 
-        # Parse messages
+        # Parse messages (pure — no shared state, so done outside the lock)
         messages = request_data.get("messages", [])
         system_content = ""
         incoming_turns = []
@@ -77,25 +73,32 @@ class MemorySidecar:
             else:
                 incoming_turns.append(msg)
 
-        # Ingest new turns
-        new_messages = self._sync_new_turns(state, incoming_turns)
-        for msg in new_messages:
-            next_turn_id = (state.turns[-1].turn_id + 1) if state.turns else 1
-            if not state.turns and state.summaries:
-                all_covered = [t_id for s in state.summaries for t_id in s.covers_turn_ids]
-                if all_covered:
-                    next_turn_id = max(all_covered) + 1
+        # Load -> ingest -> save under the short state lock, so a concurrent
+        # background compaction (or another request thread) cannot clobber this
+        # write. The lock is never held across the slow NPU compaction.
+        with FileLock(state_lock_path(Path(state_path))):
+            try:
+                state = MemoryState.load(state_path)
+            except Exception:
+                state = MemoryState()
 
-            turn = Turn(
-                role=msg["role"],
-                content=msg["content"],
-                turn_id=next_turn_id,
-                tokens=count_tokens(msg["content"]),
-            )
-            state.turns.append(turn)
+            new_messages = self._sync_new_turns(state, incoming_turns)
+            for msg in new_messages:
+                next_turn_id = (state.turns[-1].turn_id + 1) if state.turns else 1
+                if not state.turns and state.summaries:
+                    all_covered = [t_id for s in state.summaries for t_id in s.covers_turn_ids]
+                    if all_covered:
+                        next_turn_id = max(all_covered) + 1
 
-        # Save updated state before assembly cap verification
-        state.save(state_path)
+                turn = Turn(
+                    role=msg["role"],
+                    content=msg["content"],
+                    turn_id=next_turn_id,
+                    tokens=count_tokens(msg["content"]),
+                )
+                state.turns.append(turn)
+
+            state.save(state_path)
 
         # Assemble stability-first prompt messages
         assembled_messages = assemble_messages(
@@ -113,26 +116,28 @@ class MemorySidecar:
 
     def record_response(self, state_path: str, response_content: str) -> None:
         """Appends the assistant's reply to the conversation state and triggers compaction."""
-        try:
-            state = MemoryState.load(state_path)
-        except Exception as exc:
-            logger.error(f"Failed to load state for recording response: {exc}")
-            return
+        # Load -> append -> save under the short state lock (see process_chat_request).
+        with FileLock(state_lock_path(Path(state_path))):
+            try:
+                state = MemoryState.load(state_path)
+            except Exception as exc:
+                logger.error(f"Failed to load state for recording response: {exc}")
+                return
 
-        next_turn_id = (state.turns[-1].turn_id + 1) if state.turns else 1
-        if not state.turns and state.summaries:
-            all_covered = [t_id for s in state.summaries for t_id in s.covers_turn_ids]
-            if all_covered:
-                next_turn_id = max(all_covered) + 1
+            next_turn_id = (state.turns[-1].turn_id + 1) if state.turns else 1
+            if not state.turns and state.summaries:
+                all_covered = [t_id for s in state.summaries for t_id in s.covers_turn_ids]
+                if all_covered:
+                    next_turn_id = max(all_covered) + 1
 
-        assistant_turn = Turn(
-            role="assistant",
-            content=response_content,
-            turn_id=next_turn_id,
-            tokens=count_tokens(response_content),
-        )
-        state.turns.append(assistant_turn)
-        state.save(state_path)
+            assistant_turn = Turn(
+                role="assistant",
+                content=response_content,
+                turn_id=next_turn_id,
+                tokens=count_tokens(response_content),
+            )
+            state.turns.append(assistant_turn)
+            state.save(state_path)
 
         # Trigger compaction via scheduler plug-in if policy says so
         if self.memory_policy(state, self.settings):

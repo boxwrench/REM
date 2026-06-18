@@ -5,7 +5,7 @@ import logging
 import sys
 from pathlib import Path
 from pydantic import BaseModel
-from filelock import FileLock
+from filelock import FileLock, Timeout
 
 from rem.config import Settings
 from rem.npu_client import NpuClient
@@ -127,23 +127,64 @@ def compact_once(
     )
 
 
+def state_lock_path(state_path_obj: Path) -> Path:
+    """Path of the short-lived lock guarding state load-mutate-save sections.
+
+    Held briefly by both the foreground sidecar and the compactor's snapshot /
+    merge steps — never during the slow NPU work — so foreground turns are never
+    blocked on compaction.
+    """
+    return state_path_obj.with_suffix(".state.lock")
+
+
+def _fold_in_concurrent_turns(
+    result: MemoryState, latest: MemoryState, compacted_turn_ids: set[int]
+) -> None:
+    """Append any turns the foreground added since the compaction snapshot.
+
+    Compaction only ever removes the *oldest* turns and the foreground only ever
+    *appends*, so a turn present on disk that was neither compacted away nor
+    already in the result is a concurrent foreground turn — graft it onto the
+    end (turn ids are monotonic, so order is preserved)."""
+    existing_ids = {t.turn_id for t in result.turns}
+    for turn in latest.turns:
+        if turn.turn_id not in compacted_turn_ids and turn.turn_id not in existing_ids:
+            result.turns.append(turn)
+
+
 def run_background(
     state_path: str, client: NpuClient, settings: Settings | None = None
 ) -> None:
-    """Continuously compacts state under a filelock until trigger clears.
+    """Continuously compacts state until the trigger clears.
 
-    Implements the single-writer lock rule.
+    Locking model (prevents the lost-update race with the foreground path):
+    - A non-blocking *compaction* lock serializes compactions — if one is already
+      running, this call returns immediately rather than queueing.
+    - The slow NPU work runs with **no** state lock held, so foreground requests
+      are never blocked on it.
+    - The snapshot load and the final save each take a short *state* lock; the
+      save re-reads the latest on-disk state and folds in any turns the foreground
+      appended during compaction, so its result never clobbers newer turns.
     """
     settings = settings or Settings()
     state_path_obj = Path(state_path)
-    lock_path = state_path_obj.with_suffix(".lock")
+    compaction_lock = FileLock(state_path_obj.with_suffix(".lock"))
+    state_lock = FileLock(state_lock_path(state_path_obj))
 
-    lock = FileLock(lock_path)
-    with lock:
-        if state_path_obj.exists():
-            state = MemoryState.load(state_path_obj)
-        else:
-            state = MemoryState()
+    try:
+        compaction_lock.acquire(timeout=0)
+    except Timeout:
+        logger.info("Compaction already in progress for %s; skipping.", state_path)
+        return
+
+    try:
+        with state_lock:
+            if state_path_obj.exists():
+                state = MemoryState.load(state_path_obj)
+            else:
+                state = MemoryState()
+
+        snapshot_turn_ids = {t.turn_id for t in state.turns}
 
         any_compacted = False
         while should_compact(state, settings):
@@ -154,7 +195,17 @@ def run_background(
             any_compacted = True
 
         if any_compacted:
-            state.save(state_path_obj)
+            compacted_turn_ids = snapshot_turn_ids - {t.turn_id for t in state.turns}
+            with state_lock:
+                latest = (
+                    MemoryState.load(state_path_obj)
+                    if state_path_obj.exists()
+                    else MemoryState()
+                )
+                _fold_in_concurrent_turns(state, latest, compacted_turn_ids)
+                state.save(state_path_obj)
+    finally:
+        compaction_lock.release()
 
 
 def main() -> None:

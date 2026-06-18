@@ -47,13 +47,17 @@ hardware; the quality work is a clear development path, not a finished result.
   per-turn stall.
 - **It keeps up.** The NPU compactor drains context at **~73 tok/s** — comfortably
   above a realistic local-agent context-growth rate, so the backlog stays bounded.
-- **It runs cool.** ~2.5 h of sustained NPU compaction: SoC die **mean 41 °C / max
-  62 °C, no upward drift** — tens of degrees below thermal throttle.
+- **It runs cool.** A **192-minute** sustained compaction run held the SoC die at
+  **mean 41 °C / max 61 °C, no upward drift** (a separate 116-minute run peaked at
+  62 °C) — tens of degrees below thermal throttle.
 - **The placement is justified.** A concurrent NPU job costs **~3.8 %** iGPU decode
   loss vs **~4.8 %** for the same job on spare CPU cores (the NPU contends *slightly
-  less*), at **~3× throughput** and **~3× perf/watt**.
-- **The mechanism works.** Buried facts survive compaction (evidence retention 1.0)
-  at roughly **10× compression**.
+  less*), at **~3× throughput** and **~3× perf/watt** — raw artifacts in
+  [`bench/contention/`](bench/contention/), auditable with `verify_contention.py`.
+- **The compaction mechanism runs.** It extracts facts and rewrites the oldest span
+  at **~10× compression** (9.9× measured by the throughput probe). Whether buried
+  facts *reliably survive* that compression — evidence retention — is an open quality
+  question (below), **not** a settled result.
 
 **To be developed (where we'd welcome help):**
 - **Small-model JSON robustness.** The on-NPU model sometimes emits malformed JSON
@@ -62,10 +66,13 @@ hardware; the quality work is a clear development path, not a finished result.
 - **Fact identity / supersession.** When a value is updated ("I moved to Denver"),
   REM can still surface the stale one. The path forward is embedding-based identity
   (matching facts by meaning, not string labels) as a second layer.
-- **Quality vs. a naive baseline is budget-conditional.** At a generous context
-  budget, simple truncation keeps the recent answer and can match or beat REM; REM's
-  advantage shows up when the budget is tight enough that truncation drops the fact —
-  and is gated on the two items above.
+- **Quality vs. a naive baseline is unproven and budget-conditional.** At a generous
+  context budget, simple truncation keeps the recent answer and can match or beat REM;
+  REM's advantage should show up only when the budget is tight enough that truncation
+  drops the fact. The one judged battery run so far was **invalidated** (its budget was
+  too generous to test the hypothesis), and on that subset REM's answer accuracy was
+  *lower* than truncation's (0.4 vs 0.6). A valid tight-budget win — plus the
+  JSON-robustness fix above — is the open path to a defensible quality number.
 
 **Honest framing:** this is *not* "contention-free" and *not* a latency-reduction
 trick. The NPU shares the unified memory bus; it is a *placement* win (throughput +
@@ -98,8 +105,8 @@ with the [xdna-top](https://github.com/boxwrench/xdna-top) monitor):
 ~19 s (decode-bound — the lever is the compactor model / output cap, not the span
 size). See `bench/battery/throughput_probe.json` and `bench/battery/sweep/`.
 
-**Thermal** (sustained load): `bench/battery/thermal_trace*.csv` — ~2.5 h, SoC Tctl
-mean 41 °C / max 62 °C, flat.
+**Thermal** (sustained load): `bench/battery/thermal_trace*.csv` — a 192-min run held
+SoC Tctl at mean 41 °C / max 61 °C, flat (a separate 116-min run peaked at 62 °C).
 
 Full methodology and caveats: `docs/npu-placement-benchmark.md`.
 
@@ -115,10 +122,16 @@ with a summary, never blocking the foreground turn.
 ## Run it
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev]"          # core + test deps
+pip install -e ".[dev,eval]"     # add the battery's Claude judge (anthropic)
 
-# Contention benchmark (NPU vs CPU control next to an interactive iGPU model)
-PYTHONPATH=src python3 evals/contention/run_contention_benchmark.py --trials 5
+# Audit the canonical contention numbers from committed raw artifacts (no hardware)
+python bench/contention/verify_contention.py
+
+# Re-measure contention on a Strix Halo box (canonical = --trials 20, repeated 3x;
+# requires the iGPU/NPU/CPU engines serving — see docs/npu-placement-benchmark.md)
+PYTHONPATH=src python3 evals/contention/run_contention_benchmark.py \
+  --trials 20 --llama-server-path /path/to/llama-server --cpu-model-path /path/to/model.gguf
 
 # Compaction throughput probe (drain rate + per-call latency)
 PYTHONPATH=.:src python3 evals/battery/throughput_probe.py \
@@ -129,9 +142,13 @@ PYTHONPATH=.:src python3 evals/battery/run_battery_spike.py \
   --data /path/to/longmemeval_s.json --limit 5 --budget 2000
 ```
 
-The battery/probe use the [LongMemEval](https://huggingface.co/datasets/xiaowu0162/longmemeval)
-`knowledge-update` subset — download it locally and pass the path with `--data`
-(not bundled). The judge needs `ANTHROPIC_API_KEY` in the environment; **never commit it.**
+The battery/probe use the LongMemEval `knowledge-update` subset — download it locally
+and pass the path with `--data` (not bundled). Note the original
+[`xiaowu0162/longmemeval`](https://huggingface.co/datasets/xiaowu0162/longmemeval) is
+now deprecated in favor of
+[`xiaowu0162/longmemeval-cleaned`](https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned);
+pin whichever revision you report against. The judge needs `ANTHROPIC_API_KEY` in the
+environment; **never commit it.**
 
 ## Where we want help
 

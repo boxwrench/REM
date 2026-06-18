@@ -24,6 +24,16 @@ dev = [
     "respx",
     "ruff",
 ]
+# Needed to run the comparative memory battery (independent Claude judge).
+eval = [
+    "anthropic",
+]
+# The contention-aware scheduler reads NPU/iGPU telemetry via the xdna-top
+# monitor. Install from https://github.com/boxwrench/xdna-top — the core REM
+# memory/compaction library does not require it.
+scheduler = [
+    "xdna-top",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
