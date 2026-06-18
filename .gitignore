@@ -26,3 +26,6 @@ datasets/
 
 # Internal-only working docs (must never ship)
 *_internal.md
+*REPO_REVIEW*.md
+docs/repo-review-*.md
+docs/paper-evaluation-*.md
