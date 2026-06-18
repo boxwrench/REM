@@ -175,7 +175,7 @@
       <div class="stat"><div class="v npu">~3×</div><div class="k">background throughput &amp; perf/watt vs the same work on spare CPU cores</div></div>
       <div class="stat"><div class="v npu">~73<span style="font-size:14px"> tok/s</span></div><div class="k">compaction drain rate — keeps up with a fast local agent</div></div>
       <div class="stat"><div class="v npu">41<span style="font-size:14px">°C</span></div><div class="k">mean SoC temp over a 192-min sustained run — flat, no drift</div></div>
-      <div class="stat"><div class="v npu">9.9×</div><div class="k">context compression with buried-fact retention of 1.0</div></div>
+      <div class="stat"><div class="v npu">9.9×</div><div class="k">context compression measured by the throughput probe (retention quality still open)</div></div>
     </div>
   </div>
 </header>
@@ -428,7 +428,7 @@
           <li><b>It keeps up.</b> ~73 tok/s drain — above realistic agent context-growth, so the backlog stays bounded.</li>
           <li><b>It runs cool.</b> 192 min sustained: mean 41 °C / max 61 °C, no drift.</li>
           <li><b>The placement is justified.</b> ~3.8% iGPU decode loss vs ~4.8% on CPU, at ~3× throughput and ~3× perf/watt.</li>
-          <li><b>The mechanism works.</b> Buried facts survive compaction (retention 1.0) at ~10× compression.</li>
+          <li><b>The compaction mechanism runs.</b> It extracts facts and rewrites the oldest span at ~10× compression (9.9× measured). Whether buried facts <em>reliably survive</em> is an open quality question, not a settled result.</li>
         </ul>
       </div>
       <div class="panel open">
@@ -436,7 +436,7 @@
         <ul>
           <li><b>Small-model JSON robustness.</b> The on-NPU model sometimes emits malformed JSON during fact extraction; those facts get dropped. A repair/retry pipeline exists but isn't bulletproof.</li>
           <li><b>Fact identity / supersession.</b> When a value is updated ("I moved to Denver"), REM can still surface the stale one. Path forward: embedding-based identity (match by meaning, not string).</li>
-          <li><b>Quality vs. naive baseline is budget-conditional.</b> At a generous budget, simple truncation can match or beat REM; REM's edge shows up when the budget is tight enough to drop the fact — gated on the two items above.</li>
+          <li><b>Quality vs. naive baseline is unproven &amp; budget-conditional.</b> At a generous budget, simple truncation can match or beat REM. The one judged battery run so far was invalidated (budget too generous to test the hypothesis), and on that subset REM's accuracy was <em>lower</em> than truncation's (0.4 vs 0.6). A valid tight-budget win — plus JSON robustness — is the open path to a defensible quality number.</li>
         </ul>
       </div>
     </div>

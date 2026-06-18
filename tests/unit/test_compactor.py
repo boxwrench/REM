@@ -181,14 +181,19 @@ def test_failure_leaves_state_unchanged(mock_npu):
     assert len(state.ledger.entries) == 0
 
 
-def test_run_background_lock_contention(tmp_path, mock_npu):
-    """Asserts that run_background respects filelocks and blocks contention."""
+def test_run_background_skips_when_compaction_already_running(tmp_path, mock_npu):
+    """A second compaction must not overlap a running one.
+
+    The compaction lock is non-blocking: with it already held (simulating an
+    in-flight compaction), run_background returns immediately rather than
+    queueing, and leaves the state untouched for the running compaction to drain.
+    """
     state_file = tmp_path / "state.json"
     lock_file = state_file.with_suffix(".lock")
     client = NpuClient()
     settings = Settings(compact_trigger_tokens=10, keep_recent_turns=0, compact_span_turns=2)
 
-    # Setup state that needs compaction
+    # Setup state that would otherwise need compaction
     turns = [
         Turn(role="user", content="Turn 1 text", turn_id=1, tokens=10),
         Turn(role="user", content="Turn 2 text", turn_id=2, tokens=10),
@@ -196,7 +201,7 @@ def test_run_background_lock_contention(tmp_path, mock_npu):
     state = MemoryState(turns=turns)
     state.save(state_file)
 
-    # Mock NPU responses
+    # Mock NPU responses (should not be consumed, since the call must skip)
     mock_npu.post("/v1/chat/completions").mock(
         side_effect=[
             httpx.Response(200, json={"choices": [{"message": {"content": "[]"}}]}),
@@ -204,40 +209,27 @@ def test_run_background_lock_contention(tmp_path, mock_npu):
         ]
     )
 
-    # 1. Acquire the lock in the main thread
+    # Simulate a compaction already in progress by holding the compaction lock.
     lock = FileLock(lock_file)
     lock.acquire()
+    try:
+        bg_thread_completed = False
 
-    # 2. Run run_background in a separate thread - it should block waiting for the lock
-    bg_thread_started = False
-    bg_thread_completed = False
+        def thread_target():
+            nonlocal bg_thread_completed
+            run_background(str(state_file), client, settings)
+            bg_thread_completed = True
 
-    def thread_target():
-        nonlocal bg_thread_started, bg_thread_completed
-        bg_thread_started = True
-        run_background(str(state_file), client, settings)
-        bg_thread_completed = True
+        t = threading.Thread(target=thread_target)
+        t.start()
+        t.join(timeout=2.0)
 
-    t = threading.Thread(target=thread_target)
-    t.start()
+        # New contract: returns immediately (does not block on the held lock).
+        assert bg_thread_completed is True
 
-    # Wait briefly to let the thread run and hit the lock
-    time.sleep(0.1)
-    
-    assert bg_thread_started is True
-    assert bg_thread_completed is False  # Must be blocked
-
-    # Verify state file remains uncompacted because lock was held
-    current_state = MemoryState.load(state_file)
-    assert len(current_state.turns) == 2
-
-    # 3. Release the lock - the thread should unblock, run compaction, and finish
-    lock.release()
-    t.join(timeout=2.0)
-    
-    assert bg_thread_completed is True
-
-    # Verify state was compacted
-    final_state = MemoryState.load(state_file)
-    assert len(final_state.turns) == 0
-    assert len(final_state.summaries) == 1
+        # And it did not compact — the in-flight compaction owns that work.
+        current_state = MemoryState.load(state_file)
+        assert len(current_state.turns) == 2
+        assert len(current_state.summaries) == 0
+    finally:
+        lock.release()

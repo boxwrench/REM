@@ -1,17 +1,25 @@
 """Shim for importing gauge from xdna_top.gauge to avoid breaking existing imports."""
 
-from xdna_top.gauge import (
-    GpuState,
-    GaugeReading,
-    classify_state as _classify_state,
-    get_stable_state,
-    load_sysfs_paths as _load_sysfs_paths,
-    read_igpu,
-    run_xrt_smi,
-    parse_xrt_smi,
-    HardwareGauge as _HardwareGauge,
-    run_daemon as _run_daemon,
-)
+try:
+    from xdna_top.gauge import (
+        GpuState,
+        GaugeReading,
+        classify_state as _classify_state,
+        get_stable_state,
+        load_sysfs_paths as _load_sysfs_paths,
+        read_igpu,
+        run_xrt_smi,
+        parse_xrt_smi,
+        HardwareGauge as _HardwareGauge,
+        run_daemon as _run_daemon,
+    )
+except ImportError as exc:  # pragma: no cover - exercised only without the optional dep
+    raise ImportError(
+        "rem.scheduler.gauge requires the 'xdna-top' NPU/iGPU monitor, which is not "
+        "installed. Install it with `pip install -e \".[scheduler]\"` or directly from "
+        "https://github.com/boxwrench/xdna-top. The core REM memory/compaction library "
+        "does not need it."
+    ) from exc
 from rem.config import Settings
 
 # Wrap classes/functions to inject Settings where needed to preserve existing signatures in REM

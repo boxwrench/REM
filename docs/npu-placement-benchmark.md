@@ -7,8 +7,9 @@
 > (12.15 ± 1.20 vs 4.11 ± 0.80 tok/s) and **~3× total-board perf/watt** (0.143 vs
 > 0.049). An earlier, smaller N=5 run had suggested ~2.8% NPU / near-zero CPU
 > contention; that **did not reproduce** at N=20 and is not used. Measured with the
-> [xdna-top](https://github.com/boxwrench/xdna-top) monitor; full per-run data lives
-> with that project's contention experiment.
+> [xdna-top](https://github.com/boxwrench/xdna-top) monitor; the **raw per-run
+> artifacts are committed here** under [`bench/contention/`](../bench/contention/)
+> and re-derivable in one command: `python bench/contention/verify_contention.py`.
 
 **What this is.** Honest, reproducible numbers for deciding *what to run where* on
 an AMD Strix Halo APU — XDNA2 NPU + gfx1151 iGPU + CPU sharing one unified
@@ -70,8 +71,10 @@ Generation speed and contention for the baseline and concurrent conditions:
 | **CPU (concurrent)** | 4.77% (4.2–5.1%) | 4.11 ± 0.80 | 0.049 |
 
 Per-run ranges are shown so run-to-run variance is explicit. Prefill contention is
-below measurement resolution (very high stddev) and is not reported. Full per-run
-data and the power columns live with the xdna-top contention experiment.
+below measurement resolution (very high stddev) and is not reported. The raw
+per-run sample arrays and the power columns are committed under
+[`bench/contention/`](../bench/contention/) (six measurement files + telemetry
+snapshots); `verify_contention.py` recomputes the decode-loss headline from them.
 
 #### Caveats & Methodology Notes
 1. **Prefill Resolution**: Prefill throughput measurements carry extremely high variance (~8-12k tok/s standard deviation) due to the fast prefill pass and HTTP network latency. Because the prefill contention signal is smaller than the standard deviation, prefill contention is considered **below the measurement resolution** of this harness. No prefill contention loss % is reported.
@@ -119,10 +122,36 @@ The data confirms a substantial advantage when offloading background generation 
 - Full pairwise contention grid + main-lane inter-token latency p50/p99 under load.
 - Power / perf-watt curve, sustained/thermal behavior, and a memory-bandwidth probe.
 
-Reproduce command:
+### Reproduce the canonical contention result
+
+**Audit the committed numbers (no hardware, instant):**
 ```bash
-PYTHONPATH=src python3 evals/contention/run_contention_benchmark.py --trials 5
+python bench/contention/verify_contention.py
+# recomputes NPU 3.81% / CPU 4.77% from bench/contention/measurements/*.json
 ```
+
+**Re-measure on a Strix Halo box.** The canonical figures are **3 independent
+runs of `--trials 20`** (pooled to 60 decode samples per arm), not a single
+`--trials 5`. You must have all three engines serving first:
+
+```bash
+# 1. iGPU "main lane" — llama.cpp server (interactive model)
+#    point --llama-server-path at your llama-server binary
+# 2. NPU — FLM/Lemonade OpenAI-compatible endpoint on --npu-port (default 13306)
+# 3. CPU control — a GGUF for the spare-core arm via --cpu-model-path
+
+PYTHONPATH=src python3 evals/contention/run_contention_benchmark.py \
+  --trials 20 \
+  --llama-server-path /path/to/llama-server \
+  --cpu-model-path /path/to/model.gguf \
+  --npu-model gemma4-it:e2b \
+  --output-dir bench/out/run1
+# repeat for run2, run3; the headline is the pooled mean across the three runs.
+```
+
+Omit the CPU arm with `--skip-cpu` (or the NPU arm with `--skip-npu`) if you only
+want one placement. Run-to-run variance is real — see the per-run spread in
+`bench/contention/README.md`.
 
 ## Reproducibility & honesty rules (per CONTRIBUTING.md)
 - Every published number is backed by a committed `bench/*.json` artifact and its
