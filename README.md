@@ -1,14 +1,26 @@
 # REM — agent memory on a background co-processor
 
+<p align="center">
+  <img src="docs/assets/headline.svg" width="760"
+       alt="REM headline results: NPU concurrent job costs 3.81% iGPU decode loss vs 4.77% on CPU, at ~3x throughput and ~3x perf/watt; compaction drains at ~73 tok/s; 192-minute sustained run held 41C mean.">
+</p>
+
+<p align="center">
+  <a href="index.html"><img alt="Open the interactive results report"
+     src="https://img.shields.io/badge/📊_Interactive_Results_Report-Open_live_page-1f74c4?style=for-the-badge&labelColor=10355f"></a>
+</p>
+
+<p align="center">
+  <sub>Self-contained <code>index.html</code> — open it locally, or view it on GitHub Pages once the repo is published.</sub>
+</p>
+
 ![status](https://img.shields.io/badge/status-research%20·%20pre--1.0-1f74c4)
-![license](https://img.shields.io/badge/license-Apache--2.0-10355f)
+![license](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-10355f)
 ![hardware](https://img.shields.io/badge/hardware-Strix%20Halo%20·%20XDNA2%20NPU-5aa9e6)
 ![decode loss](https://img.shields.io/badge/iGPU%20decode%20loss-3.81%25%20(vs%204.77%25%20CPU)-1f74c4)
 ![throughput](https://img.shields.io/badge/drain-~73%20tok%2Fs-1f74c4)
 
-> **📊 [Visual results report →](index.html)** — an interactive page with the contention, throughput, and thermal charts. Open `index.html` locally, or view it on GitHub Pages once the repo is published.
-
-**Status:** research, pre-1.0 · **License:** Apache-2.0 · Strix Halo (AMD Ryzen AI)
+**Status:** research, pre-1.0 · Strix Halo (AMD Ryzen AI)
 
 **One line:** While the big model is *awake* on the iGPU, the NPU *sleeps on it* —
 consolidating the agent's working memory on separate compute silicon, off the GPU's
@@ -135,4 +147,8 @@ pytest        # unit suite; NPU hardware tests excluded by default
 
 ## License
 
-Apache-2.0 — see [LICENSE](LICENSE).
+**PolyForm Noncommercial License 1.0.0** — see [LICENSE](LICENSE). Free to use,
+modify, and share for **any noncommercial purpose** (research, study, hobby,
+nonprofit, evaluation); **commercial use requires a separate license**. You must
+keep the copyright/attribution notice. For commercial licensing, contact the
+author via [title22.org](https://www.title22.org).

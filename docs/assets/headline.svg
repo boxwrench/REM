@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 770 336" width="770" height="336" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" role="img" aria-label="REM headline results: NPU concurrent job costs 3.81% iGPU decode loss vs 4.77% on CPU, at ~3x throughput and ~3x perf-per-watt; compaction drains at ~73 tok/s; 192-minute sustained run held 41C mean.">
+  <defs>
+    <linearGradient id="npu" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1f74c4"/><stop offset="1" stop-color="#5aa9e6"/>
+    </linearGradient>
+    <linearGradient id="cpu" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6b7a8d"/><stop offset="1" stop-color="#9aa7b8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- card -->
+  <rect x="0.5" y="0.5" width="769" height="335" rx="14" fill="#ffffff" stroke="#dce6f1"/>
+
+  <!-- header -->
+  <text x="28" y="34" fill="#10355f" font-size="20" font-weight="700">REM — NPU-offloaded agent memory, measured</text>
+  <text x="28" y="55" fill="#5a6b82" font-size="13">AMD Strix Halo · XDNA2 NPU · placement vs CPU control · pooled 3×N=20 = 60 decode samples</text>
+
+  <!-- legend -->
+  <rect x="28" y="68" width="11" height="11" rx="2" fill="url(#npu)"/>
+  <text x="45" y="78" fill="#5a6b82" font-size="12">NPU placement</text>
+  <rect x="150" y="68" width="11" height="11" rx="2" fill="url(#cpu)"/>
+  <text x="167" y="78" fill="#5a6b82" font-size="12">CPU control</text>
+
+  <!-- ===== Block A: decode loss (lower better) ===== -->
+  <text x="28" y="106" fill="#10355f" font-size="13" font-weight="600">iGPU decode loss</text>
+  <text x="150" y="106" fill="#8a98ab" font-size="10">lower better</text>
+  <rect x="232" y="96"  width="470" height="14" rx="7" fill="#eef3f9"/>
+  <rect x="232" y="96"  width="375.4" height="14" rx="7" fill="url(#npu)"/>
+  <text x="710" y="107" fill="#1f74c4" font-size="13" font-weight="700">3.81%</text>
+  <rect x="232" y="116" width="470" height="14" rx="7" fill="#eef3f9"/>
+  <rect x="232" y="116" width="470" height="14" rx="7" fill="url(#cpu)"/>
+  <text x="710" y="127" fill="#6b7a8d" font-size="13" font-weight="700">4.77%</text>
+
+  <!-- ===== Block B: throughput (higher better) ===== -->
+  <text x="28" y="168" fill="#10355f" font-size="13" font-weight="600">Background throughput</text>
+  <rect x="232" y="158" width="470" height="14" rx="7" fill="#eef3f9"/>
+  <rect x="232" y="158" width="470" height="14" rx="7" fill="url(#npu)"/>
+  <text x="710" y="169" fill="#1f74c4" font-size="13" font-weight="700">12.15</text>
+  <rect x="232" y="178" width="470" height="14" rx="7" fill="#eef3f9"/>
+  <rect x="232" y="178" width="158.9" height="14" rx="7" fill="url(#cpu)"/>
+  <text x="710" y="189" fill="#6b7a8d" font-size="13" font-weight="700">4.11</text>
+
+  <!-- ===== Block C: perf/watt (higher better) ===== -->
+  <text x="28" y="230" fill="#10355f" font-size="13" font-weight="600">Energy efficiency</text>
+  <rect x="232" y="220" width="470" height="14" rx="7" fill="#eef3f9"/>
+  <rect x="232" y="220" width="470" height="14" rx="7" fill="url(#npu)"/>
+  <text x="710" y="231" fill="#1f74c4" font-size="13" font-weight="700">0.143</text>
+  <rect x="232" y="240" width="470" height="14" rx="7" fill="#eef3f9"/>
+  <rect x="232" y="240" width="161.0" height="14" rx="7" fill="url(#cpu)"/>
+  <text x="710" y="251" fill="#6b7a8d" font-size="13" font-weight="700">0.049</text>
+
+  <!-- divider -->
+  <line x1="28" y1="276" x2="742" y2="276" stroke="#eaf0f7"/>
+
+  <!-- footer KPI strip -->
+  <text x="28"  y="300" fill="#10355f" font-size="18" font-weight="800">~3×</text>
+  <text x="64"  y="300" fill="#5a6b82" font-size="12">throughput &amp; perf/watt</text>
+
+  <text x="232" y="300" fill="#10355f" font-size="18" font-weight="800">~73</text>
+  <text x="272" y="300" fill="#5a6b82" font-size="12">tok/s drain · keeps up to 60-tok/s agents</text>
+
+  <text x="560" y="300" fill="#10355f" font-size="18" font-weight="800">41°C</text>
+  <text x="604" y="300" fill="#5a6b82" font-size="12">192-min mean, flat</text>
+
+  <text x="28"  y="320" fill="#8a98ab" font-size="11">NPU contends slightly LESS than the CPU control (3.81% vs 4.77%) while doing ~3× the work — a justified placement, not a contention-free claim.</text>
+</svg>
