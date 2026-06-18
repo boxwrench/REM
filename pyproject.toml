@@ -39,6 +39,9 @@ scheduler = [
 where = ["src"]
 
 [tool.pytest.ini_options]
+# Resolve `import rem` to this repo's own src/ first, so a stray editable
+# install of another checkout can never silently shadow the code under test.
+pythonpath = ["src"]
 testpaths = ["tests"]
 markers = [
     "npu: tests that require the physical NPU hardware to run",
