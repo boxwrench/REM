@@ -15,7 +15,7 @@
 </p>
 
 ![status](https://img.shields.io/badge/status-research%20·%20pre--1.0-1f74c4)
-![license](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-10355f)
+![license](https://img.shields.io/badge/license-MIT-10355f)
 ![hardware](https://img.shields.io/badge/hardware-Strix%20Halo%20·%20XDNA2%20NPU-5aa9e6)
 ![decode loss](https://img.shields.io/badge/iGPU%20decode%20loss-3.81%25%20(vs%204.77%25%20CPU)-1f74c4)
 ![throughput](https://img.shields.io/badge/drain-~73%20tok%2Fs-1f74c4)
@@ -164,8 +164,6 @@ pytest        # unit suite; NPU hardware tests excluded by default
 
 ## License
 
-**PolyForm Noncommercial License 1.0.0** — see [LICENSE](LICENSE). Free to use,
-modify, and share for **any noncommercial purpose** (research, study, hobby,
-nonprofit, evaluation); **commercial use requires a separate license**. You must
-keep the copyright/attribution notice. For commercial licensing, contact the
-author via [title22.org](https://www.title22.org).
+**MIT License** — see [LICENSE](LICENSE). Free to use, modify, and distribute,
+including commercially; just keep the copyright and permission notice. Author
+contact: [title22.org](https://www.title22.org).
