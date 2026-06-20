@@ -32,6 +32,9 @@ class ArmRun:
     model_answer: str
     judged_correct: bool | None = None
     judge_reason: str = ""
+    # Per-question fact-extraction telemetry (REM arm only); None for arms with
+    # no extraction stage. See rem.memory.facts_ledger.get_extraction_stats.
+    extraction: dict | None = None
 
 
 @dataclass
@@ -43,3 +46,6 @@ class BatteryResult:
     runs: list[ArmRun] = field(default_factory=list)
     valid: bool = True
     invalid_reason: str = ""
+    # Per-arm sum of extraction telemetry across questions (arms with no
+    # extraction stage are omitted).
+    arm_extraction: dict[str, dict[str, int]] = field(default_factory=dict)

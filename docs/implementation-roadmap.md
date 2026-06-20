@@ -1,0 +1,135 @@
+# REM Implementation Roadmap
+
+Status: active handoff note.
+
+This file tracks the next implementation gate for REM. Broader hardware placement
+work can continue later, but the immediate priority is proving that the memory
+system wins a user-visible recall task under a tight context budget.
+
+Architecture direction note: [`REM-memory-architecture-spec.md`](REM-memory-architecture-spec.md)
+captures a larger graph-resident memory design that removes prose summaries from
+the stored representation and makes the per-turn read path model-free. Treat it
+as the candidate architecture after the current recall gate, unless the
+tight-budget battery shows the existing compaction path cannot be made credible.
+The spec now includes a weighted assessment and open questions; the short
+version is that graph memory is strongest against summary corruption, stale
+ghosts, and read-path ambiguity, but it does not remove the need to measure and
+improve write recall.
+
+## Current Gate: Tight-Budget Recall Win
+
+**Milestone:** REM beats naive truncation on LongMemEval `knowledge-update` when
+the context budget is tight enough that truncation drops the gold evidence
+session, and JSON extraction failures are measured and reduced enough that they
+are not the dominant failure mode.
+
+This is the right next gate because the NPU placement result is already
+measured. The unresolved question is whether REM's compaction path preserves
+useful facts better than simply truncating old context. Until that is shown, the
+elegant placement is solving a problem whose end-user recall advantage remains
+unproven.
+
+## Priority Order
+
+1. **Lock the validity rule.**
+   A battery run only counts if truncation drops the gold evidence session.
+   Invalid runs should still be saved as artifacts, but they must not be used as
+   evidence that REM beats or loses to truncation.
+
+2. **Make extraction failures observable.**
+   The battery artifact should expose fact-extraction diagnostics: strict parse,
+   repair, retry, salvage, truncation, loop detection, and final extraction
+   failure. A REM miss caused by dropped facts should be visible as an extraction
+   failure, not hidden inside answer accuracy.
+
+3. **Harden JSON robustness.**
+   Add regression coverage for the malformed outputs the small NPU model
+   produces in practice:
+   - markdown-fenced JSON
+   - truncated arrays or objects
+   - sibling JSON objects without an enclosing list
+   - repeated/looping objects
+   - partly salvageable responses with at least one valid fact
+   - unrecoverable responses that should fail cleanly without compaction
+
+4. **Run tight-budget smokes.**
+   Use small limits first (`--limit 3` or `--limit 5`) and sweep budgets until
+   the run is valid. Candidate budgets: `4000`, `3000`, `2000`, and lower if
+   needed.
+
+5. **Run the real valid subset.**
+   Use the first stable budget where truncation drops the evidence and judge
+   outputs are parseable. Commit the result artifact under `bench/battery/`.
+
+6. **Classify failures before broadening scope.**
+   If REM loses or only ties truncation, keep the artifact and classify misses:
+   extraction drop, summary loss, stale ghost, answerer failure, judge ambiguity,
+   context overflow, or budget invalidity.
+
+7. **Choose the next architecture from the failure mix.**
+   If failures are mostly malformed JSON or extraction drops, keep the near-term
+   work on write robustness. If failures are mostly prose-summary corruption,
+   stale ghosts, or retrieval/read-path ambiguity, start the graph-resident
+   architecture with Phase 0 and Phase 1 from
+   [`REM-memory-architecture-spec.md`](REM-memory-architecture-spec.md).
+
+## Acceptance Criteria
+
+The milestone is complete when the repo contains:
+
+- unit tests that fail before the JSON robustness fix and pass after it;
+- a valid tight-budget LongMemEval smoke artifact;
+- a valid tight-budget LongMemEval result artifact for the chosen subset;
+- aggregate REM vs truncation accuracy and evidence-retention numbers;
+- extraction diagnostics summarized in the result or adjacent notes;
+- a short README/doc update stating what the valid battery did or did not prove.
+
+## Suggested Commands
+
+Install eval dependencies:
+
+```bash
+pip install -e ".[dev,eval]"
+```
+
+Run default tests:
+
+```bash
+python3 -m pytest
+```
+
+Run tight-budget smokes:
+
+```bash
+PYTHONPATH=.:src python3 evals/battery/run_battery_spike.py \
+  --data /path/to/longmemeval_s.json \
+  --limit 5 \
+  --budget 3000 \
+  --out bench/battery/tight_smoke_b3000.json
+```
+
+Run the selected valid subset:
+
+```bash
+PYTHONPATH=.:src python3 evals/battery/run_battery_spike.py \
+  --data /path/to/longmemeval_s.json \
+  --budget 3000 \
+  --out bench/battery/tight_valid_b3000.json
+```
+
+The budget above is a placeholder. The artifact only counts if `valid: true`.
+
+## Deferred Until After This Gate
+
+- foreground inter-token p50/p99 under contention;
+- balanced operating point sweeps across span size, output cap, power, and
+  thermal behavior;
+- scheduler polish;
+- embedding-based semantic identity beyond the JSON robustness and current
+  slot-supersession path.
+- full graph-resident memory replacement. If selected, begin with only the
+  seeded graph store, serialization, supersession, and model-free read path from
+  [`REM-memory-architecture-spec.md`](REM-memory-architecture-spec.md), before
+  adding worker extraction.
+
+Those are important, but they should not displace the recall proof.

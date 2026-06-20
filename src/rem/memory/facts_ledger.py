@@ -21,11 +21,61 @@ logger = logging.getLogger("rem.memory.facts_ledger")
 SlotObservation: TypeAlias = tuple[int, str]
 
 # ---------------------------------------------------------------------------
-# Module-level extraction telemetry for the truncation circuit breaker.
-# run_e1a.reset_extraction_stats() clears these at the start of each trial;
-# run_e1a reads them after each compaction to compute the truncation rate.
+# Module-level extraction telemetry.
+# Callers reset these at the start of a unit of work (e.g. one battery question)
+# and read them afterwards via get_extraction_stats() to see how extraction
+# behaved: how often it parsed cleanly, needed repair/retry, salvaged a loop,
+# hit truncation, or failed outright. This is what makes a dropped-fact REM miss
+# observable instead of hidden inside answer accuracy.
 # ---------------------------------------------------------------------------
-_extraction_stats: dict[str, int] = {"attempts": 0, "truncations": 0}
+_EXTRACTION_STAT_KEYS = (
+    "attempts",        # extract_facts calls that reached the model
+    "strict_parse",    # parsed cleanly on the first strict json.loads
+    "repaired",        # recovered via fence-strip/balance/repair
+    "retried",         # needed a validator-guided retry
+    "retry_success",   # retry produced usable facts
+    "loops_detected",  # degenerate/looping output detected
+    "loops_salvaged",  # loop salvaged down to usable facts
+    "truncations",     # output detected as truncated
+    "failures",        # final extraction failure (span kept verbatim)
+)
+
+
+def _fresh_extraction_stats() -> dict[str, int]:
+    return {key: 0 for key in _EXTRACTION_STAT_KEYS}
+
+
+_extraction_stats: dict[str, int] = _fresh_extraction_stats()
+
+
+def reset_extraction_stats() -> None:
+    """Zeroes all extraction telemetry counters."""
+    _extraction_stats.update(_fresh_extraction_stats())
+
+
+def get_extraction_stats() -> dict[str, int]:
+    """Returns a snapshot copy of the current extraction telemetry counters."""
+    return dict(_extraction_stats)
+
+
+def _record_extraction_diagnostics(diagnostics: dict) -> None:
+    """Folds one robust_extract_json diagnostics dict into the module counters."""
+    if diagnostics.get("raw_parse_success"):
+        _extraction_stats["strict_parse"] += 1
+    if diagnostics.get("repair_success"):
+        _extraction_stats["repaired"] += 1
+    if diagnostics.get("retried"):
+        _extraction_stats["retried"] += 1
+    if diagnostics.get("retry_success"):
+        _extraction_stats["retry_success"] += 1
+    if diagnostics.get("loop_detected"):
+        _extraction_stats["loops_detected"] += 1
+    if diagnostics.get("loop_salvaged"):
+        _extraction_stats["loops_salvaged"] += 1
+    if diagnostics.get("truncated"):
+        _extraction_stats["truncations"] += 1
+    if not diagnostics.get("success"):
+        _extraction_stats["failures"] += 1
 
 
 class FactsExtractionError(Exception):
@@ -976,8 +1026,7 @@ def extract_facts(
     from rem.memory.robust_extract import robust_extract_json
     fact_entries, diagnostics = robust_extract_json(response_text, turns, client, messages)
 
-    if diagnostics.get("truncated") and not diagnostics.get("success"):
-        _extraction_stats["truncations"] += 1
+    _record_extraction_diagnostics(diagnostics)
 
     if not diagnostics["success"]:
         error_msg = diagnostics.get("error") or "Unknown extraction pipeline failure"

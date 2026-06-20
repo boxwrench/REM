@@ -152,6 +152,12 @@ environment; **never commit it.**
 
 ## Where we want help
 
+Current implementation gate: see [`docs/implementation-roadmap.md`](docs/implementation-roadmap.md).
+The next proof point is a valid tight-budget LongMemEval recall win over naive
+truncation, paired with measured JSON extraction robustness.
+The larger candidate architecture is tracked in
+[`docs/REM-memory-architecture-spec.md`](docs/REM-memory-architecture-spec.md).
+
 1. **JSON robustness** in small-model fact extraction (`src/rem/memory/facts_ledger.py`).
 2. **Embedding-based fact identity** for reliable supersession (matching by meaning).
 3. Tightening the compaction quality advantage and making it less budget-sensitive.
