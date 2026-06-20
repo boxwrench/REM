@@ -14,16 +14,44 @@ if str(_project_root) not in sys.path:
 
 from evals.battery.aggregate import aggregate
 from evals.battery.answerer import answer_question
+from evals.battery.classify import classify_battery
 from evals.battery.context_managers import RemContextManager, TruncationContextManager
 from evals.battery.judge import judge_answer, make_client as make_judge
 from evals.battery.longmemeval_loader import load_knowledge_update
-from evals.battery.models import ArmRun
+from evals.battery.models import ArmRun, BatteryResult
 from rem.config import Settings
 from rem.memory.assembler import ContextLimitExceeded
 from rem.memory.facts_ledger import get_extraction_stats, reset_extraction_stats
 from rem.npu_client import NpuClient
 
 GEMMA = "gemma4-it:e2b"
+
+
+def build_result_payload(
+    result: BatteryResult, *, budget: int, answerer: str, judge: str
+) -> dict:
+    """Serialize a BatteryResult and embed its failure classification so the
+    diagnosis travels with the raw results (no separate classify step needed)."""
+    payload = {
+        "eval": "battery-spike", "bench": "LongMemEval/knowledge-update",
+        "answerer": answerer, "judge": judge, "budget_tokens": budget,
+        "n_questions": result.n_questions, "valid": result.valid,
+        "invalid_reason": result.invalid_reason,
+        "arm_accuracy": result.arm_accuracy,
+        "arm_evidence_retention": result.arm_evidence_retention,
+        "arm_extraction": result.arm_extraction,
+        "runs": [r.__dict__ for r in result.runs],
+        "timestamp": time.time(),
+    }
+    report = classify_battery(payload)
+    payload["classification"] = {
+        "n_rem_misses": report.n_rem_misses,
+        "counts": report.counts,
+        "dominant": report.dominant,
+        "caveats": report.caveats,
+        "recommendation": report.recommendation(),
+    }
+    return payload
 
 
 def run(data: str, budget: int, limit: int | None, out: str) -> int:
@@ -75,17 +103,9 @@ def run(data: str, budget: int, limit: int | None, out: str) -> int:
         print(f"[{it.question_id}] done", flush=True)
 
     result = aggregate(runs, n_questions=len(items))
-    payload = {
-        "eval": "battery-spike", "bench": "LongMemEval/knowledge-update",
-        "answerer": GEMMA, "judge": "claude-haiku-4-5", "budget_tokens": budget,
-        "n_questions": result.n_questions, "valid": result.valid,
-        "invalid_reason": result.invalid_reason,
-        "arm_accuracy": result.arm_accuracy,
-        "arm_evidence_retention": result.arm_evidence_retention,
-        "arm_extraction": result.arm_extraction,
-        "runs": [r.__dict__ for r in result.runs],
-        "timestamp": time.time(),
-    }
+    payload = build_result_payload(
+        result, budget=budget, answerer=GEMMA, judge="claude-haiku-4-5"
+    )
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
@@ -93,6 +113,9 @@ def run(data: str, budget: int, limit: int | None, out: str) -> int:
     print(f"accuracy:  {result.arm_accuracy}")
     print(f"retention: {result.arm_evidence_retention}")
     print(f"extraction: {result.arm_extraction}")
+    print(f"miss breakdown: {payload['classification']['counts']}")
+    print(f"dominant: {payload['classification']['dominant']}")
+    print(f"recommendation: {payload['classification']['recommendation']}")
     print(f"Written to {out}")
     return 0
 
