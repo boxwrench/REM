@@ -29,20 +29,37 @@ useful facts better than simply truncating old context. Until that is shown, the
 elegant placement is solving a problem whose end-user recall advantage remains
 unproven.
 
+## Progress (updated 2026-06-20)
+
+The measurement apparatus for this gate is now in place; the remaining work is
+running the battery on real data and reading the result.
+
+- **Done:** validity rule, extraction observability, JSON robustness coverage,
+  and the failure classifier (priority items 1, 2, 3, and the item-6 tooling).
+  See the `recall-gate-extraction-observability` branch. Full unit suite green.
+- **In progress:** tight-budget smokes on `longmemeval_s` (priority item 4).
+- **Pending real data:** the valid subset run and the architecture decision
+  (items 5 and 7), plus applying the classifier to actual misses (item 6).
+
 ## Priority Order
 
-1. **Lock the validity rule.**
+1. **Lock the validity rule.** _[done]_
    A battery run only counts if truncation drops the gold evidence session.
    Invalid runs should still be saved as artifacts, but they must not be used as
    evidence that REM beats or loses to truncation.
+   Implemented as the retention ceiling guard in `evals/battery/aggregate.py`.
 
-2. **Make extraction failures observable.**
+2. **Make extraction failures observable.** _[done]_
    The battery artifact should expose fact-extraction diagnostics: strict parse,
    repair, retry, salvage, truncation, loop detection, and final extraction
    failure. A REM miss caused by dropped facts should be visible as an extraction
    failure, not hidden inside answer accuracy.
+   The diagnostic taxonomy is folded into `_extraction_stats`
+   (`reset_extraction_stats` / `get_extraction_stats`) and surfaced per question
+   on `ArmRun.extraction`, summed into `arm_extraction` in the artifact.
 
-3. **Harden JSON robustness.**
+3. **Harden JSON robustness.** _[done — pipeline already handled all six; locked
+   with mutation-verified regression tests in `tests/unit/test_robust_extract.py`]_
    Add regression coverage for the malformed outputs the small NPU model
    produces in practice:
    - markdown-fenced JSON
@@ -52,21 +69,24 @@ unproven.
    - partly salvageable responses with at least one valid fact
    - unrecoverable responses that should fail cleanly without compaction
 
-4. **Run tight-budget smokes.**
+4. **Run tight-budget smokes.** _[in progress]_
    Use small limits first (`--limit 3` or `--limit 5`) and sweep budgets until
    the run is valid. Candidate budgets: `4000`, `3000`, `2000`, and lower if
    needed.
 
-5. **Run the real valid subset.**
+5. **Run the real valid subset.** _[pending real data]_
    Use the first stable budget where truncation drops the evidence and judge
    outputs are parseable. Commit the result artifact under `bench/battery/`.
 
-6. **Classify failures before broadening scope.**
+6. **Classify failures before broadening scope.** _[tooling done; application
+   pending a valid run]_
    If REM loses or only ties truncation, keep the artifact and classify misses:
    extraction drop, summary loss, stale ghost, answerer failure, judge ambiguity,
    context overflow, or budget invalidity.
+   `evals/battery/classify.py` buckets misses and maps the dominant bucket to the
+   item-7 branch; the runner embeds this classification in every artifact.
 
-7. **Choose the next architecture from the failure mix.**
+7. **Choose the next architecture from the failure mix.** _[pending real data]_
    If failures are mostly malformed JSON or extraction drops, keep the near-term
    work on write robustness. If failures are mostly prose-summary corruption,
    stale ghosts, or retrieval/read-path ambiguity, start the graph-resident
@@ -77,12 +97,18 @@ unproven.
 
 The milestone is complete when the repo contains:
 
-- unit tests that fail before the JSON robustness fix and pass after it;
-- a valid tight-budget LongMemEval smoke artifact;
-- a valid tight-budget LongMemEval result artifact for the chosen subset;
-- aggregate REM vs truncation accuracy and evidence-retention numbers;
-- extraction diagnostics summarized in the result or adjacent notes;
-- a short README/doc update stating what the valid battery did or did not prove.
+- [x] unit tests that pin the JSON robustness behavior (mutation-verified, since
+  the pipeline already handled the malformed-output cases);
+- [ ] a valid tight-budget LongMemEval smoke artifact;
+- [ ] a valid tight-budget LongMemEval result artifact for the chosen subset;
+- [x] aggregate REM vs truncation accuracy and evidence-retention numbers
+  (`evals/battery/aggregate.py`, in every artifact);
+- [x] extraction diagnostics summarized in the result (`arm_extraction` plus the
+  embedded `classification` block);
+- [ ] a short README/doc update stating what the valid battery did or did not prove.
+
+The unchecked items all require the battery to run on real data; they are not
+blocked on code.
 
 ## Suggested Commands
 
