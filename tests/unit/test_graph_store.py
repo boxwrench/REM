@@ -52,3 +52,27 @@ def test_supersede_false_skips_supersession():
     s.add(Edge(subject_id="u", relation="lives_in", object_literal="Boulder", valid_from=2.0),
           supersede=False)
     assert len(s.current_edges()) == 2  # both remain current
+
+
+def test_state_at_event_time_returns_old_before_new_after():
+    s = GraphStore()
+    s.add(Edge(subject_id="u", relation="lives_in", object_literal="Denver",
+               valid_from=1.0, ingested_at=1.0))
+    s.add(Edge(subject_id="u", relation="lives_in", object_literal="Boulder",
+               valid_from=2.0, ingested_at=2.0))
+    before = [e.object_literal for e in s.state_at_event_time(1.5)]
+    after = [e.object_literal for e in s.state_at_event_time(2.5)]
+    assert before == ["Denver"]
+    assert after == ["Boulder"]
+
+
+def test_belief_at_transaction_time_uses_ingestion_not_event_time():
+    s = GraphStore()
+    s.add(Edge(subject_id="u", relation="lives_in", object_literal="Denver",
+               valid_from=1.0, ingested_at=1.0))
+    # Became true at event time 2.0, but the system only LEARNED it at txn time 5.0.
+    s.add(Edge(subject_id="u", relation="lives_in", object_literal="Boulder",
+               valid_from=2.0, ingested_at=5.0))
+    # At transaction time 3.0 the system still believed Denver (Boulder learned at 5.0).
+    believed = [e.object_literal for e in s.belief_at_transaction_time(3.0)]
+    assert believed == ["Denver"]

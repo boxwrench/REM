@@ -62,3 +62,25 @@ class GraphStore:
 
     def current_edges(self) -> list[Edge]:
         return [e for e in self.edges if e.valid_to is None and e.invalidated_at is None]
+
+    def state_at_event_time(self, t: float) -> list[Edge]:
+        """Facts true at event time t — a pure event-timeline query.
+
+        Does NOT filter on invalidated_at: a superseded fact was still true
+        during its [valid_from, valid_to) window even though it is no longer
+        currently believed. Mixing in the transaction timeline here would
+        wrongly hide history.
+        """
+        return [
+            e for e in self.edges
+            if e.valid_from <= t
+            and (e.valid_to is None or t < e.valid_to)
+        ]
+
+    def belief_at_transaction_time(self, t: float) -> list[Edge]:
+        """What the system believed at transaction time t."""
+        return [
+            e for e in self.edges
+            if e.ingested_at <= t
+            and (e.invalidated_at is None or t < e.invalidated_at)
+        ]

@@ -82,9 +82,12 @@ Methods:
 - `get_node(node_id) -> Node | None`
 - `add(edge, *, supersede=True) -> Edge` — apply supersession (below), then insert.
 - `current_edges() -> list[Edge]` — `valid_to is None and invalidated_at is None`.
-- `state_at_event_time(t: float) -> list[Edge]` — facts true at event time `t`
-  per current beliefs: `valid_from <= t and (valid_to is None or t < valid_to)`
-  and `invalidated_at is None`.
+- `state_at_event_time(t: float) -> list[Edge]` — facts true at event time `t`,
+  a pure event-timeline query: `valid_from <= t and (valid_to is None or t < valid_to)`.
+  It must NOT filter on `invalidated_at`: a superseded fact was still true during
+  its validity window even though it is no longer currently believed, and mixing
+  in the transaction timeline here would hide history (and contradict the
+  old-before/new-after supersession behavior).
 - `belief_at_transaction_time(t: float) -> list[Edge]` — what the system believed
   at transaction time `t`: `ingested_at <= t and (invalidated_at is None or t < invalidated_at)`.
 
