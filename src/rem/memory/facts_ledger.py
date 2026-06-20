@@ -883,6 +883,21 @@ def validate_and_repair_items(parsed: Any, turns: list["Turn"]) -> list[FactEntr
                 subj = (item.get("subject") or "").strip()
                 attr = (item.get("attribute") or "").strip()
                 val = (item.get("value") or "").strip()
+                # Recover a json_repair artifact: when the model drops the comma
+                # between attribute and value (`"attribute":"value":"X"`),
+                # json_repair merges the tail into the attribute string as
+                # `value":"X`, leaving no value field. A literal `":"` inside an
+                # attribute is never natural language, so split it back into
+                # (attribute, value) rather than dropping a recoverable fact.
+                if not val and '":"' in attr:
+                    recovered_attr, _, recovered_val = attr.partition('":"')
+                    recovered_attr = recovered_attr.strip().strip('"').strip()
+                    recovered_val = recovered_val.strip().strip('"').strip()
+                    if recovered_attr and recovered_val:
+                        attr = recovered_attr
+                        val = recovered_val
+                        item["attribute"] = attr
+                        item["value"] = val
                 if subj and attr and val:
                     item["text"] = f"{subj} {attr}: {val}"
                 else:

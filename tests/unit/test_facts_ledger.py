@@ -9,8 +9,42 @@ from rem.memory.facts_ledger import (
     FactsLedger,
     extract_facts,
     clean_json_text,
+    validate_and_repair_items,
     FactsExtractionError,
 )
+
+
+def test_recovers_fact_from_repair_mangled_attribute():
+    """Root cause: the small model drops the comma between attribute and value,
+    emitting `"attribute":"value":"134"`; json_repair merges the tail into the
+    attribute string -> attribute='value":"134' with no value field. The value
+    (134) is recoverable from the artifact and must not be dropped.
+
+    Reproduced exactly from json_repair on the malformed model output observed in
+    bench/battery/tight_smoke_b3000_limit1.json.
+    """
+    turns = [Turn(role="user", content="The upper quartile is 134.", turn_id=14, tokens=8)]
+    parsed = [{
+        "kind": "decision", "source_turn_id": 14,
+        "subject": "upper quartile", "attribute": 'value":"134',
+        "is_correction": False,
+    }]
+
+    entries = validate_and_repair_items(parsed, turns)
+
+    assert len(entries) == 1, "the mangled-but-recoverable fact must be salvaged, not dropped"
+    assert entries[0].attribute == "value"
+    assert "134" in entries[0].text
+
+
+def test_contentless_repair_fragment_is_still_dropped():
+    """A repair fragment with no recoverable content (e.g. a bare is_correction
+    object) has nothing to salvage and must still be dropped, not fabricated."""
+    turns = [Turn(role="user", content="The upper quartile is 134.", turn_id=14, tokens=8)]
+    parsed = [{"is_correction": False}]
+
+    with pytest.raises(ValueError):
+        validate_and_repair_items(parsed, turns)
 
 
 def test_clean_json_text():
