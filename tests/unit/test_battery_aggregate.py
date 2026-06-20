@@ -41,3 +41,21 @@ def test_aggregate_valid_when_truncation_drops_most_evidence():
     res = aggregate(runs, n_questions=3)
     # truncation retention = 1/3 ≈ 0.33 < 0.5 -> valid even though REM retention is 0.0
     assert res.valid is True
+
+
+def test_aggregate_sums_extraction_diagnostics_per_arm():
+    # The REM arm carries per-question extraction diagnostics; aggregate sums them
+    # so a run's extraction failures are visible at the artifact level.
+    runs = [
+        ArmRun("q1", "rem", 90, evidence_retained=True, model_answer="a", judged_correct=True,
+               extraction={"attempts": 2, "failures": 1, "truncations": 1}),
+        ArmRun("q2", "rem", 90, evidence_retained=False, model_answer="b", judged_correct=False,
+               extraction={"attempts": 3, "failures": 0, "truncations": 0}),
+        # Truncation arm has no extraction stage; it must not appear in arm_extraction.
+        ArmRun("q1", "truncation", 100, evidence_retained=False, model_answer="x", judged_correct=False),
+    ]
+    res = aggregate(runs, n_questions=2)
+    assert res.arm_extraction["rem"]["attempts"] == 5
+    assert res.arm_extraction["rem"]["failures"] == 1
+    assert res.arm_extraction["rem"]["truncations"] == 1
+    assert "truncation" not in res.arm_extraction

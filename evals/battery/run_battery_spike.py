@@ -20,6 +20,7 @@ from evals.battery.longmemeval_loader import load_knowledge_update
 from evals.battery.models import ArmRun
 from rem.config import Settings
 from rem.memory.assembler import ContextLimitExceeded
+from rem.memory.facts_ledger import get_extraction_stats, reset_extraction_stats
 from rem.npu_client import NpuClient
 
 GEMMA = "gemma4-it:e2b"
@@ -44,6 +45,12 @@ def run(data: str, budget: int, limit: int | None, out: str) -> int:
                                                        max_context_tokens=budget * 4)),
         }
         for name, cm in arms.items():
+            # Only the REM arm runs the extraction/compaction path; reset the
+            # telemetry before its ingest and snapshot the per-question delta so
+            # dropped-fact failures are visible in the artifact, not just accuracy.
+            is_rem = name == "rem"
+            if is_rem:
+                reset_extraction_stats()
             try:
                 cm.ingest(it.sessions, budget_tokens=budget)
                 ctx = cm.assemble()
@@ -53,6 +60,7 @@ def run(data: str, budget: int, limit: int | None, out: str) -> int:
                     assembled_tokens=0, evidence_retained=False,
                     model_answer="", judged_correct=False,
                     judge_reason=f"context overflow: {e}",
+                    extraction=get_extraction_stats() if is_rem else None,
                 ))
                 continue
             ans = answer_question(npu, context=ctx, question=it.question)
@@ -62,6 +70,7 @@ def run(data: str, budget: int, limit: int | None, out: str) -> int:
                 assembled_tokens=cm.stats().assembled_tokens,
                 evidence_retained=cm.evidence_retained(it.answer_session_ids),
                 model_answer=ans, judged_correct=v.correct, judge_reason=v.reason,
+                extraction=get_extraction_stats() if is_rem else None,
             ))
         print(f"[{it.question_id}] done", flush=True)
 
@@ -73,6 +82,7 @@ def run(data: str, budget: int, limit: int | None, out: str) -> int:
         "invalid_reason": result.invalid_reason,
         "arm_accuracy": result.arm_accuracy,
         "arm_evidence_retention": result.arm_evidence_retention,
+        "arm_extraction": result.arm_extraction,
         "runs": [r.__dict__ for r in result.runs],
         "timestamp": time.time(),
     }
@@ -82,6 +92,7 @@ def run(data: str, budget: int, limit: int | None, out: str) -> int:
     print(f"\nVALID: {result.valid}  ({result.invalid_reason})")
     print(f"accuracy:  {result.arm_accuracy}")
     print(f"retention: {result.arm_evidence_retention}")
+    print(f"extraction: {result.arm_extraction}")
     print(f"Written to {out}")
     return 0
 
