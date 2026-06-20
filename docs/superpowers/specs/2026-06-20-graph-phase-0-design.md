@@ -151,3 +151,20 @@ old-before / new-after, and that serialization matches expected lines exactly.
 - All unit tests pass; the Phase 0 gate test passes deterministically.
 - No dependency on any model or dataset; nothing imports from the current
   compaction path (and vice versa).
+
+## 9. Alternatives kept open
+
+These are viable roads not taken in Phase 0. Recorded so we can switch
+deliberately rather than rediscover them. None block Phase 0; the clean store
+interface and pydantic models are chosen partly to keep these cheap to adopt.
+
+| Decision | Phase 0 choice | Viable alternatives | Revisit when |
+|---|---|---|---|
+| **Backend** | In-memory (dicts/list) behind a store interface | SQLite edge table; embedded graph store (NetworkX, Kùzu, DuckDB-PGQ) | Phase 0 needs persistence, or edge volume / traversal cost outgrows lists |
+| **Supersession timeline** (§5.1) | `invalidated_at = new.ingested_at` (principled bitemporal) | Strict parent-spec (`= new.valid_from`); append-only belief log (never mutate old edges) | A consumer needs strict spec parity, or we want full audit immutability |
+| **Object representation** | One-of `object_id` xor `object_literal` (literal as string) | Tagged union `{kind, value}`; typed literals (number/date as real types); reify every literal as a value-node | Literal typing matters for ranking/comparison, or queries need typed math/date ops |
+| **Temporal field type** | `float` epoch | ISO-8601 strings; `datetime`; integer logical clock | Human-readable storage or calendar-aware queries become important |
+| **Node dedup** | Exact label, case-insensitive, first-seen canonical | Embedding similarity threshold (Phase 1); alias table; normalization (stemming/lowercasing) | Phase 1 entity resolution lands, or fragmentation hurts recall |
+| **Relation vocabulary** | Freeform predicates | Controlled vocabulary; relation normalization / aliases (parent §11) | Synonymous relations fragment retrieval |
+| **`state_at_event_time` semantics** | Current-beliefs filter (`invalidated_at is None`) | Full bitemporal as-of query (event time T *and* transaction time S) | A test/consumer needs "what we believed at S about T" |
+| **Module decomposition** | 3 modules (`model`/`store`/`serialize`) | Single module; merge `model`+`store` | A module stays trivially small or boundaries prove artificial |
