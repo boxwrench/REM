@@ -1,0 +1,141 @@
+{
+  "eval": "battery-spike",
+  "bench": "LongMemEval/knowledge-update",
+  "answerer": "gemma4-it:e2b",
+  "judge": "claude-haiku-4-5",
+  "budget_tokens": 2000,
+  "n_questions": 3,
+  "valid": false,
+  "invalid_reason": "Budget too generous: truncation retained the gold evidence on 67% of questions (>= 50%). Lower the budget so truncation drops the gold session, else the comparison is trivial.",
+  "arm_accuracy": {
+    "truncation": 0.3333333333333333,
+    "rem": 0.0
+  },
+  "arm_evidence_retention": {
+    "truncation": 0.6666666666666666,
+    "rem": 0.0
+  },
+  "arm_extraction": {
+    "rem": {
+      "attempts": 957,
+      "strict_parse": 917,
+      "repaired": 31,
+      "retried": 3,
+      "retry_success": 1,
+      "loops_detected": 6,
+      "loops_salvaged": 6,
+      "truncations": 14,
+      "failures": 2
+    }
+  },
+  "runs": [
+    {
+      "question_id": "6a1eabeb",
+      "arm": "truncation",
+      "assembled_tokens": 1409,
+      "evidence_retained": true,
+      "model_answer": "Your personal best time was 25:50.",
+      "judged_correct": true,
+      "judge_reason": "The model's answer conveys the same fact as the gold answer. Both state that the personal best time in the charity 5K run was 25:50 (25 minutes and 50 seconds). The model's answer is a valid paraphrase of the gold answer, using the abbreviated time format that matches one of the acceptable formats listed in the gold answer.",
+      "extraction": null
+    },
+    {
+      "question_id": "6a1eabeb",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (46098) exceeds maximum limit (8000).",
+      "extraction": {
+        "attempts": 326,
+        "strict_parse": 314,
+        "repaired": 9,
+        "retried": 0,
+        "retry_success": 0,
+        "loops_detected": 3,
+        "loops_salvaged": 3,
+        "truncations": 5,
+        "failures": 0
+      }
+    },
+    {
+      "question_id": "6aeb4375",
+      "arm": "truncation",
+      "assembled_tokens": 1622,
+      "evidence_retained": true,
+      "model_answer": "The memory does not contain information about how many Korean restaurants you have tried in your city.",
+      "judged_correct": false,
+      "judge_reason": "The model's answer states that the memory does not contain information about Korean restaurants tried, but the gold answer is 'four,' indicating that information is available. The model failed to provide the correct factual answer that was expected.",
+      "extraction": null
+    },
+    {
+      "question_id": "6aeb4375",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (45307) exceeds maximum limit (8000).",
+      "extraction": {
+        "attempts": 328,
+        "strict_parse": 318,
+        "repaired": 6,
+        "retried": 3,
+        "retry_success": 1,
+        "loops_detected": 1,
+        "loops_salvaged": 1,
+        "truncations": 1,
+        "failures": 2
+      }
+    },
+    {
+      "question_id": "830ce83f",
+      "arm": "truncation",
+      "assembled_tokens": 1633,
+      "evidence_retained": false,
+      "model_answer": "The memory does not contain information about where Rachel moved to after her recent relocation.",
+      "judged_correct": false,
+      "judge_reason": "The model's answer states that the information is not available in the memory, while the gold answer provides a specific answer: 'the suburbs'. If the gold answer is known to be correct, then the model's answer is incorrect because it claims the information is unavailable when it actually is available.",
+      "extraction": null
+    },
+    {
+      "question_id": "830ce83f",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (43357) exceeds maximum limit (8000).",
+      "extraction": {
+        "attempts": 303,
+        "strict_parse": 285,
+        "repaired": 16,
+        "retried": 0,
+        "retry_success": 0,
+        "loops_detected": 2,
+        "loops_salvaged": 2,
+        "truncations": 8,
+        "failures": 0
+      }
+    }
+  ],
+  "timestamp": 1781972656.3685951,
+  "classification": {
+    "n_rem_misses": 3,
+    "counts": {
+      "budget_invalid": 3,
+      "context_overflow": 0,
+      "extraction_drop": 0,
+      "judge_ambiguity": 0,
+      "stale_ghost": 0,
+      "answerer_failure": 0,
+      "summary_loss": 0
+    },
+    "dominant": "budget_invalid",
+    "caveats": [
+      "Run is invalid (Budget too generous: truncation retained the gold evidence on 67% of questions (>= 50%). Lower the budget so truncation drops the gold session, else the comparison is trivial.); miss classification is inconclusive."
+    ],
+    "recommendation": "Run is budget-invalid; rerun at a tighter budget before drawing any architecture conclusion."
+  }
+}

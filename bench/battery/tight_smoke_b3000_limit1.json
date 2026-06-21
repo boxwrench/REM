@@ -1,0 +1,64 @@
+{
+  "eval": "battery-spike",
+  "bench": "LongMemEval/knowledge-update",
+  "answerer": "gemma4-it:e2b",
+  "judge": "claude-haiku-4-5",
+  "budget_tokens": 3000,
+  "n_questions": 1,
+  "valid": false,
+  "invalid_reason": "Budget too generous: truncation retained the gold evidence on 100% of questions (>= 50%). Lower the budget so truncation drops the gold session, else the comparison is trivial.",
+  "arm_accuracy": {
+    "truncation": 1.0,
+    "rem": 0.0
+  },
+  "arm_evidence_retention": {
+    "truncation": 1.0,
+    "rem": 0.0
+  },
+  "arm_extraction": {
+    "rem": {
+      "attempts": 181,
+      "strict_parse": 169,
+      "repaired": 11,
+      "retried": 0,
+      "retry_success": 0,
+      "loops_detected": 1,
+      "loops_salvaged": 1,
+      "truncations": 2,
+      "failures": 0
+    }
+  },
+  "runs": [
+    {
+      "question_id": "6a1eabeb",
+      "arm": "truncation",
+      "assembled_tokens": 2839,
+      "evidence_retained": true,
+      "model_answer": "Your personal best time was 25:50.",
+      "judged_correct": true,
+      "judge_reason": "The model's answer accurately conveys the same fact as the gold answer. Both express the personal best time as 25:50 (25 minutes and 50 seconds). The model's answer is a valid paraphrase of the gold answer with the same factual content.",
+      "extraction": null
+    },
+    {
+      "question_id": "6a1eabeb",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (35115) exceeds maximum limit (12000).",
+      "extraction": {
+        "attempts": 181,
+        "strict_parse": 169,
+        "repaired": 11,
+        "retried": 0,
+        "retry_success": 0,
+        "loops_detected": 1,
+        "loops_salvaged": 1,
+        "truncations": 2,
+        "failures": 0
+      }
+    }
+  ],
+  "timestamp": 1781962008.3422801
+}
