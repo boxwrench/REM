@@ -50,9 +50,28 @@ retention), so `valid_b1000_oldgold.json` is the first valid run.
 
 The classifier's recommendation stands: fix the harness before diagnosing memory.
 
+## The overflow: root cause and repair
+
+Reproduced NPU-free: a ~500-turn item compacts to ~82 episodic summaries (~2949
+tokens) + ~164 ledger facts (~3475 tokens) = ~6642 tokens, against the REM arm's
+`max_context_tokens = budget×4 = 4000`. The assembler renders the ledger in full
+and all summaries with no size bound, so REM's compacted memory grows with
+conversation length. This is a scaling gap, not merely a small config ceiling:
+the verbatim tier is bounded but summaries + ledger are not.
+
+Repair (diagnostic-first): assemble the REM arm within a fixed memory window
+`REM_MEMORY_WINDOW_TOKENS = 16000` (the reserved memory region from the
+architecture spec §3) instead of `budget×4`. This unblocks assembly so the arm
+can answer, and isolates write/read recall from token-efficiency.
+
+Caveat: the REM arm now gets up to 16k of context while truncation gets the
+budget, so the comparison is **not token-matched**. It answers "does the gold
+survive compaction at all?" Budget-bounded memory (eviction so summaries + ledger
+fit ~budget) is the follow-up if write recall holds.
+
 ## Next
 
-1. Determine whether the overflow is a config ceiling (`max_context_tokens` too
-   small for ~500-turn items) or unbounded growth of REM's compacted memory.
-2. Fix it, then re-run `--budget 1000 --max-gold-recency 0.33` for an actual
-   REM-vs-truncation number.
+Re-run `--budget 1000 --max-gold-recency 0.33`. Expect the REM misses to move out
+of `context_overflow` into a diagnostic bucket: `summary_loss`/`stale_ghost`
+(gold lost in compaction → graph-architecture signal) or `answerer_failure`
+(gold present, model missed it → memory is not the bottleneck).
