@@ -831,6 +831,35 @@ def clean_and_check_truncation(response_text: str) -> tuple[str, bool]:
     return json_candidate, True
 
 
+_ALLOWED_FACT_KEYS = {
+    "kind", "source_turn_id", "subject", "attribute", "value",
+    "is_correction", "text", "status", "slot_key", "slot_value",
+    "superseded_by_turn_id",
+}
+
+
+def _recover_malformed_keys(item: dict) -> dict:
+    """Salvage a json_repair-mangled fact dict by keeping its valid core.
+
+    The small extraction model emits malformed JSON (unescaped quotes in values,
+    ``value=`` instead of ``"value":``); after repair this leaves dicts with
+    mangled extra keys. Rather than rejecting the whole fact:
+      1. keep all already-allowed keys,
+      2. remap an unknown key to an allowed field if it normalizes to one
+         (e.g. ``value=`` -> ``value``) and that field is not already set,
+      3. drop the remaining unknown keys.
+    The missing-text guard downstream still drops entries with no recoverable core.
+    """
+    cleaned = {k: v for k, v in item.items() if k in _ALLOWED_FACT_KEYS}
+    for k, v in item.items():
+        if k in _ALLOWED_FACT_KEYS or not isinstance(k, str):
+            continue
+        norm = k.strip(" \t\n\"'=:.,!}{")
+        if norm in _ALLOWED_FACT_KEYS and norm not in cleaned:
+            cleaned[norm] = v
+    return cleaned
+
+
 def validate_and_repair_items(parsed: Any, turns: list["Turn"]) -> list[FactEntry]:
     """Validates the parsed JSON list of facts, repairing missing source_turn_id if confident.
 
@@ -857,15 +886,9 @@ def validate_and_repair_items(parsed: Any, turns: list["Turn"]) -> list[FactEntr
             if not isinstance(item, dict):
                 raise ValueError(f"Fact entry item must be a dictionary, got: {type(item)}")
 
-            # Reject extra/hallucinated fields
-            allowed_keys = {
-                "kind", "source_turn_id", "subject", "attribute", "value",
-                "is_correction", "text", "status", "slot_key", "slot_value",
-                "superseded_by_turn_id"
-            }
-            extra_keys = set(item.keys()) - allowed_keys
-            if extra_keys:
-                raise ValueError(f"Extra fields not allowed in FactEntry: {extra_keys}")
+            # Strip/remap json_repair artifact keys and keep the valid core
+            # rather than rejecting the whole fact (see _recover_malformed_keys).
+            item = _recover_malformed_keys(item)
 
             # Safe coercion of subject/attribute/value to string defensively
             for k in ("subject", "attribute", "value"):

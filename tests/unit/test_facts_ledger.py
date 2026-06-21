@@ -47,6 +47,49 @@ def test_contentless_repair_fragment_is_still_dropped():
         validate_and_repair_items(parsed, turns)
 
 
+def test_recovers_fact_with_garbage_extra_keys_from_unescaped_quote():
+    """An unescaped quote in a value makes json_repair append garbage keys
+    (them!, false}) alongside an intact subject/attribute/value. Strip the
+    garbage and keep the fact rather than rejecting the whole entry."""
+    turns = [Turn(role="user", content="Bald Fury protagonist one-liner.", turn_id=338, tokens=8)]
+    parsed = [{
+        "kind": "quote", "source_turn_id": 338,
+        "subject": "Bald Fury protagonist", "attribute": "pun/one-liner",
+        "value": "I may be bald", "them!": False, "false}": False,
+    }]
+
+    entries = validate_and_repair_items(parsed, turns)
+
+    assert len(entries) == 1
+    assert "I may be bald" in entries[0].text
+
+
+def test_recovers_value_from_mangled_value_equals_key():
+    """The model writing `value=` instead of `"value":` traps the value text
+    under a `value=` key. Remap it back to `value` and keep the fact."""
+    turns = [Turn(role="user", content="Time-zone differences are a challenge.", turn_id=491, tokens=8)]
+    parsed = [{
+        "kind": "entity", "source_turn_id": 491,
+        "subject": "time differences", "attribute": "challenge",
+        "value=": "finding a suitable time", "is_correction": False,
+    }]
+
+    entries = validate_and_repair_items(parsed, turns)
+
+    assert len(entries) == 1
+    assert "finding a suitable time" in entries[0].text
+
+
+def test_item_with_only_garbage_keys_is_still_dropped():
+    """If stripping/ remapping leaves no recoverable core, the entry must still
+    be dropped, not fabricated."""
+    turns = [Turn(role="user", content="x", turn_id=1, tokens=1)]
+    parsed = [{"them!": False, "false}": False}]
+
+    with pytest.raises(ValueError):
+        validate_and_repair_items(parsed, turns)
+
+
 def test_clean_json_text():
     """Asserts that clean_json_text strips markdown fences, conversational text, and converts sequences of objects."""
     assert clean_json_text("  [1, 2]  ") == "[1, 2]"
