@@ -1,0 +1,199 @@
+{
+  "eval": "battery-spike",
+  "bench": "LongMemEval/knowledge-update",
+  "answerer": "gemma4-it:e2b",
+  "judge": "claude-haiku-4-5",
+  "budget_tokens": 1000,
+  "n_questions": 5,
+  "valid": true,
+  "invalid_reason": "",
+  "arm_accuracy": {
+    "truncation": 0.0,
+    "rem": 0.0
+  },
+  "arm_evidence_retention": {
+    "truncation": 0.0,
+    "rem": 0.0
+  },
+  "arm_extraction": {
+    "rem": {
+      "attempts": 2220,
+      "strict_parse": 2124,
+      "repaired": 81,
+      "retried": 6,
+      "retry_success": 5,
+      "loops_detected": 9,
+      "loops_salvaged": 9,
+      "truncations": 34,
+      "failures": 1
+    }
+  },
+  "runs": [
+    {
+      "question_id": "031748ae",
+      "arm": "truncation",
+      "assembled_tokens": 706,
+      "evidence_retained": false,
+      "model_answer": "The provided memory does not contain information about how many engineers you lead.",
+      "judged_correct": false,
+      "judge_reason": "The model's answer states that the provided memory does not contain the information, but the gold answer provides specific numbers (4 engineers when starting, 5 engineers now). The model failed to retrieve or provide the correct information that was supposedly available in the memory/context.",
+      "extraction": null
+    },
+    {
+      "question_id": "031748ae",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (40565) exceeds maximum limit (4000).",
+      "extraction": {
+        "attempts": 460,
+        "strict_parse": 429,
+        "repaired": 30,
+        "retried": 0,
+        "retry_success": 0,
+        "loops_detected": 1,
+        "loops_salvaged": 1,
+        "truncations": 11,
+        "failures": 0
+      }
+    },
+    {
+      "question_id": "3ba21379",
+      "arm": "truncation",
+      "assembled_tokens": 754,
+      "evidence_retained": false,
+      "model_answer": "The conversation memory does not contain information about what vehicle model you are currently working on.",
+      "judged_correct": false,
+      "judge_reason": "The model's answer indicates that it cannot determine the vehicle model from the conversation history, rather than providing the correct answer. The gold answer specifies 'Ford F-150 pickup truck,' which the model failed to provide. The model's response is evasive rather than factually incorrect, but it does not convey the required fact.",
+      "extraction": null
+    },
+    {
+      "question_id": "3ba21379",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (50529) exceeds maximum limit (4000).",
+      "extraction": {
+        "attempts": 406,
+        "strict_parse": 390,
+        "repaired": 12,
+        "retried": 1,
+        "retry_success": 1,
+        "loops_detected": 3,
+        "loops_salvaged": 3,
+        "truncations": 8,
+        "failures": 0
+      }
+    },
+    {
+      "question_id": "cc5ded98",
+      "arm": "truncation",
+      "assembled_tokens": 947,
+      "evidence_retained": false,
+      "model_answer": "No memory found.",
+      "judged_correct": false,
+      "judge_reason": "The model answer states 'No memory found' which does not provide the factual information requested. The gold answer specifies 'about two hours' of daily coding exercise time. The model's response fails to convey this fact and instead indicates a lack of information rather than answering the question.",
+      "extraction": null
+    },
+    {
+      "question_id": "cc5ded98",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (54790) exceeds maximum limit (4000).",
+      "extraction": {
+        "attempts": 454,
+        "strict_parse": 435,
+        "repaired": 15,
+        "retried": 2,
+        "retry_success": 2,
+        "loops_detected": 2,
+        "loops_salvaged": 2,
+        "truncations": 8,
+        "failures": 0
+      }
+    },
+    {
+      "question_id": "c6853660",
+      "arm": "truncation",
+      "assembled_tokens": 173,
+      "evidence_retained": false,
+      "model_answer": "No memory of this information exists.",
+      "judged_correct": false,
+      "judge_reason": "The model's answer states that there is no memory of the information, which contradicts the gold answer that clearly states the user increased the limit from one cup to two cups. The model failed to provide the factual answer that was requested, instead deflecting by claiming lack of memory.",
+      "extraction": null
+    },
+    {
+      "question_id": "c6853660",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (58150) exceeds maximum limit (4000).",
+      "extraction": {
+        "attempts": 459,
+        "strict_parse": 443,
+        "repaired": 14,
+        "retried": 0,
+        "retry_success": 0,
+        "loops_detected": 2,
+        "loops_salvaged": 2,
+        "truncations": 2,
+        "failures": 0
+      }
+    },
+    {
+      "question_id": "9bbe84a2",
+      "arm": "truncation",
+      "assembled_tokens": 674,
+      "evidence_retained": false,
+      "model_answer": "The memory does not contain information about a previous goal for an Apex Legends level before an update.",
+      "judged_correct": false,
+      "judge_reason": "The gold answer states the previous goal was 'level 100', but the model answer claims there is no information about this in memory. The model's answer contradicts the gold answer by stating the information is unavailable, when the gold answer confirms it was level 100.",
+      "extraction": null
+    },
+    {
+      "question_id": "9bbe84a2",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (36977) exceeds maximum limit (4000).",
+      "extraction": {
+        "attempts": 441,
+        "strict_parse": 427,
+        "repaired": 10,
+        "retried": 3,
+        "retry_success": 2,
+        "loops_detected": 1,
+        "loops_salvaged": 1,
+        "truncations": 5,
+        "failures": 1
+      }
+    }
+  ],
+  "timestamp": 1782026616.1160293,
+  "classification": {
+    "n_rem_misses": 5,
+    "counts": {
+      "budget_invalid": 0,
+      "context_overflow": 5,
+      "extraction_drop": 0,
+      "judge_ambiguity": 0,
+      "stale_ghost": 0,
+      "answerer_failure": 0,
+      "summary_loss": 0
+    },
+    "dominant": "context_overflow",
+    "caveats": [],
+    "recommendation": "Misses dominated by context_overflow: fix the harness (budget/assembly or judge prompt) before diagnosing memory."
+  }
+}

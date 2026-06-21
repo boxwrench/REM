@@ -99,16 +99,19 @@ The milestone is complete when the repo contains:
 
 - [x] unit tests that pin the JSON robustness behavior (mutation-verified, since
   the pipeline already handled the malformed-output cases);
-- [ ] a valid tight-budget LongMemEval smoke artifact;
-- [ ] a valid tight-budget LongMemEval result artifact for the chosen subset;
+- [x] a valid tight-budget LongMemEval artifact (`bench/battery/valid_b1000_oldgold.json`,
+  reached via gold-recency selection — see `bench/battery/FINDINGS.md`);
 - [x] aggregate REM vs truncation accuracy and evidence-retention numbers
   (`evals/battery/aggregate.py`, in every artifact);
 - [x] extraction diagnostics summarized in the result (`arm_extraction` plus the
   embedded `classification` block);
-- [ ] a short README/doc update stating what the valid battery did or did not prove.
+- [x] a short doc stating what the valid battery did or did not prove
+  (`bench/battery/FINDINGS.md`).
 
-The unchecked items all require the battery to run on real data; they are not
-blocked on code.
+Outstanding before a memory-quality verdict: the first valid run is blocked by
+REM `context_overflow` (its compacted memory exceeds `max_context_tokens =
+budget×4` on ~500-turn items), so it scores 0/5 without ever answering. The
+classifier flagged this; fix the assembly ceiling / memory growth, then re-run.
 
 ## Suggested Commands
 
