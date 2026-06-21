@@ -15,7 +15,11 @@ if str(_project_root) not in sys.path:
 from evals.battery.aggregate import aggregate
 from evals.battery.answerer import answer_question
 from evals.battery.classify import classify_battery
-from evals.battery.context_managers import RemContextManager, TruncationContextManager
+from evals.battery.context_managers import (
+    RemContextManager,
+    TruncationContextManager,
+    REM_MEMORY_WINDOW_TOKENS,
+)
 from evals.battery.judge import judge_answer, make_client as make_judge
 from evals.battery.longmemeval_loader import load_knowledge_update
 from evals.battery.models import ArmRun, BatteryResult
@@ -70,10 +74,12 @@ def run(data: str, budget: int, limit: int | None, out: str,
     for it in items:
         arms = {
             "truncation": TruncationContextManager(),
+            # ingest() sets compact_trigger_tokens=budget; the explicit memory
+            # window lets the arm assemble its full compacted memory instead of
+            # overflowing budget*4 on long-haystack items.
             "rem": RemContextManager(client=npu,
                                      settings=Settings(summarizer_model=GEMMA,
-                                                       compact_trigger_tokens=budget,
-                                                       max_context_tokens=budget * 4)),
+                                                       max_context_tokens=REM_MEMORY_WINDOW_TOKENS)),
         }
         for name, cm in arms.items():
             # Only the REM arm runs the extraction/compaction path; reset the

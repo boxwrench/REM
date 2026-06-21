@@ -75,6 +75,16 @@ class TruncationContextManager:
 REM_SYSTEM = "You are a helpful assistant with long-term memory."
 REM_TASK = "Answer the user's question using the conversation memory."
 
+# REM's assembled memory (summaries + facts ledger + recent window) must fit a
+# fixed memory window, NOT budget*4. The ledger and summaries grow with
+# conversation length, so for long-haystack items budget*4 (e.g. 4000 at
+# budget 1000) overflows and the arm cannot answer. 16k matches the reserved
+# memory region in the architecture spec (§3: 32k window, 16k for memory).
+# NOTE: this gives the REM arm more context than the truncation budget, so the
+# comparison is not token-matched — it isolates write/read recall from
+# token-efficiency. Budget-bounded memory (eviction) is the follow-up.
+REM_MEMORY_WINDOW_TOKENS = 16000
+
 
 class RemContextManager:
     """REM arm: run the real compaction loop over foreign chat turns."""
@@ -93,8 +103,11 @@ class RemContextManager:
             raise RuntimeError("RemContextManager.ingest is single-call; build a new instance per question")
         s = self._settings.model_copy()
         s.compact_trigger_tokens = budget_tokens
-        if s.max_context_tokens < budget_tokens * 4:
-            s.max_context_tokens = budget_tokens * 4
+        # Assemble within the REM memory window, not budget*4: compacted memory
+        # (summaries + ledger) grows with conversation length and overflows
+        # budget*4 on long-haystack items. See REM_MEMORY_WINDOW_TOKENS.
+        if s.max_context_tokens < REM_MEMORY_WINDOW_TOKENS:
+            s.max_context_tokens = REM_MEMORY_WINDOW_TOKENS
         turn_id = 0
         for sess in sessions:
             for turn in sess.turns:
