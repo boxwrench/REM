@@ -54,11 +54,14 @@ def build_result_payload(
     return payload
 
 
-def run(data: str, budget: int, limit: int | None, out: str) -> int:
-    items = load_knowledge_update(data, limit=limit)
+def run(data: str, budget: int, limit: int | None, out: str,
+        max_gold_recency: float | None = None) -> int:
+    items = load_knowledge_update(data, limit=limit, max_gold_recency=max_gold_recency)
     if not items:
         print("No knowledge-update items found.", file=sys.stderr)
         return 2
+    print(f"selected {len(items)} items; gold_recency="
+          f"{[round(it.gold_recency, 2) for it in items]}", flush=True)
 
     npu = NpuClient(Settings(summarizer_model=GEMMA))
     judge = make_judge()
@@ -125,9 +128,14 @@ def main() -> int:
     ap.add_argument("--data", required=True, help="Path to LongMemEval JSON")
     ap.add_argument("--budget", type=int, default=8000, help="Context token budget B")
     ap.add_argument("--limit", type=int, default=None, help="Max knowledge-update questions")
+    ap.add_argument("--max-gold-recency", type=float, default=None,
+                    help="Keep only items whose latest gold session is at or before "
+                         "this normalized timeline position (0=oldest, 1=newest); "
+                         "selects items where truncation drops the gold.")
     ap.add_argument("--out", default="bench/battery/spike_results.json")
     args = ap.parse_args()
-    return run(args.data, args.budget, args.limit, args.out)
+    return run(args.data, args.budget, args.limit, args.out,
+               max_gold_recency=args.max_gold_recency)
 
 
 if __name__ == "__main__":

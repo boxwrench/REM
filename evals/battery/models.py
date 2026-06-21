@@ -20,6 +20,10 @@ class QAItem:
     question_type: str
     sessions: list[Session]
     answer_session_ids: list[str]
+    # Normalized position of the latest gold session in the haystack timeline
+    # (0.0 = oldest, 1.0 = newest). Low values are the items where naive
+    # truncation drops the gold, so REM's compaction can prove its worth.
+    gold_recency: float = 1.0
 
 
 @dataclass
