@@ -1,0 +1,66 @@
+{
+  "diagnostic": "memory-overflow-breakdown",
+  "note": "non-comparative; assemble window is NOT token-matched to budget",
+  "item": "031748ae",
+  "gold_recency": 0.16326530612244897,
+  "budget_tokens": 1000,
+  "assemble_window_tokens": 64000,
+  "model_fit_tokens": 28000,
+  "ingest_secs": 4542.2,
+  "assembled_total_tokens": 40626,
+  "exceeds_model_window": true,
+  "tier_token_breakdown": {
+    "system": 16,
+    "task": 18,
+    "episodic summaries": 17940,
+    "facts ledger": 20095,
+    "verbatim transcript": 2555
+  },
+  "memory_counts": {
+    "summaries": 460,
+    "ledger_entries": 950,
+    "ledger_active": 940,
+    "verbatim_turns": 8,
+    "compactions": 460
+  },
+  "extraction": {
+    "attempts": 460,
+    "strict_parse": 429,
+    "repaired": 30,
+    "retried": 0,
+    "retry_success": 0,
+    "loops_detected": 1,
+    "loops_salvaged": 1,
+    "truncations": 11,
+    "failures": 0
+  },
+  "gold_survival": {
+    "n_gold_turns": 24,
+    "heuristic_retained": false,
+    "answer_string_present": false,
+    "gold_turns_snippet_survived": 0,
+    "salient_keyword_hits": {
+      "4": 458,
+      "5": 254,
+      "Engineer": 9,
+      "Now": 15,
+      "Senior": 4,
+      "Software": 2,
+      "When": 12
+    },
+    "gold_answer": "When you just started your new role as Senior Software Engineer, you led 4 engineers. Now, you lead 5 engineers",
+    "gold_turns_preview": [
+      "I'm planning a team outing for my engineers and I need some suggestions for fun activities in the city. Do you have any recommendations?",
+      "What a great idea! Treating your engineers to a fun team outing can be a wonderful way to boost morale, encourage bonding, and create lasting memories. I'd be happy to help you with some activity sugg",
+      "I like the outdoor games idea, maybe we can do a giant Jenga game or something similar. Do you know of any rooftop spaces in the city that can accommodate a group of 5 people?"
+    ]
+  },
+  "state_file": "bench/battery/diag_031748ae_w64k_state.json",
+  "question": "How many engineers do I lead when I just started my new role as Senior Software Engineer? How many engineers do I lead now?",
+  "timestamp": 1782523265.6390755,
+  "rem_full_answer": null,
+  "rem_full_answer_error": "NpuUnavailable: NPU service request failed at http://localhost:13306/v1/chat/completions after retry: Client error '400 Bad Request' for url 'http://localhost:13306/v1/chat/completions'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
+  "rem_fitted_answer": "You are a team lead for five engineers.",
+  "rem_fitted_judged_correct": false,
+  "rem_fitted_judge_reason": "The model's answer only states that you currently lead 5 engineers, which matches the gold answer's current number. However, the model fails to answer the first part of the question about how many engineers you led when you just started (which was 4 according to the gold answer). The model's response is incomplete and does not convey the full fact about both the initial and current numbers of engineers led."
+}
