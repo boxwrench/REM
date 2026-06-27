@@ -29,7 +29,6 @@ if str(_project_root) not in sys.path:
 
 from evals.battery.answerer import answer_question
 from evals.battery.context_managers import RemContextManager
-from evals.battery.judge import judge_answer, make_client as make_judge
 from evals.battery.longmemeval_loader import load_knowledge_update
 from rem.config import Settings
 from rem.memory.assembler import assemble
