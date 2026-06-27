@@ -34,6 +34,7 @@ from evals.battery.longmemeval_loader import load_knowledge_update
 from rem.config import Settings
 from rem.memory.facts_ledger import get_extraction_stats, reset_extraction_stats
 from rem.memory.tiers import count_tokens
+from rem.memory.tiers import MemoryState
 from rem.npu_client import NpuClient
 
 GEMMA = "gemma4-it:e2b"
@@ -120,7 +121,22 @@ def gold_survival(item, cm: RemContextManager, assembled: str) -> dict:
     }
 
 
-def run(data: str, max_gold_recency: float, out: str) -> int:
+def acquire_state(cm, load_state, item, budget_tokens):
+    """Returns (state, ingest_secs). With --load-state, loads NPU-free and skips ingest.
+
+    Otherwise runs the real ~75-min compaction on the item's sessions.
+    """
+    if load_state:
+        state = MemoryState.load(load_state)
+        cm._state = state
+        return state, 0.0
+    t0 = time.time()
+    cm.ingest(item.sessions, budget_tokens=budget_tokens)
+    return cm._state, round(time.time() - t0, 1)
+
+
+def run(data: str, max_gold_recency: float, out: str,
+        load_state: str | None = None, answer: bool = True) -> int:
     items = load_knowledge_update(data, limit=1, max_gold_recency=max_gold_recency)
     if not items:
         print("No matching knowledge-update items.", file=sys.stderr)
@@ -137,11 +153,9 @@ def run(data: str, max_gold_recency: float, out: str) -> int:
     )
 
     reset_extraction_stats()
-    t0 = time.time()
-    cm.ingest(it.sessions, budget_tokens=1000)
+    state, ingest_secs = acquire_state(cm, load_state, it, budget_tokens=1000)
     assembled = cm.assemble()
-    ingest_secs = round(time.time() - t0, 1)
-    extraction = get_extraction_stats()
+    extraction = get_extraction_stats()  # empty/zeros when state was loaded
 
     # Persist the compacted state immediately so the 75-min compaction is never
     # lost again: all further analysis can load this NPU-free.
@@ -150,7 +164,6 @@ def run(data: str, max_gold_recency: float, out: str) -> int:
     state_path = out_path.with_name(out_path.stem + "_state.json")
     cm._state.save(state_path)
 
-    state = cm._state  # diagnostic: inspect the compacted state directly
     total_tokens = count_tokens(assembled)
     breakdown = tier_breakdown(assembled)
     counts = {
@@ -243,8 +256,13 @@ def main() -> int:
     ap.add_argument("--data", required=True)
     ap.add_argument("--max-gold-recency", type=float, default=0.33)
     ap.add_argument("--out", default="bench/battery/diag_memory.json")
+    ap.add_argument("--load-state", default=None,
+                    help="Load a persisted MemoryState JSON and skip the 75-min ingest.")
+    ap.add_argument("--no-answer", dest="answer", action="store_false",
+                    help="Skip the NPU answer calls (pure-Python size/gold checks only).")
     args = ap.parse_args()
-    return run(args.data, args.max_gold_recency, args.out)
+    return run(args.data, args.max_gold_recency, args.out,
+               load_state=args.load_state, answer=args.answer)
 
 
 if __name__ == "__main__":
