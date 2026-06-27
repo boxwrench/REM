@@ -32,7 +32,9 @@ from evals.battery.context_managers import RemContextManager
 from evals.battery.judge import judge_answer, make_client as make_judge
 from evals.battery.longmemeval_loader import load_knowledge_update
 from rem.config import Settings
+from rem.memory.assembler import assemble
 from rem.memory.facts_ledger import get_extraction_stats, reset_extraction_stats
+from rem.memory.selector import RecencySelector
 from rem.memory.tiers import count_tokens
 from rem.memory.tiers import MemoryState
 from rem.npu_client import NpuClient
@@ -135,8 +137,26 @@ def acquire_state(cm, load_state, item, budget_tokens):
     return cm._state, round(time.time() - t0, 1)
 
 
+def fit_with_selector(state, question, settings):
+    """Fit the compacted state to settings.read_fit_tokens via RecencySelector.
+
+    Returns (fitted_text, fitted_tokens) using the same assemble() the real read
+    path uses, so the size reflects what the model would receive.
+    """
+    fitted_state = RecencySelector().select(state, question, settings.read_fit_tokens)
+    fitted_text = assemble(fitted_state, system="", task=question)
+    return fitted_text, count_tokens(fitted_text)
+
+
+def gold_in_fitted(fitted_text: str, needles: list[str]) -> dict[str, bool]:
+    """Whether each gold needle survives into the fitted slice (case-insensitive)."""
+    low = fitted_text.lower()
+    return {n: n.lower() in low for n in needles}
+
+
 def run(data: str, max_gold_recency: float, out: str,
-        load_state: str | None = None, answer: bool = True) -> int:
+        load_state: str | None = None, answer: bool = True,
+        gold_needles: list[str] | None = None) -> int:
     items = load_knowledge_update(data, limit=1, max_gold_recency=max_gold_recency)
     if not items:
         print("No matching knowledge-update items.", file=sys.stderr)
@@ -201,6 +221,8 @@ def run(data: str, max_gold_recency: float, out: str,
         "rem_fitted_answer": None,
         "rem_fitted_judged_correct": None,
         "rem_fitted_judge_reason": None,
+        "rem_fitted_tokens": None,
+        "gold_in_fitted": None,
     }
 
     def _write():
@@ -230,23 +252,29 @@ def run(data: str, max_gold_recency: float, out: str,
     _write()
     print(f"full-memory answer: {payload['rem_full_answer'] or payload['rem_full_answer_error']}")
 
-    # Answer attempt 2: fitted to the model window (keep head: summaries+ledger
-    # come first in the assembler order). Tests whether the gold is *reachable*
-    # in the compacted tiers given a model-sized read budget.
-    fitted = assembled if total_tokens <= MODEL_FIT_TOKENS else assembled[: MODEL_FIT_TOKENS * 4]
-    try:
-        ans = answer_question(npu, context=fitted, question=it.question).strip()
-        judge = make_judge()
-        verdict = judge_answer(judge, question=it.question, gold=it.answer, model_answer=ans)
-        payload["rem_fitted_answer"] = ans
-        payload["rem_fitted_judged_correct"] = verdict.correct
-        payload["rem_fitted_judge_reason"] = verdict.reason
-    except Exception as e:  # noqa: BLE001
-        payload["rem_fitted_judge_reason"] = f"answer/judge failed: {type(e).__name__}: {e}"
+    # Answer attempt 2: the REAL bounded read path. Fit via the selector, check the
+    # gold survives the fit, then (optionally) answer. Step 0 PASS = fits budget +
+    # gold present + an answer returned (judged correctness deferred; see spec).
+    settings = Settings(summarizer_model=GEMMA)
+    fitted, fitted_tokens = fit_with_selector(state, it.question, settings)
+    # Faithful two-word gold needles come from --gold-needle; fall back to the
+    # (looser, single-token) salient scan only if none were given.
+    needles = gold_needles or sorted(survival["salient_keyword_hits"] or {})
+    gold_hits = gold_in_fitted(fitted, needles)
+    payload["rem_fitted_tokens"] = fitted_tokens
+    payload["gold_in_fitted"] = gold_hits
     _write()
+    print(f"fitted_tokens: {fitted_tokens} (budget {settings.read_fit_tokens})  "
+          f"gold_in_fitted: {gold_hits}")
 
-    print(f"fitted({MODEL_FIT_TOKENS}tok) correct: {payload['rem_fitted_judged_correct']}  "
-          f"answer: {(payload['rem_fitted_answer'] or '')[:200]}")
+    if answer:
+        try:
+            ans = answer_question(npu, context=fitted, question=it.question).strip()
+            payload["rem_fitted_answer"] = ans
+        except Exception as e:  # noqa: BLE001
+            payload["rem_fitted_judge_reason"] = f"answer failed: {type(e).__name__}: {e}"
+        _write()
+        print(f"fitted answer: {(payload['rem_fitted_answer'] or '')[:200]}")
     print(f"Written to {out}")
     return 0
 
@@ -260,9 +288,13 @@ def main() -> int:
                     help="Load a persisted MemoryState JSON and skip the 75-min ingest.")
     ap.add_argument("--no-answer", dest="answer", action="store_false",
                     help="Skip the NPU answer calls (pure-Python size/gold checks only).")
+    ap.add_argument("--gold-needle", dest="gold_needles", action="append", default=None,
+                    help="Exact gold substring that must survive the fit (repeatable, "
+                         "e.g. --gold-needle '4 engineers' --gold-needle '5 engineers').")
     args = ap.parse_args()
     return run(args.data, args.max_gold_recency, args.out,
-               load_state=args.load_state, answer=args.answer)
+               load_state=args.load_state, answer=args.answer,
+               gold_needles=args.gold_needles)
 
 
 if __name__ == "__main__":
