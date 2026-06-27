@@ -279,6 +279,8 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 
 ### Task 2: `--load-state` on `diagnose_memory.py` (skip the 75-min ingest)
 
+> **STATUS: COMPLETE** (commit `5bad116`, diff verified). 1 load-state test passes; full NPU-free suite 150 passed. Resume execution at Task 3.
+
 **Files:**
 - Modify: `evals/battery/diagnose_memory.py` (`run` signature, state acquisition, `main` argparse)
 - Test: `tests/unit/test_diagnose_load_state.py`
