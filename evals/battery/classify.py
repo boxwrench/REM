@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import Counter
 from dataclasses import dataclass, field
@@ -35,14 +36,38 @@ CATEGORIES = (
 )
 
 _OVERFLOW_MARKER = "context overflow"
-_AMBIGUOUS_MARKERS = (
-    "ambiguous", "unclear", "cannot determine", "can't determine",
-    "unable to determine", "partially",
+# Words that reliably mean the *judge* was unsure about correctness.
+_AMBIGUOUS_WORDS = ("ambiguous", "unclear", "partially")
+# "<x> cannot determine ..." only signals judge ambiguity when the judge is the
+# subject. When the model/answer is the subject ("the model cannot determine
+# the value"), it describes an answer failure, not judge uncertainty.
+_DETERMINE_RE = re.compile(
+    r"(?:cannot|can't|could not|couldn't|unable to|not able to)\s+determine"
 )
+_MODEL_SUBJECT_RE = re.compile(r"\b(?:model|assistant|response|answer|ai)\b")
 _STALE_MARKERS = (
     "stale", "outdated", "old value", "previous value", "superseded",
     "no longer", "earlier value",
 )
+
+
+def _is_judge_ambiguity(reason: str) -> bool:
+    """True when the judge itself expresses uncertainty about correctness.
+
+    Separates the judge being unsure ("the grading is ambiguous", "I cannot
+    determine if this is correct") from the judge stating that the *model* could
+    not determine something ("the model cannot determine X") — the latter is an
+    answer failure, not judge ambiguity, and must not divert the architecture
+    recommendation toward "fix the judge".
+    """
+    if any(w in reason for w in _AMBIGUOUS_WORDS):
+        return True
+    m = _DETERMINE_RE.search(reason)
+    if not m:
+        return False
+    # A model/answer subject just before the phrase means the model (not the
+    # judge) is what "cannot determine" -> not judge ambiguity.
+    return _MODEL_SUBJECT_RE.search(reason[: m.start()][-40:]) is None
 
 
 def classify_miss(run: dict, *, run_valid: bool = True) -> str:
@@ -58,7 +83,7 @@ def classify_miss(run: dict, *, run_valid: bool = True) -> str:
     if extraction.get("failures", 0) > 0:
         return "extraction_drop"
 
-    if any(m in reason for m in _AMBIGUOUS_MARKERS):
+    if _is_judge_ambiguity(reason):
         return "judge_ambiguity"
     if any(m in reason for m in _STALE_MARKERS):
         return "stale_ghost"

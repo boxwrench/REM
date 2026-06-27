@@ -73,6 +73,26 @@ def test_unrecoverable_response_counts_failure(mock_npu):
     assert stats["failures"] == 1
 
 
+def test_initial_api_failure_counts_as_failure(mock_npu):
+    # When the model endpoint rejects the request outright (e.g. HTTP 400
+    # "Max length reached!"), client.chat() raises before any JSON pipeline runs.
+    # That is still an extraction failure and must be counted, not hidden as
+    # attempts=1/failures=0.
+    reset_extraction_stats()
+    client = NpuClient()
+    turns = [Turn(role="user", content="anything", turn_id=1, tokens=2)]
+    mock_npu.post("/v1/chat/completions").mock(
+        return_value=httpx.Response(400, json={"error": {"message": "Max length reached!"}})
+    )
+
+    with pytest.raises(FactsExtractionError):
+        extract_facts(turns, client, deterministic_fact_capture=False)
+
+    stats = get_extraction_stats()
+    assert stats["attempts"] == 1
+    assert stats["failures"] == 1
+
+
 def test_truncated_failure_counts_truncation(mock_npu):
     reset_extraction_stats()
     client = NpuClient()

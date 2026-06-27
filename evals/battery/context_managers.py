@@ -75,14 +75,20 @@ class TruncationContextManager:
 REM_SYSTEM = "You are a helpful assistant with long-term memory."
 REM_TASK = "Answer the user's question using the conversation memory."
 
-# REM's assembled memory (summaries + facts ledger + recent window) must fit a
-# fixed memory window, NOT budget*4. The ledger and summaries grow with
-# conversation length, so for long-haystack items budget*4 (e.g. 4000 at
-# budget 1000) overflows and the arm cannot answer. 16k matches the reserved
-# memory region in the architecture spec (§3: 32k window, 16k for memory).
-# NOTE: this gives the REM arm more context than the truncation budget, so the
-# comparison is not token-matched — it isolates write/read recall from
-# token-efficiency. Budget-bounded memory (eviction) is the follow-up.
+# REM's assembled memory (summaries + facts ledger + recent window) is rendered
+# in full by the assembler: the ledger and summaries grow with conversation
+# length and are NOT bounded. 16k is the reserved memory region from the
+# architecture spec (§3: 32k window, 16k for memory), used here as the assemble
+# ceiling instead of budget*4.
+#
+# WARNING — this does NOT fix the overflow on long-haystack knowledge-update
+# items. Measured compacted memory there is 37k–58k tokens (see
+# bench/battery/FINDINGS.md and bench/battery/diag_031748ae_w64k.json), which
+# exceeds both this 16k ceiling AND the answering model's own context window
+# (~32–40k; it returns HTTP 400 "Max length reached!"). REM therefore still
+# raises ContextLimitExceeded and cannot answer on these items. Making REM
+# answer requires a bounded read path (retrieval/eviction that fits memory to
+# the model window), not a larger ceiling. Tracked as the next architecture gate.
 REM_MEMORY_WINDOW_TOKENS = 16000
 
 
