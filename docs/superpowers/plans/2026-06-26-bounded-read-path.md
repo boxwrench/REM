@@ -426,6 +426,8 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 
 ### Task 3: Selector-based fitted answer + gold-in-fitted-slice check
 
+> **STATUS: COMPLETE** (commit `ef3358c`, diff verified). 2 fit tests pass; full NPU-free suite 152 passed. Resume execution at Task 4.
+
 **Files:**
 - Modify: `evals/battery/diagnose_memory.py` (the "Answer attempt 2 / fitted" block, ~lines 220-236; payload fields ~lines 187-191)
 - Test: `tests/unit/test_diagnose_fit.py`
