@@ -23,6 +23,8 @@
 
 ### Task 1: `read_fit_tokens` setting + `RecencySelector`
 
+> **STATUS: COMPLETE** (commits `b62eda5..e453946`, diff verified). 6 selector tests pass; full NPU-free suite 149 passed. Resume execution at Task 2.
+
 **Files:**
 - Modify: `src/rem/config.py:35-40` (add one setting)
 - Create: `src/rem/memory/selector.py`
@@ -254,12 +256,12 @@ class RecencySelector:
 - [ ] **Step 5: Run the tests to verify they pass**
 
 Run: `PYTHONPATH=.:src python3 -m pytest tests/unit/test_selector.py -q`
-Expected: PASS (7 passed).
+Expected: PASS (6 passed).
 
 - [ ] **Step 6: Run the full NPU-free suite (no regressions)**
 
 Run: `PYTHONPATH=.:src python3 -m pytest -m 'not npu' -q`
-Expected: PASS — prior 143 passed plus the 7 new = 150 passed.
+Expected: PASS — prior 143 passed plus the 6 new = 149 passed.
 
 - [ ] **Step 7: Commit**
 
@@ -573,7 +575,7 @@ Expected: PASS (2 passed).
 - [ ] **Step 6: Run the full NPU-free suite**
 
 Run: `PYTHONPATH=.:src python3 -m pytest -m 'not npu' -q`
-Expected: PASS — 153 passed (143 baseline + 7 selector + 1 load-state + 2 fit; no regressions).
+Expected: PASS — 152 passed (143 baseline + 6 selector + 1 load-state + 2 fit; no regressions).
 
 - [ ] **Step 7: Commit**
 
