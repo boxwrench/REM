@@ -1,0 +1,79 @@
+{
+  "eval": "battery-spike",
+  "bench": "LongMemEval/knowledge-update",
+  "answerer": "gemma4-it:e2b",
+  "judge": "claude-haiku-4-5",
+  "budget_tokens": 1000,
+  "n_questions": 1,
+  "valid": true,
+  "invalid_reason": "",
+  "arm_accuracy": {
+    "truncation": 0.0,
+    "rem": 0.0
+  },
+  "arm_evidence_retention": {
+    "truncation": 0.0,
+    "rem": 0.0
+  },
+  "arm_extraction": {
+    "rem": {
+      "attempts": 460,
+      "strict_parse": 429,
+      "repaired": 30,
+      "retried": 0,
+      "retry_success": 0,
+      "loops_detected": 1,
+      "loops_salvaged": 1,
+      "truncations": 11,
+      "failures": 0
+    }
+  },
+  "runs": [
+    {
+      "question_id": "031748ae",
+      "arm": "truncation",
+      "assembled_tokens": 706,
+      "evidence_retained": false,
+      "model_answer": "The provided memory does not contain information about how many engineers you lead.",
+      "judged_correct": false,
+      "judge_reason": "The model's answer states that the information is not available in memory, but the gold answer provides specific numbers (4 engineers when starting, 5 engineers now). The model failed to retrieve or access the relevant information that was supposedly in the memory/context, making it factually incorrect compared to the gold answer.",
+      "extraction": null
+    },
+    {
+      "question_id": "031748ae",
+      "arm": "rem",
+      "assembled_tokens": 0,
+      "evidence_retained": false,
+      "model_answer": "",
+      "judged_correct": false,
+      "judge_reason": "context overflow: Assembled context tokens (40626) exceeds maximum limit (16000).",
+      "extraction": {
+        "attempts": 460,
+        "strict_parse": 429,
+        "repaired": 30,
+        "retried": 0,
+        "retry_success": 0,
+        "loops_detected": 1,
+        "loops_salvaged": 1,
+        "truncations": 11,
+        "failures": 0
+      }
+    }
+  ],
+  "timestamp": 1782074222.6846848,
+  "classification": {
+    "n_rem_misses": 1,
+    "counts": {
+      "budget_invalid": 0,
+      "context_overflow": 1,
+      "extraction_drop": 0,
+      "judge_ambiguity": 0,
+      "stale_ghost": 0,
+      "answerer_failure": 0,
+      "summary_loss": 0
+    },
+    "dominant": "context_overflow",
+    "caveats": [],
+    "recommendation": "Misses dominated by context_overflow: fix the harness (budget/assembly or judge prompt) before diagnosing memory."
+  }
+}

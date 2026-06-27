@@ -51,6 +51,26 @@ def test_summary_loss_when_evidence_absent_and_no_extraction_failure():
     assert classify_miss(run, run_valid=True) == "summary_loss"
 
 
+def test_genuine_judge_uncertainty_is_judge_ambiguity():
+    # The judge itself is unsure -> judge_ambiguity is correct.
+    for reason in (
+        "The grading is ambiguous; the answer could match either value.",
+        "It is unclear whether the answer refers to the updated figure.",
+        "I cannot determine whether this answer is correct from the gold.",
+    ):
+        assert classify_miss(_miss(judge_reason=reason), run_valid=True) == "judge_ambiguity"
+
+
+def test_model_cannot_determine_is_not_judge_ambiguity():
+    # The judge is CERTAIN the model failed; "cannot determine" describes the
+    # MODEL's answer, not the judge's uncertainty. Must not be judge_ambiguity.
+    reason = "Incorrect: the model cannot determine the number of engineers from the memory."
+    assert classify_miss(_miss(judge_reason=reason, evidence_retained=False),
+                         run_valid=True) == "summary_loss"
+    assert classify_miss(_miss(judge_reason=reason, evidence_retained=True),
+                         run_valid=True) == "answerer_failure"
+
+
 def test_budget_invalid_takes_precedence():
     # An invalid run cannot be diagnosed, even if it has an extraction failure.
     run = _miss(extraction={"attempts": 2, "failures": 1, "truncations": 0})

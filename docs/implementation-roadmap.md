@@ -109,9 +109,14 @@ The milestone is complete when the repo contains:
   (`bench/battery/FINDINGS.md`).
 
 Outstanding before a memory-quality verdict: the first valid run is blocked by
-REM `context_overflow` (its compacted memory exceeds `max_context_tokens =
-budget×4` on ~500-turn items), so it scores 0/5 without ever answering. The
-classifier flagged this; fix the assembly ceiling / memory growth, then re-run.
+REM `context_overflow`. Its compacted memory on the five oldest-gold items is
+36,977–58,150 tokens (the assembler renders the full ledger + all summaries with
+no size bound), so it scores 0/5 without ever answering. Raising the assemble
+ceiling does NOT fix this: the memory exceeds 16k on all five, and the larger
+items exceed the answering model's own ~32–40k window (HTTP 400 "Max length
+reached!"). The real fix is a bounded read path (retrieval/eviction that fits
+memory to the model window), which is the item-7 architecture gate — not a
+ceiling tweak. See `bench/battery/FINDINGS.md`.
 
 ## Suggested Commands
 

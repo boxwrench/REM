@@ -1059,6 +1059,10 @@ def extract_facts(
     try:
         response_text = client.chat(messages, max_tokens=client.settings.npu_max_tokens)
     except Exception as exc:
+        # An API-level failure (e.g. HTTP 400 "Max length reached!") is still an
+        # extraction failure: count it so observability is not defeated by the
+        # request never reaching the JSON pipeline that records failures below.
+        _extraction_stats["failures"] += 1
         raise FactsExtractionError(f"First fact extraction API call failed: {exc}") from exc
 
     from rem.memory.robust_extract import robust_extract_json

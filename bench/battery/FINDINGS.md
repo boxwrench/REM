@@ -50,28 +50,55 @@ retention), so `valid_b1000_oldgold.json` is the first valid run.
 
 The classifier's recommendation stands: fix the harness before diagnosing memory.
 
-## The overflow: root cause and repair
+## The overflow: root cause, and why the 16k "repair" does not fix it
 
-Reproduced NPU-free: a ~500-turn item compacts to ~82 episodic summaries (~2949
-tokens) + ~164 ledger facts (~3475 tokens) = ~6642 tokens, against the REM arm's
-`max_context_tokens = budget×4 = 4000`. The assembler renders the ledger in full
-and all summaries with no size bound, so REM's compacted memory grows with
-conversation length. This is a scaling gap, not merely a small config ceiling:
-the verbatim tier is bounded but summaries + ledger are not.
+Root cause: the assembler renders the facts ledger in full and every episodic
+summary with no size bound, so REM's compacted memory grows with conversation
+length. The verbatim tier is bounded but summaries + ledger are not. This is a
+scaling gap, not a small config ceiling.
 
-Repair (diagnostic-first): assemble the REM arm within a fixed memory window
-`REM_MEMORY_WINDOW_TOKENS = 16000` (the reserved memory region from the
-architecture spec §3) instead of `budget×4`. This unblocks assembly so the arm
-can answer, and isolates write/read recall from token-efficiency.
+The actual magnitude (from the artifact's own overflow messages, corroborated by
+the canary and `diag_031748ae_w64k.json`): on the five oldest-gold items REM's
+assembled memory is **36,977 – 58,150 tokens**:
 
-Caveat: the REM arm now gets up to 16k of context while truncation gets the
-budget, so the comparison is **not token-matched**. It answers "does the gold
-survive compaction at all?" Budget-bounded memory (eviction so summaries + ledger
-fit ~budget) is the follow-up if write recall holds.
+| item | assembled tokens |
+|---|---|
+| 9bbe84a2 | 36,977 |
+| 031748ae | 40,565 |
+| 3ba21379 | 50,529 |
+| cc5ded98 | 54,790 |
+| c6853660 | 58,150 |
+
+An earlier note here estimated ~6.6k from a synthetic reproduction; that
+under-counted by 6×. Raising the assemble ceiling from `budget×4 = 4000` to
+`REM_MEMORY_WINDOW_TOKENS = 16000` (spec §3 reserved region) **does not unblock
+assembly** — all five still exceed 16k, so REM still raises
+`ContextLimitExceeded` and answers nothing. The 16k change only moves the
+ceiling; it does not bound the memory.
+
+Worse, the larger items (50k–58k) exceed the **answering model's own context
+window** (~32–40k): `gemma4-it:e2b` returns HTTP 400 `"Max length reached!"`
+above that. So even with an unbounded assemble ceiling, the model cannot read
+REM's compacted memory on long items. Compaction here re-encodes the history at
+similar scale rather than compressing it to a consumable size.
+
+## What this means for the gate
+
+REM cannot answer these items until it has a **bounded read path** — retrieval
+or eviction that fits the assembled memory to the model window (~28k after
+question/answer headroom), selecting which summaries/facts to include. That is a
+design change, not a ceiling tweak, and is the next architecture gate (roadmap
+item 7). A token-matched REM-vs-truncation comparison is only meaningful once
+that exists.
 
 ## Next
 
-Re-run `--budget 1000 --max-gold-recency 0.33`. Expect the REM misses to move out
-of `context_overflow` into a diagnostic bucket: `summary_loss`/`stale_ghost`
-(gold lost in compaction → graph-architecture signal) or `answerer_failure`
-(gold present, model missed it → memory is not the bottleneck).
+1. Diagnostic (`evals/battery/diagnose_memory.py`, artifact
+   `diag_031748ae_w64k.json`): with a large assemble window, measure the per-tier
+   breakdown (which store dominates the 40k), whether the gold survived
+   compaction, and whether a model-fitting head-slice can still recall it. This
+   decides whether the problem is read-path-only (gold survived) or also a
+   write-recall/summary-fidelity problem (gold lost).
+2. Then choose the P1 fix scope: a bounded read path so the five-item battery can
+   produce a token-matched comparison, vs. recording the read-path overflow as
+   the architecture verdict.
