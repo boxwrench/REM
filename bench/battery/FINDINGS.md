@@ -91,14 +91,56 @@ design change, not a ceiling tweak, and is the next architecture gate (roadmap
 item 7). A token-matched REM-vs-truncation comparison is only meaningful once
 that exists.
 
-## Next
+## Diagnostic result (item 031748ae)
 
-1. Diagnostic (`evals/battery/diagnose_memory.py`, artifact
-   `diag_031748ae_w64k.json`): with a large assemble window, measure the per-tier
-   breakdown (which store dominates the 40k), whether the gold survived
-   compaction, and whether a model-fitting head-slice can still recall it. This
-   decides whether the problem is read-path-only (gold survived) or also a
-   write-recall/summary-fidelity problem (gold lost).
-2. Then choose the P1 fix scope: a bounded read path so the five-item battery can
-   produce a token-matched comparison, vs. recording the read-path overflow as
-   the architecture verdict.
+`evals/battery/diagnose_memory.py` ran the real compaction with a 64k assemble
+window so the memory rendered, then inspected it. Artifacts:
+`diag_031748ae_w64k.json` (summary) and `diag_031748ae_w64k_state.json` (the full
+compacted `MemoryState`, 817K — re-analyzable NPU-free). Ingest took 4,542s
+(~75 min) for this one item at budget 1000.
+
+Tier breakdown of the 40,626-token assembled memory:
+
+| tier | tokens | share | size |
+|---|---|---|---|
+| facts ledger | 20,095 | 49% | 950 entries (940 active) |
+| episodic summaries | 17,940 | 44% | 460 summaries (= 460 compactions) |
+| verbatim transcript | 2,555 | 6% | 8 turns |
+
+The ledger and summaries are 93% of memory and both grow with conversation
+length; verbatim is correctly bounded. Extraction was clean: 460 attempts, 0
+failures, 429 strict-parse, 30 repaired, 11 truncations.
+
+**Write recall worked.** Both target values survived compaction:
+- "4 engineers" — ledger turn12 `team members.count='4 engineers plus manager
+  Rachel'`; summaries turn11/12 ("consist of 4 engineers and Rachel").
+- "5 engineers" — ledger turns 5/67/74 (`team.size='5 engineers'`); summaries
+  turn5/67.
+
+**The miss is read-path, two ways:**
+1. Size — 40,626 tokens exceeds the 16k ceiling and the answering model's own
+   ~32–40k window. The full-memory answer attempt returned HTTP 400 "Max length
+   reached!".
+2. Structure — fitted to a 28k head-slice (which *contained* "4 engineers" via
+   the summaries), REM still answered only "five engineers" and was judged wrong:
+   the question asks for the starting count *and* now, but the flat ledger +
+   prose summaries scatter 4 and 5 across unrelated contexts with no temporal
+   "started → now" link.
+
+Caveat (why n=1 is not decisive): this item's source is itself ambiguous. In the
+conversation "4 engineers" is the team-*outing* headcount ("4 engineers + manager
+Rachel"), which LongMemEval's gold treats as the "when you started" count. REM
+recorded the conversation faithfully; the "started with 4" framing is an
+inference the dataset expects, not a stated fact. A bitemporal graph helps with
+genuine then/now updates but would not by itself resolve this item's ambiguity.
+
+## Verdict and next
+
+Status: documented and paused (no five-item rerun). The gate has produced a clear
+read-path finding but not a memory-quality verdict, and a single dissected item is
+too messy to choose an architecture on. Outstanding decision (deferred to a
+focused session): either add a bounded read path (retrieval/eviction that fits
+memory to the model window) and rerun the five-item battery to get the failure
+*mix* before choosing — vs. starting the graph-resident read path on the strength
+of the read-path size finding alone. The 950-entry ledger bloat needs addressing
+either way.
