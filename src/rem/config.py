@@ -37,6 +37,10 @@ class Settings(BaseSettings):
     compact_span_turns: int = 6
     keep_recent_turns: int = 8
     max_context_tokens: int = 32000
+    # Read path (bounded assembly). Target for the fitted read budget; kept under
+    # the answering model's ~32-40k window so it never returns HTTP 400. Distinct
+    # from max_context_tokens, which is the assemble safety ceiling.
+    read_fit_tokens: int = 28000
     deterministic_fact_capture: bool = True
 
     # Wiki parameters (Path B)
