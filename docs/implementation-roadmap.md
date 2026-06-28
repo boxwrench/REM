@@ -167,3 +167,30 @@ The budget above is a placeholder. The artifact only counts if `valid: true`.
   adding worker extraction.
 
 Those are important, but they should not displace the recall proof.
+
+## Post-Gate Method Evaluation Queue (added 2026-06-27)
+
+These evaluations begin only after the bounded read path produces a gradeable
+native REM result. They are comparisons, not permission to replace the current
+architecture. The full intake and acceptance contracts live in the Tesla repo
+under `projects/rem-methods-evaluation/`.
+
+1. **Run TencentDB Agent Memory as a black-box comparator.** Feed it the same
+   fixed valid LongMemEval `knowledge-update` subset, budget, prompts, and
+   scoring used for native REM. Record recall, retained evidence, stale-ghost
+   failures, injected tokens, latency, and provenance. End with a
+   keep/borrow/reject note. Do not integrate its plugin or storage code during
+   the comparison.
+2. **Test DREAM-0.5B as an embedding challenger.** After the current
+   Qwen3-Embedding-0.6B baseline is wired into the relevant identity/retrieval
+   path, compare both models on a frozen paraphrase, unseen-vocabulary,
+   same-slot/different-slot, and stale-update fixture. Run DREAM through
+   Transformers/PEFT first. Convert to GGUF only if it wins the preregistered
+   quality threshold without exceeding the 400 ms p95 retrieval target.
+3. **Borrow mechanisms only on measured evidence.** Candidate mechanisms are
+   provenance drill-down, progressive disclosure, and hybrid lexical/dense
+   retrieval. Any architectural change driven by these comparisons requires a
+   new versioned proposal; do not silently revise the current spec.
+
+DSpark, JetSpec, FastContext, TS-ICL, MiniMax MSA, DAPO, and the social-archive
+design are not REM roadmap items.
