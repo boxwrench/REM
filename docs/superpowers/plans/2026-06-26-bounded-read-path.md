@@ -597,7 +597,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 
 ### Task 4: Run Step 0 against the persisted state + record the result
 
-> **STATUS: COMPLETE** (commit `b3deb3d`). Step 0 verdict: **FAIL** on the §5 bar by the budget criterion alone — fitted 28,121 vs 28,000 (+121, 0.43% over). Gold survived (both needles) and the model returned an answer, so the fit turns the 40,626-token overflow into an answerable read. Recorded unpatched (spec D2); `SELECTOR_RESERVE_TOKENS` calibration noted as the follow-up lever. Plan complete.
+> **STATUS: COMPLETE** (first run `b3deb3d`; budget fix `0e15ccd`; re-run `13924a2`). Step 0 verdict: **PASS** on the §5 bar. First run FAILED by +121 (fitted 28,121 vs 28,000) because the selector estimates costs without rendering (D1). Fix: `fit_with_selector` measures the assembled cost and trims the lowest-priority tiers to the budget, leaving the protected slot+verbatim floor (and the gold) intact; `selector.py` unchanged. Re-run fits at 27,996, both gold needles present, answer returned. Honest caveat in FINDINGS: trimming dropped context the model had used, so the answer degraded to a refusal (judged correctness deferred, spec §2). Plan complete.
 
 **Files:**
 - Read: `bench/battery/diag_031748ae_w64k_state.json` (the 836K persisted state)
