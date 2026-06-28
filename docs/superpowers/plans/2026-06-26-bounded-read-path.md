@@ -597,6 +597,8 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 
 ### Task 4: Run Step 0 against the persisted state + record the result
 
+> **STATUS: COMPLETE** (commit `b3deb3d`). Step 0 verdict: **FAIL** on the §5 bar by the budget criterion alone — fitted 28,121 vs 28,000 (+121, 0.43% over). Gold survived (both needles) and the model returned an answer, so the fit turns the 40,626-token overflow into an answerable read. Recorded unpatched (spec D2); `SELECTOR_RESERVE_TOKENS` calibration noted as the follow-up lever. Plan complete.
+
 **Files:**
 - Read: `bench/battery/diag_031748ae_w64k_state.json` (the 836K persisted state)
 - Create: `bench/battery/step0_031748ae.json` (the run output)
