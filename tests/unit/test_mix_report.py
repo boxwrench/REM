@@ -1,0 +1,61 @@
+"""mix_report labels each item's read-path miss NPU-free."""
+from rem.config import Settings
+from rem.memory.facts_ledger import FactEntry, FactsLedger
+from rem.memory.tiers import MemoryState, SpanSummary, Turn
+from evals.battery.mix_report import label_item
+
+
+def _slot_gold():
+    entries = [
+        FactEntry(kind="number", text="team size is 5 engineers", source_turn_id=74,
+                  status="active", slot_key="team.size", slot_value="5 engineers"),
+        FactEntry(kind="number", text="outing had 4 engineers", source_turn_id=12,
+                  status="active", slot_key="team_members.count", slot_value="4 engineers"),
+    ]
+    return MemoryState(turns=[Turn(role="user", content="now?", turn_id=900, tokens=2)],
+                       summaries=[], ledger=FactsLedger(entries=entries))
+
+
+def test_label_retrieval_recall_when_needle_absent():
+    settings = Settings(read_fit_tokens=4000)
+    # gold "5 engineers" present; "9 engineers" never in memory -> absent -> recall miss
+    out = label_item(_slot_gold(), "headcount?", "5 engineers",
+                     ["5 engineers", "9 engineers"], settings)
+    assert out["fits_budget"] is True
+    assert out["gold_in_fitted"]["9 engineers"] is False
+    assert out["failure_mode"] == "retrieval-recall"
+
+
+def test_label_needs_answer_when_all_present_no_answerer():
+    settings = Settings(read_fit_tokens=4000)
+    out = label_item(_slot_gold(), "headcount?", "5 engineers",
+                     ["4 engineers", "5 engineers"], settings)
+    assert out["failure_mode"] == "needs-answer"
+    assert out["needle_tiers"]["5 engineers"] == "slot"
+
+
+def test_label_size_when_protected_floor_exceeds_budget():
+    # 200 distinct protected slots blow a tiny budget; cannot fit even minimal.
+    entries = [FactEntry(kind="number", text=f"metric {i} is forty two units here",
+                         source_turn_id=i, status="active",
+                         slot_key=f"m.{i}", slot_value=str(i)) for i in range(200)]
+    entries.append(FactEntry(kind="number", text="team size is 5 engineers",
+                             source_turn_id=999, status="active",
+                             slot_key="team.size", slot_value="5 engineers"))
+    state = MemoryState(turns=[], summaries=[], ledger=FactsLedger(entries=entries))
+    settings = Settings(read_fit_tokens=800)
+    out = label_item(state, "headcount?", "5 engineers", ["5 engineers"], settings)
+    assert out["fits_budget"] is False
+    assert out["failure_mode"] == "size"
+
+
+def test_label_pass_and_temporal_with_injected_answerer():
+    settings = Settings(read_fit_tokens=4000)
+    good = label_item(_slot_gold(), "headcount?", "5 engineers",
+                      ["4 engineers", "5 engineers"], settings,
+                      answerer=lambda ctx, q: "you lead 5 engineers")
+    assert good["failure_mode"] == "pass"
+    bad = label_item(_slot_gold(), "headcount?", "5 engineers",
+                     ["4 engineers", "5 engineers"], settings,
+                     answerer=lambda ctx, q: "the memory does not say")
+    assert bad["failure_mode"] == "temporal-structure"
