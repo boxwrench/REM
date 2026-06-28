@@ -29,6 +29,28 @@ useful facts better than simply truncating old context. Until that is shown, the
 elegant placement is solving a problem whose end-user recall advantage remains
 unproven.
 
+## Progress (updated 2026-06-27)
+
+The gate is resolved. The bounded read path was built and validated, the first
+valid run answers instead of overflowing, and the five-item failure mix has been
+read. The architecture decision (item 7) is settled for now: keep the tuned read
+path; the mix does not justify the graph rebuild.
+
+- **Bounded read path (Step 0): PASS.** `RecencySelector` + `REM_READ_FIT_TOKENS`
+  fit compacted memory to budget; `fit_with_selector` measures the assembled cost
+  and trims the lowest-priority tiers so it honestly fits, leaving the protected
+  slot+verbatim floor (the gold) intact. On 031748ae: 40,626 → 27,996 tokens, gold
+  preserved, model answers (no HTTP 400). See `bench/battery/FINDINGS.md` "Step 0".
+- **Failure mix (five oldest-gold items): read path holds 4/5.** All five fit the
+  budget (27,891–27,999) — size is not a failure mode. Mix: 4 pass, 1
+  temporal-structure (031748ae, the dataset-ambiguous item), 0 retrieval-recall.
+  Per-item states captured NPU-free-reusable under `bench/battery/states/`; labels
+  in `bench/battery/mix_report.json`. See `bench/battery/FINDINGS.md` "Failure mix".
+- **Next levers (not the graph):** write-recall / extraction quality (the capture
+  surfaced malformed-entry skipping and slot-key fragmentation), and a larger
+  token-matched *unambiguous* item set to confirm whether temporal-structure
+  recurs on clean items. Slot-value-aware needle matching is a methodology fix.
+
 ## Progress (updated 2026-06-20)
 
 The measurement apparatus for this gate is now in place; the remaining work is
@@ -86,12 +108,17 @@ running the battery on real data and reading the result.
    `evals/battery/classify.py` buckets misses and maps the dominant bucket to the
    item-7 branch; the runner embeds this classification in every artifact.
 
-7. **Choose the next architecture from the failure mix.** _[pending real data]_
-   If failures are mostly malformed JSON or extraction drops, keep the near-term
-   work on write robustness. If failures are mostly prose-summary corruption,
-   stale ghosts, or retrieval/read-path ambiguity, start the graph-resident
-   architecture with Phase 0 and Phase 1 from
-   [`REM-memory-architecture-spec.md`](REM-memory-architecture-spec.md).
+7. **Choose the next architecture from the failure mix.** _[resolved 2026-06-27 —
+   keep the read path]_
+   The five-item mix is in: the bounded read path fits all five and answers 4/5
+   correctly; the lone miss is a then→now link on the dataset-ambiguous item, not
+   summary corruption or read-path size. That is thin evidence for the graph
+   rebuild, and the architecture spec's own guidance (rows 36, 42–45) is to
+   validate read recall and fix write recall before assuming the graph helps. The
+   capture surfaced write-side noise (malformed entries, slot-key fragmentation),
+   so the near-term work stays on write robustness and a cleaner item set, not the
+   graph. Revisit the graph if temporal-structure failures recur on unambiguous
+   items. See `bench/battery/FINDINGS.md` "Failure mix".
 
 ## Acceptance Criteria
 
@@ -108,15 +135,13 @@ The milestone is complete when the repo contains:
 - [x] a short doc stating what the valid battery did or did not prove
   (`bench/battery/FINDINGS.md`).
 
-Outstanding before a memory-quality verdict: the first valid run is blocked by
-REM `context_overflow`. Its compacted memory on the five oldest-gold items is
-36,977–58,150 tokens (the assembler renders the full ledger + all summaries with
-no size bound), so it scores 0/5 without ever answering. Raising the assemble
-ceiling does NOT fix this: the memory exceeds 16k on all five, and the larger
-items exceed the answering model's own ~32–40k window (HTTP 400 "Max length
-reached!"). The real fix is a bounded read path (retrieval/eviction that fits
-memory to the model window), which is the item-7 architecture gate — not a
-ceiling tweak. See `bench/battery/FINDINGS.md`.
+Resolved (2026-06-27): the `context_overflow` block is cleared. Compacted memory on
+the five oldest-gold items was 36,977–58,150 tokens (the assembler renders the full
+ledger + all summaries with no size bound), so the first valid run scored 0/5
+without ever answering. The fix was a bounded read path (Step 0): the selector fits
+memory to the model window and the consumer trims the assembled slice to budget. All
+five now fit (27,891–27,999) and answer; the read path holds 4/5 on the failure mix.
+See `bench/battery/FINDINGS.md` ("Step 0", "Failure mix").
 
 ## Suggested Commands
 
