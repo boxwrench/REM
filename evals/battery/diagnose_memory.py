@@ -32,7 +32,7 @@ from evals.battery.context_managers import RemContextManager
 from evals.battery.longmemeval_loader import load_knowledge_update
 from rem.config import Settings
 from rem.memory.assembler import assemble
-from rem.memory.facts_ledger import get_extraction_stats, reset_extraction_stats
+from rem.memory.facts_ledger import FactsLedger, get_extraction_stats, reset_extraction_stats
 from rem.memory.selector import RecencySelector
 from rem.memory.tiers import count_tokens
 from rem.memory.tiers import MemoryState
@@ -141,10 +141,42 @@ def fit_with_selector(state, question, settings):
 
     Returns (fitted_text, fitted_tokens) using the same assemble() the real read
     path uses, so the size reflects what the model would receive.
+
+    The selector estimates per-item costs without rendering (spec D1), so the
+    assembled text can land just over budget once section scaffolding is added. We
+    measure the real assembled cost here and, when it overshoots, trim the
+    lowest-priority kept tiers -- no-slot ledger entries oldest-first, then episodic
+    summaries oldest-first -- re-rendering until it fits. The protected tier (newest
+    active entry per slot_key + verbatim) is never trimmed, so current-state gold is
+    preserved; if that floor alone exceeds the budget the over-budget result is
+    returned for the caller to record (spec D6).
     """
-    fitted_state = RecencySelector().select(state, question, settings.read_fit_tokens)
-    fitted_text = assemble(fitted_state, system="", task=question)
-    return fitted_text, count_tokens(fitted_text)
+    budget = settings.read_fit_tokens
+    fitted = RecencySelector().select(state, question, budget)
+
+    def _render(st):
+        txt = assemble(st, system="", task=question)
+        return txt, count_tokens(txt)
+
+    text, n = _render(fitted)
+    if n <= budget:
+        return text, n
+
+    summaries = list(fitted.summaries)
+    slotted = [e for e in fitted.ledger.entries if e.slot_key]
+    free = [e for e in fitted.ledger.entries if not e.slot_key]
+    while n > budget and (free or summaries):
+        if free:
+            free.pop()          # selector kept newest-first; last is oldest
+        else:
+            summaries.pop()
+        text, n = _render(MemoryState(
+            schema_version=fitted.schema_version,
+            turns=fitted.turns,
+            summaries=summaries,
+            ledger=FactsLedger(entries=slotted + free),
+        ))
+    return text, n
 
 
 def gold_in_fitted(fitted_text: str, needles: list[str]) -> dict[str, bool]:
