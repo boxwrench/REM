@@ -46,10 +46,15 @@ path; the mix does not justify the graph rebuild.
   temporal-structure (031748ae, the dataset-ambiguous item), 0 retrieval-recall.
   Per-item states captured NPU-free-reusable under `bench/battery/states/`; labels
   in `bench/battery/mix_report.json`. See `bench/battery/FINDINGS.md` "Failure mix".
-- **Next levers (not the graph):** write-recall / extraction quality (the capture
-  surfaced malformed-entry skipping and slot-key fragmentation), and a larger
-  token-matched *unambiguous* item set to confirm whether temporal-structure
-  recurs on clean items. Slot-value-aware needle matching is a methodology fix.
+- **Next lever (not the graph): slot-key canonicalization.** The write-recall audit
+  (`evals/battery/write_recall_audit.py`) shows write recall is good but supersession
+  fires on only ~1.1–1.3% of entries — the extractor assigns a fresh slot key per
+  mention, so one value lands under up to 7 keys (32–55 fragmented values/item).
+  That fragmentation is both the 950-entry ledger bloat and the lone
+  temporal-structure miss (031748ae's 4 and 5 active under different keys, unordered).
+  Normalize keys / add semantic supersession so updates collapse — the most likely
+  single fix, without a graph. Secondary: a larger token-matched *unambiguous* item
+  set, and slot-value-aware needle matching (methodology). See `bench/battery/FINDINGS.md`.
 
 ## Progress (updated 2026-06-20)
 
