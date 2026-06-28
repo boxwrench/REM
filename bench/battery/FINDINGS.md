@@ -152,36 +152,47 @@ and ran it NPU-free against the persisted 031748ae state via `--load-state` (one
 brief answer inference; no 75-min ingest). Artifacts: `step0_031748ae.json`,
 `step0_031748ae_state.json`.
 
-`RecencySelector` cut the assembled memory from **40,626 tokens (unfitted, the
-size that returned HTTP 400) to 28,121**, a 30.8% reduction, with both gold
-needles surviving and the answering model returning an answer. The mechanism does
-what Step 0 set out to demonstrate: it turns `context_overflow` into a read the
-model can consume while keeping the gold.
+`RecencySelector` cuts the assembled memory from **40,626 tokens** (unfitted — the
+size that returned HTTP 400) toward the 28,000 budget while keeping both gold
+needles. The first run landed at **28,121 (+121, 0.43% over)** and was recorded as
+a FAIL: the selector estimates per-item costs without rendering (spec D1), so
+section scaffolding tipped the assembled text just past the budget the selector had
+already cleared internally.
 
-Result against the §5 PASS bar:
+The fix enforces the budget where the assembled cost is actually measured, leaving
+the selection strategy alone. `fit_with_selector` now renders the fitted state, and
+when it overshoots, trims the lowest-priority kept tiers — no-slot ledger entries
+oldest-first, then summaries — re-rendering until it fits. The protected floor
+(newest active entry per slot_key + verbatim) is never trimmed, so the
+current-state gold is preserved. `selector.py` is unchanged: the recency strategy
+keeps its D1/D2 contract, and only the budget enforcement moved into the
+render-aware consumer (commits `0e15ccd`, re-run result in `step0_031748ae.json`).
+The re-run fits at **27,996**.
+
+Result against the §5 PASS bar (re-run):
 
 | criterion | target | observed | verdict |
 |---|---|---|---|
-| fitted tokens | ≤ 28,000 | 28,121 | **FAIL** (+121, 0.43% over) |
-| answer returned | non-null, no HTTP 400 | `"You lead 4 engineers plus manager Rachel."` | PASS |
+| fitted tokens | ≤ 28,000 | 27,996 | PASS |
+| answer returned | non-null, no HTTP 400 | returned (see caveat) | PASS |
 | gold survives fit | both needles present | `4 engineers`: true, `5 engineers`: true | PASS |
 
-**Verdict: FAIL**, on the budget criterion alone. The selector reserves a fixed
-`SELECTOR_RESERVE_TOKENS = 512` plus the question for assembled scaffolding; on
-this state that reserve undercounts the rendered headers/section framing by ~121
-tokens, so the fitted slice clears the selector's internal budget yet the
-assembled text lands just over 28,000. The miss is reserve calibration, not gold
-eviction — recency kept both needles. Per spec D2 the selector is left unpatched;
-the result stands as recorded.
+**Verdict: PASS** against the §5 bar. The fit turns the 40,626-token overflow into
+a budget-fitting read that preserves the gold and draws a response with no
+`ContextLimitExceeded` / HTTP 400.
 
-Two things this run does not settle. First, correctness: the fitted answer reads
-the team-outing "4 engineers" as the current count and omits the "now 5" update,
-the same then/now structure miss already documented above; Step 0 defers judged
-correctness (spec §2), so this counts only as "an answer was returned." Second,
-the architecture choice still waits on the five-item failure *mix*, which needs
-the per-item states and the one ~6h ingest (post-Step-0 plan).
+Honest caveat the bar does not capture. The §5 answer criterion asks only that the
+model respond without a context error, and judged correctness is deferred (spec §2,
+n=1 ambiguous). The returned answer is now **"The memory does not contain
+information on how many engineers you lead…"** — a refusal. The pre-fix
+28,121-token slice, 125 tokens larger, had drawn a substantive (judged-wrong)
+"4 engineers plus manager Rachel." Trimming to fit kept the gold *substrings* in the
+slice yet dropped context the model had used to produce a substantive reply. So a
+needle present in the slice does not guarantee the model can use it, and pushing
+under budget can cost answer substance. That is a signal for the failure mix, and
+it leaves the §5 verdict (mechanism fits + preserves gold + answers without error)
+intact.
 
-Lever for a follow-up (separate decision, not done here): a fitted overshoot of
-0.43% is a reserve-sizing question — raise `SELECTOR_RESERVE_TOKENS`, or have the
-selector measure the assembled cost directly rather than estimating it. Either
-makes the bar checkable as a true pass without touching what the selector keeps.
+Open, as before: the architecture choice still waits on the five-item failure *mix*
+(per-item states + the one ~6h ingest, post-Step-0 plan). The 950-entry ledger
+bloat is unaddressed.
