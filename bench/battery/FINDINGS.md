@@ -262,3 +262,47 @@ set to confirm whether temporal-structure failures recur on clean items before
 paying for the graph — and, in parallel, instrument write recall / extraction
 quality, which this capture flags as the more pressing lever. Fix the bare-number
 needle methodology before the next mix run so the automated labels match outcomes.
+
+## Write-recall audit (the lever the mix pointed at)
+
+`evals/battery/write_recall_audit.py` (NPU-free; `bench/battery/write_recall_audit.json`)
+separates write recall from read recall over the five states and measures two
+write-side signals. Result: **write recall is good; write quality is the defect.**
+
+Write recall holds. Every gold value is extracted into the compacted state and sits
+in a ledger slot — `4/5 engineers`, `F-150`, `two hours`, `one cup`/`two cups` all
+resolve to `slot` in the full (unfitted) state, and the read path keeps them. The
+one apparent absence, 9bbe84a2 "level 100", is the bare-number needle artifact: the
+prior goal is written as the slot `level goal.target level: 100`, just not as the
+literal string. No gold fact was dropped on the write side.
+
+The defect is supersession. Slot supersession barely fires — **10–11 of ~850–940
+entries per item, ~1.1–1.3%** — because the extractor assigns a fresh slot key for
+nearly every mention. The same value lands under many distinct keys (32–55
+fragmented values per item, one value under up to 7 keys), so genuine updates never
+collapse and every mention persists as an "active current" fact:
+
+| concept (item) | value | distinct active slot keys |
+|---|---|---|
+| team size (031748ae) | "5 engineers" | `group size.number of engineers`, `team size.size`, `team.size` (+ "4 engineers" under `team members.count`) |
+| coding time (cc5ded98) | "two hours" | `coding exercises.frequency` / `.time per day` / `.time spent per day` / `.duration` |
+| coffee limit (c6853660) | one→two cups | `morning routine.quantity…` (one cup) vs `morning coffee limit.new limit` (two cups) — never collapse |
+| Apex goal (9bbe84a2) | 100→150 | `level goal.target level` (100) vs `goal.level`, `level.target level for goal setting`, `user.goal` (150) |
+
+This single defect explains both open problems. It is the 950-entry ledger bloat
+(updates do not collapse, so the ledger grows with every mention), and it is the
+lone temporal-structure miss: 031748ae's "4 engineers" and "5 engineers" are both
+active under different keys with no supersession and no order, so the model cannot
+resolve started→now. The flat ledger is not the obstacle here — the fragmented
+keying is, and a graph would inherit the same bad keys from the same extractor.
+
+Extraction also drops entries: the ingest skipped 6–22 malformed fact entries per
+item (missing-`text` shapes), plus one hard extraction failure on 9bbe84a2 (the
+`"source_turn_id":443,subject"` mangling) that fell back to keeping the span
+verbatim. These do not touch the gold here, but they are unmeasured fact loss.
+
+Lever: **slot-key canonicalization** — normalize keys (or add a supersession step
+that matches semantically-equivalent keys) so updates collapse (4→5, one→two,
+100→150). That shrinks the ledger and hands the read path an ordered current-state
+set, which is the most likely single fix for the 031748ae temporal-structure miss —
+without a graph rebuild. This is the concrete write-recall work the mix called for.
