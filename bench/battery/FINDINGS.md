@@ -196,3 +196,69 @@ intact.
 Open, as before: the architecture choice still waits on the five-item failure *mix*
 (per-item states + the one ~6h ingest, post-Step-0 plan). The 950-entry ledger
 bloat is unaddressed.
+
+## Failure mix (five oldest-gold items)
+
+The post-Step-0 increment captured all five compacted states once (~4.7h NPU,
+`bench/battery/states/`, manifest + `mix_report.json`), then labelled each item's
+read-path miss NPU-free (RecencySelector fit + gold/structure needles) with one
+brief answer per item. Spec: `docs/superpowers/specs/2026-06-27-failure-mix-design.md`.
+
+The headline: **the bounded read path fits all five** (fitted 27,891–27,999, every
+one ≤ 28,000). Size is not a failure mode for any item — the trim-enforced read
+path holds across the set, not only on 031748ae. Per item:
+
+| item | recency | fitted | gold in slice | brief answer | outcome |
+|---|---|---|---|---|---|
+| 031748ae | 0.16 | 27,996 | 4 + 5 engineers (both, slots) | refusal | **temporal-structure** |
+| 3ba21379 | 0.18 | 27,999 | F-150 (slot); Mustang distractor also present | "Ford F-150 pickup truck" | pass |
+| cc5ded98 | 0.26 | 27,891 | two hours (slot); prior "an hour" dropped | "Two hours each day" | pass |
+| c6853660 | 0.28 | 27,912 | one cup + two cups (both, slots) | "...two cups" | pass |
+| 9bbe84a2 | 0.28 | 27,979 | prior goal 100 retained (slot `level goal.target level: 100`) | "previous goal... was 100" | pass* |
+
+Corrected mix: **4 pass, 1 temporal-structure, 0 retrieval-recall, 0 size.**
+
+\* `mix_report` auto-labelled 9bbe84a2 retrieval-recall, a measurement artifact:
+the gold value 100 is retained in the fitted slice as the slot
+`level goal.target level: 100` (turn 61), distinct from the current `goal.level: 150`
+(turn 144), and the model answered correctly. The exact-substring needle "level 100"
+matched neither the slot rendering nor the answer phrasing ("level was 100"). The
+true outcome is a pass; the automated label is recorded as-is in `mix_report.json`
+with this correction noted. Lesson: substring needles are brittle for bare-number
+gold; a slot-value-aware match is the follow-up.
+
+The one genuine miss, 031748ae, is temporal-structure: both "4 engineers" and
+"5 engineers" survive in distinct slots and fit the budget, yet the model refuses
+("the memory does not contain…"). The flat ledger holds the values with no
+started→now link, and this item's gold rests on a dataset inference (the "4" is the
+team-outing headcount; see the diagnostic caveat above), so it is the weakest of
+the five as evidence.
+
+### What the mix says about the architecture (read-path spec §8)
+
+The graph-resident store's defining feature is temporal edges (valid_from/valid_to),
+which directly target the started→now linking that 031748ae fails. But the
+architecture spec (`docs/REM-memory-architecture-spec.md`, decision rows 36 and
+42–45) is explicit: validate read recall before assuming the graph helps, and if
+extraction misses dominate, graph work must begin with write-recall, not a rebuild.
+
+This mix argues against committing to the graph now:
+
+- Read recall is already good — 4/5 produce a correct answer through recency + the
+  trim fix, with the gold fitting the budget every time. The read path is not the
+  bottleneck for four of five items.
+- The single failure is a then→now linking miss on the most ambiguous item (n=1,
+  dataset-inferred gold). That is thin evidence to justify replacing the memory path.
+- The capture surfaced write-side noise instead: heavy "malformed fact entry"
+  skipping during ingest, the known `"source_turn_id":443,subject"` mangling shape
+  (9bbe84a2, fell back to verbatim), and slot-key fragmentation — the Apex goal
+  alone split across `level goal.target level`, `goal.level`, and
+  `level.target level for goal setting`. That fragmentation is why both then/now
+  goals survived for 9bbe84a2, but it is a write-recall quality problem.
+
+Recommendation: keep the tuned read path; do not start the graph rebuild on this
+mix. The cheapest informative next step is a larger, token-matched, unambiguous item
+set to confirm whether temporal-structure failures recur on clean items before
+paying for the graph — and, in parallel, instrument write recall / extraction
+quality, which this capture flags as the more pressing lever. Fix the bare-number
+needle methodology before the next mix run so the automated labels match outcomes.
