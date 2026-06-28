@@ -1,0 +1,237 @@
+{
+  "states_dir": "bench/battery/states",
+  "n_items": 5,
+  "items": [
+    {
+      "ledger_total": 950,
+      "ledger_active": 940,
+      "superseded": 10,
+      "supersession_rate": 0.0105,
+      "write_recall_gold": {
+        "4 engineers": "slot",
+        "5 engineers": "slot"
+      },
+      "write_recall_structure": {},
+      "fragmented_values": 55,
+      "fragmentation_examples": {
+        "american": [
+          "balance.origin",
+          "gap.origin",
+          "j.crew.origin",
+          "nike.origin",
+          "old navy.origin",
+          "ralph lauren.origin",
+          "tommy hilfiger.origin"
+        ],
+        "amsterdam": [
+          "bakery.location",
+          "dessert.location",
+          "events.location",
+          "food experiences.location",
+          "landmarkt.location"
+        ],
+        "5": [
+          "group size.number of engineers",
+          "linkedin posts engagement.comments",
+          "linkedin posts.comments",
+          "team outing.number of people"
+        ],
+        "6 people": [
+          "activity.capacity",
+          "corporate team building package.size",
+          "team outing.capacity",
+          "team outing.package size"
+        ],
+        "10": [
+          "additional prohibition era words.count",
+          "gin themed words.count",
+          "team registration.minimum players",
+          "tips for increasing engagement on social media.number of tips listed"
+        ]
+      },
+      "question_id": "031748ae"
+    },
+    {
+      "ledger_total": 846,
+      "ledger_active": 835,
+      "superseded": 11,
+      "supersession_rate": 0.013,
+      "write_recall_gold": {
+        "F-150": "slot"
+      },
+      "write_recall_structure": {
+        "Mustang": "slot"
+      },
+      "fragmented_values": 32,
+      "fragmentation_examples": {
+        "5-10 hours": [
+          "house sitting.investment per week",
+          "online surveys and gigs.investment per week",
+          "pet sitting or dog walking.investment per week",
+          "photography.investment per week",
+          "selling products online.investment per week"
+        ],
+        "$15": [
+          "cost.amount",
+          "expense.amount",
+          "food bowl price.cost",
+          "stainless steel food bowl from amazon.cost",
+          "stainless steel food bowl from amazon.price"
+        ],
+        "photography and yoga": [
+          "interests.combination",
+          "interests.combined interests",
+          "interests.mentioned",
+          "interests.types"
+        ],
+        "10-15 hours": [
+          "freelance writing or editing.investment per week",
+          "graphic design or digital art.investment per week",
+          "tutoring or online teaching.investment per week",
+          "virtual assistance.investment per week"
+        ],
+        "up to 20,000mah": [
+          "eggtronic power bank.capacity",
+          "goal zero sherpa.capacity",
+          "jackery titan.capacity",
+          "mophie powerstation.capacity"
+        ]
+      },
+      "question_id": "3ba21379"
+    },
+    {
+      "ledger_total": 913,
+      "ledger_active": 902,
+      "superseded": 11,
+      "supersession_rate": 0.012,
+      "write_recall_gold": {
+        "two hours": "slot"
+      },
+      "write_recall_structure": {
+        "an hour each day": "summary"
+      },
+      "fragmented_values": 41,
+      "fragmentation_examples": {
+        "productivity and goal-setting": [
+          "podcast type.focus area",
+          "podcast.focus",
+          "podcasts.topic",
+          "topic.interest"
+        ],
+        "2": [
+          "belkin wemo smart lighting starter kit.bulbs",
+          "ikea tradfri gateway kit.bulbs",
+          "lifx smart lighting starter kit.bulbs",
+          "samsung smartthings smart lighting starter kit.bulbs"
+        ],
+        "$120": [
+          "barbie doll purchase price.price",
+          "doll cost.price",
+          "paid amount for doll.amount paid"
+        ],
+        "unknown": [
+          "favorite type of sushi.preference status",
+          "national executive director.identity",
+          "wd 40.knowledge"
+        ],
+        "pampanga": [
+          "initiatives.location",
+          "sanitation technology.area of interest",
+          "waste disposal.location"
+        ]
+      },
+      "question_id": "cc5ded98"
+    },
+    {
+      "ledger_total": 948,
+      "ledger_active": 938,
+      "superseded": 10,
+      "supersession_rate": 0.0105,
+      "write_recall_gold": {
+        "one cup": "slot",
+        "two cups": "slot"
+      },
+      "write_recall_structure": {},
+      "fragmented_values": 48,
+      "fragmentation_examples": {
+        "5-10 breaths": [
+          "boat pose paripurna navasana .hold time",
+          "cat cow pose marjaryasana bitilasana .repeat count",
+          "cobra pose bhujangasana .hold time",
+          "hamstring stretching poses.hold duration",
+          "hip flexor stretching poses.hold duration",
+          "plank pose phalakasana .hold time",
+          "sphinx pose salamba bhujangasana .hold time"
+        ],
+        "unknown": [
+          "armadillos.defense against alligators or crocodiles",
+          "egg freezing.success rates",
+          "ross lake resort cabins.capacity",
+          "ross lake resort cabins.group accommodations",
+          "tractor supply co..closing time on thursdays"
+        ],
+        "7-8 hours": [
+          "driving distance.range",
+          "goal.sleep duration target",
+          "sleep duration.recommended hours",
+          "sleep duration.recommended range"
+        ],
+        "5 minutes": [
+          "ball bouncing and catching duration.time",
+          "dynamic stretching duration.time",
+          "light cardio duration.time",
+          "tennis specific movements duration.time"
+        ],
+        "french press": [
+          "brewing method.option",
+          "coffee method.type",
+          "coffee method.type being considered"
+        ]
+      },
+      "question_id": "c6853660"
+    },
+    {
+      "ledger_total": 865,
+      "ledger_active": 854,
+      "superseded": 11,
+      "supersession_rate": 0.0127,
+      "write_recall_gold": {
+        "level 100": "absent"
+      },
+      "write_recall_structure": {
+        "level 150": "slot"
+      },
+      "fragmented_values": 36,
+      "fragmentation_examples": {
+        "1/4 teaspoon": [
+          "peanut sauce ingredients.red pepper flakes optional",
+          "salt.amount",
+          "star anise.quantity",
+          "sugar.amount"
+        ],
+        "$10": [
+          "credit.amount",
+          "discount.amount",
+          "dr. jart dermaclar clearing solution moisturizer price.price",
+          "laneige water bank moisturizing gel cream price.price"
+        ],
+        "2020": [
+          "hannah gadsby douglas.year",
+          "john mulaney comeback kid.year",
+          "taylor tomlinson deal with it.year"
+        ],
+        "factory forklift": [
+          "object.definition.name",
+          "object.name",
+          "speed sensor.location"
+        ],
+        "20-30 minutes": [
+          "exercise duration.time",
+          "nap duration.time",
+          "workout duration.time limit"
+        ]
+      },
+      "question_id": "9bbe84a2"
+    }
+  ]
+}
