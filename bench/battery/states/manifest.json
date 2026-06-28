@@ -1,0 +1,82 @@
+[
+  {
+    "question_id": "031748ae",
+    "question": "How many engineers do I lead when I just started my new role as Senior Software Engineer? How many engineers do I lead now?",
+    "answer": "When you just started your new role as Senior Software Engineer, you led 4 engineers. Now, you lead 5 engineers",
+    "answer_session_ids": [
+      "answer_8748f791_1",
+      "answer_8748f791_2"
+    ],
+    "gold_recency": 0.16326530612244897,
+    "n_sessions": 50,
+    "n_turns": 494,
+    "state_file": "bench/battery/states/031748ae_state.json",
+    "assembled_total_tokens": null,
+    "ingest_secs": null,
+    "captured_at": null
+  },
+  {
+    "question_id": "3ba21379",
+    "question": "What type of vehicle model am I currently working on?",
+    "answer": "Ford F-150 pickup truck",
+    "answer_session_ids": [
+      "answer_cd345582_1",
+      "answer_cd345582_2"
+    ],
+    "gold_recency": 0.17777777777777778,
+    "n_sessions": 46,
+    "n_turns": 431,
+    "state_file": "bench/battery/states/3ba21379_state.json",
+    "assembled_total_tokens": 50828,
+    "ingest_secs": 4209.7,
+    "captured_at": 1782620162.141857
+  },
+  {
+    "question_id": "cc5ded98",
+    "question": "How much time do I dedicate to coding exercises each day?",
+    "answer": "about two hours",
+    "answer_session_ids": [
+      "answer_a5b68517_1",
+      "answer_a5b68517_2"
+    ],
+    "gold_recency": 0.2641509433962264,
+    "n_sessions": 54,
+    "n_turns": 493,
+    "state_file": "bench/battery/states/cc5ded98_state.json",
+    "assembled_total_tokens": 54790,
+    "ingest_secs": 4607.7,
+    "captured_at": 1782624769.8068843
+  },
+  {
+    "question_id": "c6853660",
+    "question": "Did I mostly recently increase or decrease the limit on the number of cups of coffee in the morning?",
+    "answer": "You increased the limit (from one cup to two cups)",
+    "answer_session_ids": [
+      "answer_626e93c4_1",
+      "answer_626e93c4_2"
+    ],
+    "gold_recency": 0.2765957446808511,
+    "n_sessions": 48,
+    "n_turns": 477,
+    "state_file": "bench/battery/states/c6853660_state.json",
+    "assembled_total_tokens": 58150,
+    "ingest_secs": 4612.1,
+    "captured_at": 1782629381.9216175
+  },
+  {
+    "question_id": "9bbe84a2",
+    "question": "What was my previous goal for my Apex Legends level before I updated my goal?",
+    "answer": "level 100",
+    "answer_session_ids": [
+      "answer_c6a0c6c2_1",
+      "answer_c6a0c6c2_2"
+    ],
+    "gold_recency": 0.2830188679245283,
+    "n_sessions": 54,
+    "n_turns": 459,
+    "state_file": "bench/battery/states/9bbe84a2_state.json",
+    "assembled_total_tokens": 36977,
+    "ingest_secs": 4295.1,
+    "captured_at": 1782633676.9897735
+  }
+]
