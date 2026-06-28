@@ -59,3 +59,30 @@ def test_label_pass_and_temporal_with_injected_answerer():
                      ["4 engineers", "5 engineers"], settings,
                      answerer=lambda ctx, q: "the memory does not say")
     assert bad["failure_mode"] == "temporal-structure"
+
+
+def test_structure_needles_are_recorded_but_not_gating():
+    # A present gold + a structure needle that is ABSENT from the slice must NOT
+    # flip the label to retrieval-recall; structure needles only diagnose.
+    settings = Settings(read_fit_tokens=4000)
+    out = label_item(_slot_gold(), "headcount?", "5 engineers",
+                     ["5 engineers"], settings,
+                     structure_needles=["9 engineers"])
+    assert out["failure_mode"] == "needs-answer"           # gold present -> not recall
+    assert out["structure_in_fitted"]["9 engineers"] is False
+    assert out["structure_tiers"]["9 engineers"] == "absent"
+
+
+def test_structure_needle_present_records_tier():
+    # The contrasting value sitting in the slice is recorded with its carrying tier.
+    settings = Settings(read_fit_tokens=4000)
+    out = label_item(_slot_gold(), "headcount?", "5 engineers",
+                     ["5 engineers"], settings,
+                     structure_needles=["4 engineers"])
+    assert out["structure_in_fitted"]["4 engineers"] is True
+    assert out["structure_tiers"]["4 engineers"] == "slot"
+    # answerer that returns the contrasting (wrong) value is flagged
+    out2 = label_item(_slot_gold(), "headcount?", "5 engineers",
+                      ["5 engineers"], settings, structure_needles=["4 engineers"],
+                      answerer=lambda ctx, q: "you lead 4 engineers")
+    assert out2["answer_contains_structure"] is True
