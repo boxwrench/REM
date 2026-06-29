@@ -1,0 +1,3538 @@
+{
+  "schema_version": 1,
+  "experiment": "embedding-slot-identity-largeset",
+  "model": "Qwen/Qwen3-Embedding-0.6B",
+  "backend": "sentence-transformers (local, CPU)",
+  "repository_revision": "b43943636baf5a480b2fb6454193ec515c5e6771",
+  "created_at": 1782712164.2387397,
+  "seed": 0,
+  "n_pairs": 67,
+  "kind_counts": {
+    "same": 19,
+    "hard_neg": 16,
+    "easy_neg": 32
+  },
+  "resolved_entries": {
+    "031748ae|team.size": [
+      "team.size",
+      "5 engineers"
+    ],
+    "031748ae|team size.size": [
+      "team size.size",
+      "five engineers"
+    ],
+    "031748ae|group size.number of engineers": [
+      "group size.number of engineers",
+      "5"
+    ],
+    "cc5ded98|coding exercises.frequency": [
+      "coding exercises.frequency",
+      "two hours each day"
+    ],
+    "cc5ded98|coding exercises.time per day": [
+      "coding exercises.time per day",
+      "Two hours"
+    ],
+    "cc5ded98|coding exercises.time spent per day": [
+      "coding exercises.time spent per day",
+      "two hours"
+    ],
+    "cc5ded98|coding exercises.duration": [
+      "coding exercises.duration",
+      "Two hours a day"
+    ],
+    "c6853660|client.marketing team size": [
+      "client.marketing team size",
+      "three people"
+    ],
+    "c6853660|marketing team.size": [
+      "marketing team.size",
+      "three people"
+    ],
+    "c6853660|team size.number of salespeople": [
+      "team size.number of salespeople",
+      "3"
+    ],
+    "c6853660|marketing team size.size": [
+      "marketing team size.size",
+      "small"
+    ],
+    "c6853660|morning routine.quantity of coffee cups per morning": [
+      "morning routine.quantity of coffee cups per morning",
+      "one cup"
+    ],
+    "c6853660|morning coffee limit.new limit": [
+      "morning coffee limit.new limit",
+      "two cups"
+    ],
+    "9bbe84a2|level goal.target level": [
+      "level goal.target level",
+      "100"
+    ],
+    "9bbe84a2|goal.level": [
+      "goal.level",
+      "150"
+    ],
+    "9bbe84a2|user.goal": [
+      "user.goal",
+      "level 150 eventually"
+    ],
+    "031748ae|team members.count": [
+      "team members.count",
+      "4 engineers plus manager Rachel"
+    ],
+    "031748ae|team outing.attendees": [
+      "team outing.attendees",
+      "6"
+    ],
+    "031748ae|team outing.type": [
+      "team outing.type",
+      "fun activities in the city"
+    ],
+    "c6853660|coffee maker.capacity": [
+      "coffee maker.capacity",
+      "8-cup capacity"
+    ],
+    "c6853660|dedicated team.responsibility": [
+      "dedicated team.responsibility",
+      "integrating ESG considerations into the investment process and engaging with companies on ESG issues."
+    ],
+    "9bbe84a2|gail.goal": [
+      "gail.goal",
+      "among the top 50 global energy companies by 2030"
+    ],
+    "9bbe84a2|comedian.goal": [
+      "comedian.goal",
+      "get name out there"
+    ],
+    "9bbe84a2|apex legends.appeal": [
+      "apex legends.appeal",
+      "Playing with friends is a huge part of its appeal"
+    ],
+    "3ba21379|vehicle.model": [
+      "vehicle.model",
+      "Ford F-150 pickup truck"
+    ],
+    "3ba21379|project.model": [
+      "project.model",
+      "Ford Mustang Shelby GT350R"
+    ],
+    "3ba21379|model car.type": [
+      "model car.type",
+      "Ford Mustang Shelby GT350R"
+    ],
+    "3ba21379|rolex watch.model": [
+      "rolex watch.model",
+      "1967 Rolex Watch"
+    ],
+    "3ba21379|processor.model": [
+      "processor.model",
+      "IPCP Pro 550"
+    ],
+    "cc5ded98|coding practice.key to improvement": [
+      "coding practice.key to improvement",
+      "consistent, persistent, and patient"
+    ],
+    "cc5ded98|coding buddy.purpose": [
+      "coding buddy.purpose",
+      "learn with, discuss challenges, get feedback"
+    ]
+  },
+  "pairs": [
+    {
+      "item": "031748ae",
+      "id": "team_size@031748ae:team.size|team size.size",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "team.size",
+        "5 engineers"
+      ],
+      "right": [
+        "team size.size",
+        "five engineers"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "team_size@031748ae:team.size|group size.number of engineers",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "team.size",
+        "5 engineers"
+      ],
+      "right": [
+        "group size.number of engineers",
+        "5"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "team_size@031748ae:team size.size|group size.number of engineers",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "team size.size",
+        "five engineers"
+      ],
+      "right": [
+        "group size.number of engineers",
+        "5"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time per day",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "coding exercises.frequency",
+        "two hours each day"
+      ],
+      "right": [
+        "coding exercises.time per day",
+        "Two hours"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time spent per day",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "coding exercises.frequency",
+        "two hours each day"
+      ],
+      "right": [
+        "coding exercises.time spent per day",
+        "two hours"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.duration",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "coding exercises.frequency",
+        "two hours each day"
+      ],
+      "right": [
+        "coding exercises.duration",
+        "Two hours a day"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.time spent per day",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "coding exercises.time per day",
+        "Two hours"
+      ],
+      "right": [
+        "coding exercises.time spent per day",
+        "two hours"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.duration",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "coding exercises.time per day",
+        "Two hours"
+      ],
+      "right": [
+        "coding exercises.duration",
+        "Two hours a day"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "coding_time@cc5ded98:coding exercises.time spent per day|coding exercises.duration",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "coding exercises.time spent per day",
+        "two hours"
+      ],
+      "right": [
+        "coding exercises.duration",
+        "Two hours a day"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "mkt_team_size@c6853660:client.marketing team size|marketing team.size",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "client.marketing team size",
+        "three people"
+      ],
+      "right": [
+        "marketing team.size",
+        "three people"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "mkt_team_size@c6853660:client.marketing team size|team size.number of salespeople",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "client.marketing team size",
+        "three people"
+      ],
+      "right": [
+        "team size.number of salespeople",
+        "3"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "mkt_team_size@c6853660:client.marketing team size|marketing team size.size",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "client.marketing team size",
+        "three people"
+      ],
+      "right": [
+        "marketing team size.size",
+        "small"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "mkt_team_size@c6853660:marketing team.size|team size.number of salespeople",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "marketing team.size",
+        "three people"
+      ],
+      "right": [
+        "team size.number of salespeople",
+        "3"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "mkt_team_size@c6853660:marketing team.size|marketing team size.size",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "marketing team.size",
+        "three people"
+      ],
+      "right": [
+        "marketing team size.size",
+        "small"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "mkt_team_size@c6853660:team size.number of salespeople|marketing team size.size",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "team size.number of salespeople",
+        "3"
+      ],
+      "right": [
+        "marketing team size.size",
+        "small"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "coffee_limit@c6853660:morning routine.quantity of coffee cups per morning|morning coffee limit.new limit",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "morning routine.quantity of coffee cups per morning",
+        "one cup"
+      ],
+      "right": [
+        "morning coffee limit.new limit",
+        "two cups"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "apex_goal@9bbe84a2:level goal.target level|goal.level",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "level goal.target level",
+        "100"
+      ],
+      "right": [
+        "goal.level",
+        "150"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "apex_goal@9bbe84a2:level goal.target level|user.goal",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "level goal.target level",
+        "100"
+      ],
+      "right": [
+        "user.goal",
+        "level 150 eventually"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "apex_goal@9bbe84a2:goal.level|user.goal",
+      "same_slot": true,
+      "kind": "same",
+      "left": [
+        "goal.level",
+        "150"
+      ],
+      "right": [
+        "user.goal",
+        "level 150 eventually"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "HARD@031748ae:team.size|team members.count",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "team.size",
+        "5 engineers"
+      ],
+      "right": [
+        "team members.count",
+        "4 engineers plus manager Rachel"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "HARD@031748ae:team.size|team outing.attendees",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "team.size",
+        "5 engineers"
+      ],
+      "right": [
+        "team outing.attendees",
+        "6"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "HARD@031748ae:group size.number of engineers|team outing.attendees",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "group size.number of engineers",
+        "5"
+      ],
+      "right": [
+        "team outing.attendees",
+        "6"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "HARD@031748ae:team size.size|team outing.type",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "team size.size",
+        "five engineers"
+      ],
+      "right": [
+        "team outing.type",
+        "fun activities in the city"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "HARD@c6853660:morning coffee limit.new limit|coffee maker.capacity",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "morning coffee limit.new limit",
+        "two cups"
+      ],
+      "right": [
+        "coffee maker.capacity",
+        "8-cup capacity"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "HARD@c6853660:morning routine.quantity of coffee cups per morning|coffee maker.capacity",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "morning routine.quantity of coffee cups per morning",
+        "one cup"
+      ],
+      "right": [
+        "coffee maker.capacity",
+        "8-cup capacity"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "HARD@c6853660:marketing team.size|dedicated team.responsibility",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "marketing team.size",
+        "three people"
+      ],
+      "right": [
+        "dedicated team.responsibility",
+        "integrating ESG considerations into the investment process and engaging with companies on ESG issues."
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "HARD@9bbe84a2:goal.level|gail.goal",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "goal.level",
+        "150"
+      ],
+      "right": [
+        "gail.goal",
+        "among the top 50 global energy companies by 2030"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "HARD@9bbe84a2:goal.level|comedian.goal",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "goal.level",
+        "150"
+      ],
+      "right": [
+        "comedian.goal",
+        "get name out there"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "HARD@9bbe84a2:user.goal|apex legends.appeal",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "user.goal",
+        "level 150 eventually"
+      ],
+      "right": [
+        "apex legends.appeal",
+        "Playing with friends is a huge part of its appeal"
+      ]
+    },
+    {
+      "item": "3ba21379",
+      "id": "HARD@3ba21379:vehicle.model|project.model",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "vehicle.model",
+        "Ford F-150 pickup truck"
+      ],
+      "right": [
+        "project.model",
+        "Ford Mustang Shelby GT350R"
+      ]
+    },
+    {
+      "item": "3ba21379",
+      "id": "HARD@3ba21379:vehicle.model|model car.type",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "vehicle.model",
+        "Ford F-150 pickup truck"
+      ],
+      "right": [
+        "model car.type",
+        "Ford Mustang Shelby GT350R"
+      ]
+    },
+    {
+      "item": "3ba21379",
+      "id": "HARD@3ba21379:vehicle.model|rolex watch.model",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "vehicle.model",
+        "Ford F-150 pickup truck"
+      ],
+      "right": [
+        "rolex watch.model",
+        "1967 Rolex Watch"
+      ]
+    },
+    {
+      "item": "3ba21379",
+      "id": "HARD@3ba21379:vehicle.model|processor.model",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "vehicle.model",
+        "Ford F-150 pickup truck"
+      ],
+      "right": [
+        "processor.model",
+        "IPCP Pro 550"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "HARD@cc5ded98:coding exercises.duration|coding practice.key to improvement",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "coding exercises.duration",
+        "Two hours a day"
+      ],
+      "right": [
+        "coding practice.key to improvement",
+        "consistent, persistent, and patient"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "HARD@cc5ded98:coding exercises.frequency|coding buddy.purpose",
+      "same_slot": false,
+      "kind": "hard_neg",
+      "left": [
+        "coding exercises.frequency",
+        "two hours each day"
+      ],
+      "right": [
+        "coding buddy.purpose",
+        "learn with, discuss challenges, get feedback"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "EASY@031748ae:team.size|infra.host@450",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "team.size",
+        "5 engineers"
+      ],
+      "right": [
+        "infra.host",
+        "sound of ghostly footsteps"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "EASY@031748ae:team.size|organization strategy.general tip@210",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "team.size",
+        "5 engineers"
+      ],
+      "right": [
+        "organization strategy.general tip",
+        "Group similar items together"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "EASY@031748ae:team size.size|blockchain.application@405",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "team size.size",
+        "five engineers"
+      ],
+      "right": [
+        "blockchain.application",
+        "streamline supply chain management"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "EASY@031748ae:team size.size|python learning resources.course@476",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "team size.size",
+        "five engineers"
+      ],
+      "right": [
+        "python learning resources.course",
+        "Codecademy's Python Course"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "EASY@031748ae:group size.number of engineers|dishwasher.features@228",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "group size.number of engineers",
+        "5"
+      ],
+      "right": [
+        "dishwasher.features",
+        "multiple cycles, quiet operation, and energy efficiency"
+      ]
+    },
+    {
+      "item": "031748ae",
+      "id": "EASY@031748ae:group size.number of engineers|sharp sharp.type@22",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "group size.number of engineers",
+        "5"
+      ],
+      "right": [
+        "sharp sharp.type",
+        "vegan and gluten-free bakery"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.frequency|sides.selection@148",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.frequency",
+        "two hours each day"
+      ],
+      "right": [
+        "sides.selection",
+        "Cilantro Lime Rice and Grilled Pineapple Salad"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.frequency|cleaning tasks.suggestion@291",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.frequency",
+        "two hours each day"
+      ],
+      "right": [
+        "cleaning tasks.suggestion",
+        "Deep clean the refrigerator"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.time per day|idea prioritization factors.factor4@275",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.time per day",
+        "Two hours"
+      ],
+      "right": [
+        "idea prioritization factors.factor4",
+        "Impact and feasibility"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.time per day|sushi.origin@227",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.time per day",
+        "Two hours"
+      ],
+      "right": [
+        "sushi.origin",
+        "Southeast Asia"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.time spent per day|waste disposal.location@434",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.time spent per day",
+        "two hours"
+      ],
+      "right": [
+        "waste disposal.location",
+        "Pampanga"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.time spent per day|ki.weight@459",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.time spent per day",
+        "two hours"
+      ],
+      "right": [
+        "ki.weight",
+        "-1.78 g"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.duration|interests.topics@166",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.duration",
+        "Two hours a day"
+      ],
+      "right": [
+        "interests.topics",
+        "jd-r theory, organizational culture, organizational behavior, too-much of a good thing effect and justice"
+      ]
+    },
+    {
+      "item": "cc5ded98",
+      "id": "EASY@cc5ded98:coding exercises.duration|companies like arco.investment focus@268",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "coding exercises.duration",
+        "Two hours a day"
+      ],
+      "right": [
+        "companies like arco.investment focus",
+        "sustainable energy sources"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:client.marketing team size|infra.threshold@185",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "client.marketing team size",
+        "three people"
+      ],
+      "right": [
+        "infra.threshold",
+        "1/16 of an inch or less"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:client.marketing team size|asking price.value@312",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "client.marketing team size",
+        "three people"
+      ],
+      "right": [
+        "asking price.value",
+        "$120,000"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:marketing team.size|stanford california.reputation source@466",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "marketing team.size",
+        "three people"
+      ],
+      "right": [
+        "stanford california.reputation source",
+        "academic excellence"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:marketing team.size|yoga pants with pockets.tip@110",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "marketing team.size",
+        "three people"
+      ],
+      "right": [
+        "yoga pants with pockets.tip",
+        "Look for slim pockets"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:team size.number of salespeople|closet organization.strategy@270",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "team size.number of salespeople",
+        "3"
+      ],
+      "right": [
+        "closet organization.strategy",
+        "Purge and categorize items into keep, donate/sell, and discard piles"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:team size.number of salespeople|investment decision making process.standard benchmark employed@70",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "team size.number of salespeople",
+        "3"
+      ],
+      "right": [
+        "investment decision making process.standard benchmark employed",
+        "United Nations Sustainable Development Goals (SDGs) as a framework"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:marketing team size.size|cloud storage services.examples@145",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "marketing team size.size",
+        "small"
+      ],
+      "right": [
+        "cloud storage services.examples",
+        "['Google Drive', 'Dropbox', 'iCloud']"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:marketing team size.size|investment decision making process.data sources used@70",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "marketing team size.size",
+        "small"
+      ],
+      "right": [
+        "investment decision making process.data sources used",
+        "various ESG data providers and research firms"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|diet and nutrition.recommendation@403",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "morning routine.quantity of coffee cups per morning",
+        "one cup"
+      ],
+      "right": [
+        "diet and nutrition.recommendation",
+        "Eat a balanced diet rich in antioxidants, omega-3 fatty acids, and essential vitamins and minerals"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|back exercises.exercise 1@52",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "morning routine.quantity of coffee cups per morning",
+        "one cup"
+      ],
+      "right": [
+        "back exercises.exercise 1",
+        "Bent-Over Rows"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:morning coffee limit.new limit|routes or lines.reliability@333",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "morning coffee limit.new limit",
+        "two cups"
+      ],
+      "right": [
+        "routes or lines.reliability",
+        "less reliable than others"
+      ]
+    },
+    {
+      "item": "c6853660",
+      "id": "EASY@c6853660:morning coffee limit.new limit|armadillos.strategy@426",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "morning coffee limit.new limit",
+        "two cups"
+      ],
+      "right": [
+        "armadillos.strategy",
+        "using their burrows or running away"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "EASY@9bbe84a2:level goal.target level|developer.company@145",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "level goal.target level",
+        "100"
+      ],
+      "right": [
+        "developer.company",
+        "Respawn Entertainment"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "EASY@9bbe84a2:level goal.target level|glasswire.function@298",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "level goal.target level",
+        "100"
+      ],
+      "right": [
+        "glasswire.function",
+        "provide insights into the traffic and bandwidth usage of your range extender"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "EASY@9bbe84a2:goal.level|cooking ratio.water to rice ratio@388",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "goal.level",
+        "150"
+      ],
+      "right": [
+        "cooking ratio.water to rice ratio",
+        "1:1.25 to 1:1.5"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "EASY@9bbe84a2:goal.level|hiring manager for rippling role.desired skills@447",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "goal.level",
+        "150"
+      ],
+      "right": [
+        "hiring manager for rippling role.desired skills",
+        "['Demonstrate experience managing a high volume of inbound leads and a willingness to make 20-25 calls per month to engaged prospects', 'Show a track record of successfully navigating a strategic sales process with a 45-day deal time', 'Prove an ability to consistently meet or exceed a monthly quota of $80,000', 'Demonstrate strong organizational and time management skills to effectively prioritize and manage a high volume of inbound leads', 'Exhibit a solid understanding of HRIS/HCM software and security-related products, as well as the ability to become an expert in the Rippling platform', 'Show a passion for helping businesses streamline their HR and IT processes', 'Demonstrate excellent communication skills and an ability to deliver compelling sales presentations and product demos', 'Possess a deep understanding of the competitor landscape and the ability to position Rippling as a superior solution', 'Prove an ability to work collaboratively with the customer success team to ensure a seamless transition for new customers', 'Demonstrate a commitment to continuous learning and development to stay up-to-date on industry trends and new product features']"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "EASY@9bbe84a2:user.goal|manual methods for tracking conversations.examples@338",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "user.goal",
+        "level 150 eventually"
+      ],
+      "right": [
+        "manual methods for tracking conversations.examples",
+        "['Taking a screenshot of the conversation or comment thread', 'Saving the post or comment in a note-taking app like Evernote or OneNote', 'Creating a reminder or task in your calendar to follow up on the conversation']"
+      ]
+    },
+    {
+      "item": "9bbe84a2",
+      "id": "EASY@9bbe84a2:user.goal|lobbyists and special interest groups.influence@79",
+      "same_slot": false,
+      "kind": "easy_neg",
+      "left": [
+        "user.goal",
+        "level 150 eventually"
+      ],
+      "right": [
+        "lobbyists and special interest groups.influence",
+        "passage of bills in Congress"
+      ]
+    }
+  ],
+  "results": {
+    "bare_key": {
+      "recall_all": 0.2105,
+      "threshold_all": 0.890636,
+      "margin_vs_hard": {
+        "min_same": 0.6729,
+        "max_neg": 0.8894,
+        "margin": -0.2164,
+        "clean_recall_above_max_neg": 0.2105,
+        "n_same": 19,
+        "n_neg": 16
+      },
+      "margin_vs_all": {
+        "min_same": 0.6729,
+        "max_neg": 0.8894,
+        "margin": -0.2164,
+        "clean_recall_above_max_neg": 0.2105,
+        "n_same": 19,
+        "n_neg": 48
+      },
+      "pairs": [
+        {
+          "id": "team_size@031748ae:team.size|team size.size",
+          "same_slot": true,
+          "left": "team.size",
+          "right": "team size.size",
+          "similarity": 0.878206
+        },
+        {
+          "id": "team_size@031748ae:team.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team.size",
+          "right": "group size.number of engineers",
+          "similarity": 0.672938
+        },
+        {
+          "id": "team_size@031748ae:team size.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team size.size",
+          "right": "group size.number of engineers",
+          "similarity": 0.754272
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time per day",
+          "same_slot": true,
+          "left": "coding exercises.frequency",
+          "right": "coding exercises.time per day",
+          "similarity": 0.731552
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises.frequency",
+          "right": "coding exercises.time spent per day",
+          "similarity": 0.734426
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises.frequency",
+          "right": "coding exercises.duration",
+          "similarity": 0.749846
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises.time per day",
+          "right": "coding exercises.time spent per day",
+          "similarity": 0.965335
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises.time per day",
+          "right": "coding exercises.duration",
+          "similarity": 0.836226
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time spent per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises.time spent per day",
+          "right": "coding exercises.duration",
+          "similarity": 0.833262
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team.size",
+          "same_slot": true,
+          "left": "client.marketing team size",
+          "right": "marketing team.size",
+          "similarity": 0.890636
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "client.marketing team size",
+          "right": "team size.number of salespeople",
+          "similarity": 0.843561
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team size.size",
+          "same_slot": true,
+          "left": "client.marketing team size",
+          "right": "marketing team size.size",
+          "similarity": 0.957041
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "marketing team.size",
+          "right": "team size.number of salespeople",
+          "similarity": 0.788489
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|marketing team size.size",
+          "same_slot": true,
+          "left": "marketing team.size",
+          "right": "marketing team size.size",
+          "similarity": 0.908968
+        },
+        {
+          "id": "mkt_team_size@c6853660:team size.number of salespeople|marketing team size.size",
+          "same_slot": true,
+          "left": "team size.number of salespeople",
+          "right": "marketing team size.size",
+          "similarity": 0.852357
+        },
+        {
+          "id": "coffee_limit@c6853660:morning routine.quantity of coffee cups per morning|morning coffee limit.new limit",
+          "same_slot": true,
+          "left": "morning routine.quantity of coffee cups per morning",
+          "right": "morning coffee limit.new limit",
+          "similarity": 0.708619
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|goal.level",
+          "same_slot": true,
+          "left": "level goal.target level",
+          "right": "goal.level",
+          "similarity": 0.790863
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|user.goal",
+          "same_slot": true,
+          "left": "level goal.target level",
+          "right": "user.goal",
+          "similarity": 0.694134
+        },
+        {
+          "id": "apex_goal@9bbe84a2:goal.level|user.goal",
+          "same_slot": true,
+          "left": "goal.level",
+          "right": "user.goal",
+          "similarity": 0.673545
+        },
+        {
+          "id": "HARD@031748ae:team.size|team members.count",
+          "same_slot": false,
+          "left": "team.size",
+          "right": "team members.count",
+          "similarity": 0.809309
+        },
+        {
+          "id": "HARD@031748ae:team.size|team outing.attendees",
+          "same_slot": false,
+          "left": "team.size",
+          "right": "team outing.attendees",
+          "similarity": 0.619007
+        },
+        {
+          "id": "HARD@031748ae:group size.number of engineers|team outing.attendees",
+          "same_slot": false,
+          "left": "group size.number of engineers",
+          "right": "team outing.attendees",
+          "similarity": 0.564341
+        },
+        {
+          "id": "HARD@031748ae:team size.size|team outing.type",
+          "same_slot": false,
+          "left": "team size.size",
+          "right": "team outing.type",
+          "similarity": 0.632937
+        },
+        {
+          "id": "HARD@c6853660:morning coffee limit.new limit|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning coffee limit.new limit",
+          "right": "coffee maker.capacity",
+          "similarity": 0.671606
+        },
+        {
+          "id": "HARD@c6853660:morning routine.quantity of coffee cups per morning|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning routine.quantity of coffee cups per morning",
+          "right": "coffee maker.capacity",
+          "similarity": 0.740441
+        },
+        {
+          "id": "HARD@c6853660:marketing team.size|dedicated team.responsibility",
+          "same_slot": false,
+          "left": "marketing team.size",
+          "right": "dedicated team.responsibility",
+          "similarity": 0.599372
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|gail.goal",
+          "same_slot": false,
+          "left": "goal.level",
+          "right": "gail.goal",
+          "similarity": 0.774468
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|comedian.goal",
+          "same_slot": false,
+          "left": "goal.level",
+          "right": "comedian.goal",
+          "similarity": 0.692149
+        },
+        {
+          "id": "HARD@9bbe84a2:user.goal|apex legends.appeal",
+          "same_slot": false,
+          "left": "user.goal",
+          "right": "apex legends.appeal",
+          "similarity": 0.611628
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|project.model",
+          "same_slot": false,
+          "left": "vehicle.model",
+          "right": "project.model",
+          "similarity": 0.642554
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|model car.type",
+          "same_slot": false,
+          "left": "vehicle.model",
+          "right": "model car.type",
+          "similarity": 0.889363
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|rolex watch.model",
+          "same_slot": false,
+          "left": "vehicle.model",
+          "right": "rolex watch.model",
+          "similarity": 0.589922
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|processor.model",
+          "same_slot": false,
+          "left": "vehicle.model",
+          "right": "processor.model",
+          "similarity": 0.635861
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.duration|coding practice.key to improvement",
+          "same_slot": false,
+          "left": "coding exercises.duration",
+          "right": "coding practice.key to improvement",
+          "similarity": 0.692739
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.frequency|coding buddy.purpose",
+          "same_slot": false,
+          "left": "coding exercises.frequency",
+          "right": "coding buddy.purpose",
+          "similarity": 0.659973
+        },
+        {
+          "id": "EASY@031748ae:team.size|infra.host@450",
+          "same_slot": false,
+          "left": "team.size",
+          "right": "infra.host",
+          "similarity": 0.484153
+        },
+        {
+          "id": "EASY@031748ae:team.size|organization strategy.general tip@210",
+          "same_slot": false,
+          "left": "team.size",
+          "right": "organization strategy.general tip",
+          "similarity": 0.508924
+        },
+        {
+          "id": "EASY@031748ae:team size.size|blockchain.application@405",
+          "same_slot": false,
+          "left": "team size.size",
+          "right": "blockchain.application",
+          "similarity": 0.490372
+        },
+        {
+          "id": "EASY@031748ae:team size.size|python learning resources.course@476",
+          "same_slot": false,
+          "left": "team size.size",
+          "right": "python learning resources.course",
+          "similarity": 0.459436
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|dishwasher.features@228",
+          "same_slot": false,
+          "left": "group size.number of engineers",
+          "right": "dishwasher.features",
+          "similarity": 0.480948
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|sharp sharp.type@22",
+          "same_slot": false,
+          "left": "group size.number of engineers",
+          "right": "sharp sharp.type",
+          "similarity": 0.471775
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|sides.selection@148",
+          "same_slot": false,
+          "left": "coding exercises.frequency",
+          "right": "sides.selection",
+          "similarity": 0.435409
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|cleaning tasks.suggestion@291",
+          "same_slot": false,
+          "left": "coding exercises.frequency",
+          "right": "cleaning tasks.suggestion",
+          "similarity": 0.445574
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|idea prioritization factors.factor4@275",
+          "same_slot": false,
+          "left": "coding exercises.time per day",
+          "right": "idea prioritization factors.factor4",
+          "similarity": 0.589314
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|sushi.origin@227",
+          "same_slot": false,
+          "left": "coding exercises.time per day",
+          "right": "sushi.origin",
+          "similarity": 0.439132
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|waste disposal.location@434",
+          "same_slot": false,
+          "left": "coding exercises.time spent per day",
+          "right": "waste disposal.location",
+          "similarity": 0.468182
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|ki.weight@459",
+          "same_slot": false,
+          "left": "coding exercises.time spent per day",
+          "right": "ki.weight",
+          "similarity": 0.523543
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|interests.topics@166",
+          "same_slot": false,
+          "left": "coding exercises.duration",
+          "right": "interests.topics",
+          "similarity": 0.530286
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|companies like arco.investment focus@268",
+          "same_slot": false,
+          "left": "coding exercises.duration",
+          "right": "companies like arco.investment focus",
+          "similarity": 0.485415
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|infra.threshold@185",
+          "same_slot": false,
+          "left": "client.marketing team size",
+          "right": "infra.threshold",
+          "similarity": 0.551311
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|asking price.value@312",
+          "same_slot": false,
+          "left": "client.marketing team size",
+          "right": "asking price.value",
+          "similarity": 0.530619
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|stanford california.reputation source@466",
+          "same_slot": false,
+          "left": "marketing team.size",
+          "right": "stanford california.reputation source",
+          "similarity": 0.393114
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|yoga pants with pockets.tip@110",
+          "same_slot": false,
+          "left": "marketing team.size",
+          "right": "yoga pants with pockets.tip",
+          "similarity": 0.397145
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|closet organization.strategy@270",
+          "same_slot": false,
+          "left": "team size.number of salespeople",
+          "right": "closet organization.strategy",
+          "similarity": 0.55452
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|investment decision making process.standard benchmark employed@70",
+          "same_slot": false,
+          "left": "team size.number of salespeople",
+          "right": "investment decision making process.standard benchmark employed",
+          "similarity": 0.465894
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|cloud storage services.examples@145",
+          "same_slot": false,
+          "left": "marketing team size.size",
+          "right": "cloud storage services.examples",
+          "similarity": 0.621029
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|investment decision making process.data sources used@70",
+          "same_slot": false,
+          "left": "marketing team size.size",
+          "right": "investment decision making process.data sources used",
+          "similarity": 0.576634
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|diet and nutrition.recommendation@403",
+          "same_slot": false,
+          "left": "morning routine.quantity of coffee cups per morning",
+          "right": "diet and nutrition.recommendation",
+          "similarity": 0.532966
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|back exercises.exercise 1@52",
+          "same_slot": false,
+          "left": "morning routine.quantity of coffee cups per morning",
+          "right": "back exercises.exercise 1",
+          "similarity": 0.475532
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|routes or lines.reliability@333",
+          "same_slot": false,
+          "left": "morning coffee limit.new limit",
+          "right": "routes or lines.reliability",
+          "similarity": 0.540081
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|armadillos.strategy@426",
+          "same_slot": false,
+          "left": "morning coffee limit.new limit",
+          "right": "armadillos.strategy",
+          "similarity": 0.535873
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|developer.company@145",
+          "same_slot": false,
+          "left": "level goal.target level",
+          "right": "developer.company",
+          "similarity": 0.535223
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|glasswire.function@298",
+          "same_slot": false,
+          "left": "level goal.target level",
+          "right": "glasswire.function",
+          "similarity": 0.560791
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|cooking ratio.water to rice ratio@388",
+          "same_slot": false,
+          "left": "goal.level",
+          "right": "cooking ratio.water to rice ratio",
+          "similarity": 0.434943
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|hiring manager for rippling role.desired skills@447",
+          "same_slot": false,
+          "left": "goal.level",
+          "right": "hiring manager for rippling role.desired skills",
+          "similarity": 0.56896
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|manual methods for tracking conversations.examples@338",
+          "same_slot": false,
+          "left": "user.goal",
+          "right": "manual methods for tracking conversations.examples",
+          "similarity": 0.60137
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|lobbyists and special interest groups.influence@79",
+          "same_slot": false,
+          "left": "user.goal",
+          "right": "lobbyists and special interest groups.influence",
+          "similarity": 0.520166
+        }
+      ]
+    },
+    "natural_key": {
+      "recall_all": 0.2105,
+      "threshold_all": 0.888077,
+      "margin_vs_hard": {
+        "min_same": 0.6757,
+        "max_neg": 0.8875,
+        "margin": -0.2118,
+        "clean_recall_above_max_neg": 0.2105,
+        "n_same": 19,
+        "n_neg": 16
+      },
+      "margin_vs_all": {
+        "min_same": 0.6757,
+        "max_neg": 0.8875,
+        "margin": -0.2118,
+        "clean_recall_above_max_neg": 0.2105,
+        "n_same": 19,
+        "n_neg": 48
+      },
+      "pairs": [
+        {
+          "id": "team_size@031748ae:team.size|team size.size",
+          "same_slot": true,
+          "left": "team size",
+          "right": "team size size",
+          "similarity": 0.948234
+        },
+        {
+          "id": "team_size@031748ae:team.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team size",
+          "right": "group size number of engineers",
+          "similarity": 0.744355
+        },
+        {
+          "id": "team_size@031748ae:team size.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team size size",
+          "right": "group size number of engineers",
+          "similarity": 0.698765
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time per day",
+          "same_slot": true,
+          "left": "coding exercises frequency",
+          "right": "coding exercises time per day",
+          "similarity": 0.697842
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises frequency",
+          "right": "coding exercises time spent per day",
+          "similarity": 0.710207
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises frequency",
+          "right": "coding exercises duration",
+          "similarity": 0.72861
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises time per day",
+          "right": "coding exercises time spent per day",
+          "similarity": 0.949468
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises time per day",
+          "right": "coding exercises duration",
+          "similarity": 0.844708
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time spent per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises time spent per day",
+          "right": "coding exercises duration",
+          "similarity": 0.820828
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team.size",
+          "same_slot": true,
+          "left": "client marketing team size",
+          "right": "marketing team size",
+          "similarity": 0.888077
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "client marketing team size",
+          "right": "team size number of salespeople",
+          "similarity": 0.781125
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team size.size",
+          "same_slot": true,
+          "left": "client marketing team size",
+          "right": "marketing team size size",
+          "similarity": 0.875454
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "marketing team size",
+          "right": "team size number of salespeople",
+          "similarity": 0.781566
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|marketing team size.size",
+          "same_slot": true,
+          "left": "marketing team size",
+          "right": "marketing team size size",
+          "similarity": 0.947977
+        },
+        {
+          "id": "mkt_team_size@c6853660:team size.number of salespeople|marketing team size.size",
+          "same_slot": true,
+          "left": "team size number of salespeople",
+          "right": "marketing team size size",
+          "similarity": 0.814125
+        },
+        {
+          "id": "coffee_limit@c6853660:morning routine.quantity of coffee cups per morning|morning coffee limit.new limit",
+          "same_slot": true,
+          "left": "morning routine quantity of coffee cups per morning",
+          "right": "morning coffee limit new limit",
+          "similarity": 0.748508
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|goal.level",
+          "same_slot": true,
+          "left": "level goal target level",
+          "right": "goal level",
+          "similarity": 0.798724
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|user.goal",
+          "same_slot": true,
+          "left": "level goal target level",
+          "right": "user goal",
+          "similarity": 0.675749
+        },
+        {
+          "id": "apex_goal@9bbe84a2:goal.level|user.goal",
+          "same_slot": true,
+          "left": "goal level",
+          "right": "user goal",
+          "similarity": 0.768768
+        },
+        {
+          "id": "HARD@031748ae:team.size|team members.count",
+          "same_slot": false,
+          "left": "team size",
+          "right": "team members count",
+          "similarity": 0.754474
+        },
+        {
+          "id": "HARD@031748ae:team.size|team outing.attendees",
+          "same_slot": false,
+          "left": "team size",
+          "right": "team outing attendees",
+          "similarity": 0.664706
+        },
+        {
+          "id": "HARD@031748ae:group size.number of engineers|team outing.attendees",
+          "same_slot": false,
+          "left": "group size number of engineers",
+          "right": "team outing attendees",
+          "similarity": 0.528987
+        },
+        {
+          "id": "HARD@031748ae:team size.size|team outing.type",
+          "same_slot": false,
+          "left": "team size size",
+          "right": "team outing type",
+          "similarity": 0.635132
+        },
+        {
+          "id": "HARD@c6853660:morning coffee limit.new limit|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning coffee limit new limit",
+          "right": "coffee maker capacity",
+          "similarity": 0.692145
+        },
+        {
+          "id": "HARD@c6853660:morning routine.quantity of coffee cups per morning|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning routine quantity of coffee cups per morning",
+          "right": "coffee maker capacity",
+          "similarity": 0.657957
+        },
+        {
+          "id": "HARD@c6853660:marketing team.size|dedicated team.responsibility",
+          "same_slot": false,
+          "left": "marketing team size",
+          "right": "dedicated team responsibility",
+          "similarity": 0.619689
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|gail.goal",
+          "same_slot": false,
+          "left": "goal level",
+          "right": "gail goal",
+          "similarity": 0.770288
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|comedian.goal",
+          "same_slot": false,
+          "left": "goal level",
+          "right": "comedian goal",
+          "similarity": 0.693225
+        },
+        {
+          "id": "HARD@9bbe84a2:user.goal|apex legends.appeal",
+          "same_slot": false,
+          "left": "user goal",
+          "right": "apex legends appeal",
+          "similarity": 0.524411
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|project.model",
+          "same_slot": false,
+          "left": "vehicle model",
+          "right": "project model",
+          "similarity": 0.64321
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|model car.type",
+          "same_slot": false,
+          "left": "vehicle model",
+          "right": "model car type",
+          "similarity": 0.887544
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|rolex watch.model",
+          "same_slot": false,
+          "left": "vehicle model",
+          "right": "rolex watch model",
+          "similarity": 0.578858
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|processor.model",
+          "same_slot": false,
+          "left": "vehicle model",
+          "right": "processor model",
+          "similarity": 0.595186
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.duration|coding practice.key to improvement",
+          "same_slot": false,
+          "left": "coding exercises duration",
+          "right": "coding practice key to improvement",
+          "similarity": 0.70246
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.frequency|coding buddy.purpose",
+          "same_slot": false,
+          "left": "coding exercises frequency",
+          "right": "coding buddy purpose",
+          "similarity": 0.589626
+        },
+        {
+          "id": "EASY@031748ae:team.size|infra.host@450",
+          "same_slot": false,
+          "left": "team size",
+          "right": "infra host",
+          "similarity": 0.55891
+        },
+        {
+          "id": "EASY@031748ae:team.size|organization strategy.general tip@210",
+          "same_slot": false,
+          "left": "team size",
+          "right": "organization strategy general tip",
+          "similarity": 0.625846
+        },
+        {
+          "id": "EASY@031748ae:team size.size|blockchain.application@405",
+          "same_slot": false,
+          "left": "team size size",
+          "right": "blockchain application",
+          "similarity": 0.497601
+        },
+        {
+          "id": "EASY@031748ae:team size.size|python learning resources.course@476",
+          "same_slot": false,
+          "left": "team size size",
+          "right": "python learning resources course",
+          "similarity": 0.433434
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|dishwasher.features@228",
+          "same_slot": false,
+          "left": "group size number of engineers",
+          "right": "dishwasher features",
+          "similarity": 0.394414
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|sharp sharp.type@22",
+          "same_slot": false,
+          "left": "group size number of engineers",
+          "right": "sharp sharp type",
+          "similarity": 0.415629
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|sides.selection@148",
+          "same_slot": false,
+          "left": "coding exercises frequency",
+          "right": "sides selection",
+          "similarity": 0.443632
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|cleaning tasks.suggestion@291",
+          "same_slot": false,
+          "left": "coding exercises frequency",
+          "right": "cleaning tasks suggestion",
+          "similarity": 0.461907
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|idea prioritization factors.factor4@275",
+          "same_slot": false,
+          "left": "coding exercises time per day",
+          "right": "idea prioritization factors factor4",
+          "similarity": 0.575583
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|sushi.origin@227",
+          "same_slot": false,
+          "left": "coding exercises time per day",
+          "right": "sushi origin",
+          "similarity": 0.328563
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|waste disposal.location@434",
+          "same_slot": false,
+          "left": "coding exercises time spent per day",
+          "right": "waste disposal location",
+          "similarity": 0.410617
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|ki.weight@459",
+          "same_slot": false,
+          "left": "coding exercises time spent per day",
+          "right": "ki weight",
+          "similarity": 0.489747
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|interests.topics@166",
+          "same_slot": false,
+          "left": "coding exercises duration",
+          "right": "interests topics",
+          "similarity": 0.462563
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|companies like arco.investment focus@268",
+          "same_slot": false,
+          "left": "coding exercises duration",
+          "right": "companies like arco investment focus",
+          "similarity": 0.390393
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|infra.threshold@185",
+          "same_slot": false,
+          "left": "client marketing team size",
+          "right": "infra threshold",
+          "similarity": 0.4517
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|asking price.value@312",
+          "same_slot": false,
+          "left": "client marketing team size",
+          "right": "asking price value",
+          "similarity": 0.491841
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|stanford california.reputation source@466",
+          "same_slot": false,
+          "left": "marketing team size",
+          "right": "stanford california reputation source",
+          "similarity": 0.409589
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|yoga pants with pockets.tip@110",
+          "same_slot": false,
+          "left": "marketing team size",
+          "right": "yoga pants with pockets tip",
+          "similarity": 0.42826
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|closet organization.strategy@270",
+          "same_slot": false,
+          "left": "team size number of salespeople",
+          "right": "closet organization strategy",
+          "similarity": 0.510705
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|investment decision making process.standard benchmark employed@70",
+          "same_slot": false,
+          "left": "team size number of salespeople",
+          "right": "investment decision making process standard benchmark employed",
+          "similarity": 0.462969
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|cloud storage services.examples@145",
+          "same_slot": false,
+          "left": "marketing team size size",
+          "right": "cloud storage services examples",
+          "similarity": 0.512922
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|investment decision making process.data sources used@70",
+          "same_slot": false,
+          "left": "marketing team size size",
+          "right": "investment decision making process data sources used",
+          "similarity": 0.553115
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|diet and nutrition.recommendation@403",
+          "same_slot": false,
+          "left": "morning routine quantity of coffee cups per morning",
+          "right": "diet and nutrition recommendation",
+          "similarity": 0.468662
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|back exercises.exercise 1@52",
+          "same_slot": false,
+          "left": "morning routine quantity of coffee cups per morning",
+          "right": "back exercises exercise 1",
+          "similarity": 0.413974
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|routes or lines.reliability@333",
+          "same_slot": false,
+          "left": "morning coffee limit new limit",
+          "right": "routes or lines reliability",
+          "similarity": 0.54236
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|armadillos.strategy@426",
+          "same_slot": false,
+          "left": "morning coffee limit new limit",
+          "right": "armadillos strategy",
+          "similarity": 0.484665
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|developer.company@145",
+          "same_slot": false,
+          "left": "level goal target level",
+          "right": "developer company",
+          "similarity": 0.456154
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|glasswire.function@298",
+          "same_slot": false,
+          "left": "level goal target level",
+          "right": "glasswire function",
+          "similarity": 0.463229
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|cooking ratio.water to rice ratio@388",
+          "same_slot": false,
+          "left": "goal level",
+          "right": "cooking ratio water to rice ratio",
+          "similarity": 0.461288
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|hiring manager for rippling role.desired skills@447",
+          "same_slot": false,
+          "left": "goal level",
+          "right": "hiring manager for rippling role desired skills",
+          "similarity": 0.496648
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|manual methods for tracking conversations.examples@338",
+          "same_slot": false,
+          "left": "user goal",
+          "right": "manual methods for tracking conversations examples",
+          "similarity": 0.533917
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|lobbyists and special interest groups.influence@79",
+          "same_slot": false,
+          "left": "user goal",
+          "right": "lobbyists and special interest groups influence",
+          "similarity": 0.5059
+        }
+      ]
+    },
+    "subject": {
+      "recall_all": 0.3158,
+      "threshold_all": 1.0,
+      "margin_vs_hard": {
+        "min_same": 0.5621,
+        "max_neg": 0.9013,
+        "margin": -0.3393,
+        "clean_recall_above_max_neg": 0.3158,
+        "n_same": 19,
+        "n_neg": 16
+      },
+      "margin_vs_all": {
+        "min_same": 0.5621,
+        "max_neg": 0.9013,
+        "margin": -0.3393,
+        "clean_recall_above_max_neg": 0.3158,
+        "n_same": 19,
+        "n_neg": 48
+      },
+      "pairs": [
+        {
+          "id": "team_size@031748ae:team.size|team size.size",
+          "same_slot": true,
+          "left": "team",
+          "right": "team size",
+          "similarity": 0.744496
+        },
+        {
+          "id": "team_size@031748ae:team.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team",
+          "right": "group size",
+          "similarity": 0.653042
+        },
+        {
+          "id": "team_size@031748ae:team size.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team size",
+          "right": "group size",
+          "similarity": 0.891027
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time per day",
+          "same_slot": true,
+          "left": "coding exercises",
+          "right": "coding exercises",
+          "similarity": 1.0
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises",
+          "right": "coding exercises",
+          "similarity": 1.0
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises",
+          "right": "coding exercises",
+          "similarity": 1.0
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises",
+          "right": "coding exercises",
+          "similarity": 1.0
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises",
+          "right": "coding exercises",
+          "similarity": 1.0
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time spent per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises",
+          "right": "coding exercises",
+          "similarity": 1.0
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team.size",
+          "same_slot": true,
+          "left": "client",
+          "right": "marketing team",
+          "similarity": 0.587752
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "client",
+          "right": "team size",
+          "similarity": 0.580735
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team size.size",
+          "same_slot": true,
+          "left": "client",
+          "right": "marketing team size",
+          "similarity": 0.562053
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "marketing team",
+          "right": "team size",
+          "similarity": 0.61574
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|marketing team size.size",
+          "same_slot": true,
+          "left": "marketing team",
+          "right": "marketing team size",
+          "similarity": 0.890014
+        },
+        {
+          "id": "mkt_team_size@c6853660:team size.number of salespeople|marketing team size.size",
+          "same_slot": true,
+          "left": "team size",
+          "right": "marketing team size",
+          "similarity": 0.799712
+        },
+        {
+          "id": "coffee_limit@c6853660:morning routine.quantity of coffee cups per morning|morning coffee limit.new limit",
+          "same_slot": true,
+          "left": "morning routine",
+          "right": "morning coffee limit",
+          "similarity": 0.631188
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|goal.level",
+          "same_slot": true,
+          "left": "level goal",
+          "right": "goal",
+          "similarity": 0.785314
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|user.goal",
+          "same_slot": true,
+          "left": "level goal",
+          "right": "user",
+          "similarity": 0.596914
+        },
+        {
+          "id": "apex_goal@9bbe84a2:goal.level|user.goal",
+          "same_slot": true,
+          "left": "goal",
+          "right": "user",
+          "similarity": 0.691084
+        },
+        {
+          "id": "HARD@031748ae:team.size|team members.count",
+          "same_slot": false,
+          "left": "team",
+          "right": "team members",
+          "similarity": 0.781231
+        },
+        {
+          "id": "HARD@031748ae:team.size|team outing.attendees",
+          "same_slot": false,
+          "left": "team",
+          "right": "team outing",
+          "similarity": 0.744643
+        },
+        {
+          "id": "HARD@031748ae:group size.number of engineers|team outing.attendees",
+          "same_slot": false,
+          "left": "group size",
+          "right": "team outing",
+          "similarity": 0.632498
+        },
+        {
+          "id": "HARD@031748ae:team size.size|team outing.type",
+          "same_slot": false,
+          "left": "team size",
+          "right": "team outing",
+          "similarity": 0.652441
+        },
+        {
+          "id": "HARD@c6853660:morning coffee limit.new limit|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning coffee limit",
+          "right": "coffee maker",
+          "similarity": 0.647317
+        },
+        {
+          "id": "HARD@c6853660:morning routine.quantity of coffee cups per morning|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning routine",
+          "right": "coffee maker",
+          "similarity": 0.453882
+        },
+        {
+          "id": "HARD@c6853660:marketing team.size|dedicated team.responsibility",
+          "same_slot": false,
+          "left": "marketing team",
+          "right": "dedicated team",
+          "similarity": 0.702818
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|gail.goal",
+          "same_slot": false,
+          "left": "goal",
+          "right": "gail",
+          "similarity": 0.697328
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|comedian.goal",
+          "same_slot": false,
+          "left": "goal",
+          "right": "comedian",
+          "similarity": 0.504852
+        },
+        {
+          "id": "HARD@9bbe84a2:user.goal|apex legends.appeal",
+          "same_slot": false,
+          "left": "user",
+          "right": "apex legends",
+          "similarity": 0.603793
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|project.model",
+          "same_slot": false,
+          "left": "vehicle",
+          "right": "project",
+          "similarity": 0.586707
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|model car.type",
+          "same_slot": false,
+          "left": "vehicle",
+          "right": "model car",
+          "similarity": 0.827967
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|rolex watch.model",
+          "same_slot": false,
+          "left": "vehicle",
+          "right": "rolex watch",
+          "similarity": 0.548117
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|processor.model",
+          "same_slot": false,
+          "left": "vehicle",
+          "right": "processor",
+          "similarity": 0.602123
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.duration|coding practice.key to improvement",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "coding practice",
+          "similarity": 0.901342
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.frequency|coding buddy.purpose",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "coding buddy",
+          "similarity": 0.701028
+        },
+        {
+          "id": "EASY@031748ae:team.size|infra.host@450",
+          "same_slot": false,
+          "left": "team",
+          "right": "infra",
+          "similarity": 0.647296
+        },
+        {
+          "id": "EASY@031748ae:team.size|organization strategy.general tip@210",
+          "same_slot": false,
+          "left": "team",
+          "right": "organization strategy",
+          "similarity": 0.637114
+        },
+        {
+          "id": "EASY@031748ae:team size.size|blockchain.application@405",
+          "same_slot": false,
+          "left": "team size",
+          "right": "blockchain",
+          "similarity": 0.50681
+        },
+        {
+          "id": "EASY@031748ae:team size.size|python learning resources.course@476",
+          "same_slot": false,
+          "left": "team size",
+          "right": "python learning resources",
+          "similarity": 0.48345
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|dishwasher.features@228",
+          "same_slot": false,
+          "left": "group size",
+          "right": "dishwasher",
+          "similarity": 0.467178
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|sharp sharp.type@22",
+          "same_slot": false,
+          "left": "group size",
+          "right": "sharp sharp",
+          "similarity": 0.529523
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|sides.selection@148",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "sides",
+          "similarity": 0.54159
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|cleaning tasks.suggestion@291",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "cleaning tasks",
+          "similarity": 0.495879
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|idea prioritization factors.factor4@275",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "idea prioritization factors",
+          "similarity": 0.517171
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|sushi.origin@227",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "sushi",
+          "similarity": 0.461884
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|waste disposal.location@434",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "waste disposal",
+          "similarity": 0.467314
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|ki.weight@459",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "ki",
+          "similarity": 0.534042
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|interests.topics@166",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "interests",
+          "similarity": 0.536597
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|companies like arco.investment focus@268",
+          "same_slot": false,
+          "left": "coding exercises",
+          "right": "companies like arco",
+          "similarity": 0.503495
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|infra.threshold@185",
+          "same_slot": false,
+          "left": "client",
+          "right": "infra",
+          "similarity": 0.687408
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|asking price.value@312",
+          "same_slot": false,
+          "left": "client",
+          "right": "asking price",
+          "similarity": 0.56831
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|stanford california.reputation source@466",
+          "same_slot": false,
+          "left": "marketing team",
+          "right": "stanford california",
+          "similarity": 0.450739
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|yoga pants with pockets.tip@110",
+          "same_slot": false,
+          "left": "marketing team",
+          "right": "yoga pants with pockets",
+          "similarity": 0.439052
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|closet organization.strategy@270",
+          "same_slot": false,
+          "left": "team size",
+          "right": "closet organization",
+          "similarity": 0.593734
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|investment decision making process.standard benchmark employed@70",
+          "same_slot": false,
+          "left": "team size",
+          "right": "investment decision making process",
+          "similarity": 0.531244
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|cloud storage services.examples@145",
+          "same_slot": false,
+          "left": "marketing team size",
+          "right": "cloud storage services",
+          "similarity": 0.485732
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|investment decision making process.data sources used@70",
+          "same_slot": false,
+          "left": "marketing team size",
+          "right": "investment decision making process",
+          "similarity": 0.523999
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|diet and nutrition.recommendation@403",
+          "same_slot": false,
+          "left": "morning routine",
+          "right": "diet and nutrition",
+          "similarity": 0.56126
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|back exercises.exercise 1@52",
+          "same_slot": false,
+          "left": "morning routine",
+          "right": "back exercises",
+          "similarity": 0.531577
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|routes or lines.reliability@333",
+          "same_slot": false,
+          "left": "morning coffee limit",
+          "right": "routes or lines",
+          "similarity": 0.468552
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|armadillos.strategy@426",
+          "same_slot": false,
+          "left": "morning coffee limit",
+          "right": "armadillos",
+          "similarity": 0.41749
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|developer.company@145",
+          "same_slot": false,
+          "left": "level goal",
+          "right": "developer",
+          "similarity": 0.573493
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|glasswire.function@298",
+          "same_slot": false,
+          "left": "level goal",
+          "right": "glasswire",
+          "similarity": 0.536536
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|cooking ratio.water to rice ratio@388",
+          "same_slot": false,
+          "left": "goal",
+          "right": "cooking ratio",
+          "similarity": 0.481781
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|hiring manager for rippling role.desired skills@447",
+          "same_slot": false,
+          "left": "goal",
+          "right": "hiring manager for rippling role",
+          "similarity": 0.49106
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|manual methods for tracking conversations.examples@338",
+          "same_slot": false,
+          "left": "user",
+          "right": "manual methods for tracking conversations",
+          "similarity": 0.573004
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|lobbyists and special interest groups.influence@79",
+          "same_slot": false,
+          "left": "user",
+          "right": "lobbyists and special interest groups",
+          "similarity": 0.557749
+        }
+      ]
+    },
+    "full_fact": {
+      "recall_all": 0.7895,
+      "threshold_all": 0.806474,
+      "margin_vs_hard": {
+        "min_same": 0.7664,
+        "max_neg": 0.7951,
+        "margin": -0.0287,
+        "clean_recall_above_max_neg": 0.7895,
+        "n_same": 19,
+        "n_neg": 16
+      },
+      "margin_vs_all": {
+        "min_same": 0.7664,
+        "max_neg": 0.7951,
+        "margin": -0.0287,
+        "clean_recall_above_max_neg": 0.7895,
+        "n_same": 19,
+        "n_neg": 48
+      },
+      "pairs": [
+        {
+          "id": "team_size@031748ae:team.size|team size.size",
+          "same_slot": true,
+          "left": "team size: 5 engineers",
+          "right": "team size size: five engineers",
+          "similarity": 0.870398
+        },
+        {
+          "id": "team_size@031748ae:team.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team size: 5 engineers",
+          "right": "group size number of engineers: 5",
+          "similarity": 0.941725
+        },
+        {
+          "id": "team_size@031748ae:team size.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team size size: five engineers",
+          "right": "group size number of engineers: 5",
+          "similarity": 0.846307
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time per day",
+          "same_slot": true,
+          "left": "coding exercises frequency: two hours each day",
+          "right": "coding exercises time per day: Two hours",
+          "similarity": 0.858142
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises frequency: two hours each day",
+          "right": "coding exercises time spent per day: two hours",
+          "similarity": 0.832201
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises frequency: two hours each day",
+          "right": "coding exercises duration: Two hours a day",
+          "similarity": 0.917307
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises time per day: Two hours",
+          "right": "coding exercises time spent per day: two hours",
+          "similarity": 0.964041
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises time per day: Two hours",
+          "right": "coding exercises duration: Two hours a day",
+          "similarity": 0.925756
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time spent per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises time spent per day: two hours",
+          "right": "coding exercises duration: Two hours a day",
+          "similarity": 0.883191
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team.size",
+          "same_slot": true,
+          "left": "client marketing team size: three people",
+          "right": "marketing team size: three people",
+          "similarity": 0.886061
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "client marketing team size: three people",
+          "right": "team size number of salespeople: 3",
+          "similarity": 0.792495
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team size.size",
+          "same_slot": true,
+          "left": "client marketing team size: three people",
+          "right": "marketing team size size: small",
+          "similarity": 0.794306
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "marketing team size: three people",
+          "right": "team size number of salespeople: 3",
+          "similarity": 0.819449
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|marketing team size.size",
+          "same_slot": true,
+          "left": "marketing team size: three people",
+          "right": "marketing team size size: small",
+          "similarity": 0.837074
+        },
+        {
+          "id": "mkt_team_size@c6853660:team size.number of salespeople|marketing team size.size",
+          "same_slot": true,
+          "left": "team size number of salespeople: 3",
+          "right": "marketing team size size: small",
+          "similarity": 0.766364
+        },
+        {
+          "id": "coffee_limit@c6853660:morning routine.quantity of coffee cups per morning|morning coffee limit.new limit",
+          "same_slot": true,
+          "left": "morning routine quantity of coffee cups per morning: one cup",
+          "right": "morning coffee limit new limit: two cups",
+          "similarity": 0.783715
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|goal.level",
+          "same_slot": true,
+          "left": "level goal target level: 100",
+          "right": "goal level: 150",
+          "similarity": 0.806474
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|user.goal",
+          "same_slot": true,
+          "left": "level goal target level: 100",
+          "right": "user goal: level 150 eventually",
+          "similarity": 0.866624
+        },
+        {
+          "id": "apex_goal@9bbe84a2:goal.level|user.goal",
+          "same_slot": true,
+          "left": "goal level: 150",
+          "right": "user goal: level 150 eventually",
+          "similarity": 0.871137
+        },
+        {
+          "id": "HARD@031748ae:team.size|team members.count",
+          "same_slot": false,
+          "left": "team size: 5 engineers",
+          "right": "team members count: 4 engineers plus manager Rachel",
+          "similarity": 0.717293
+        },
+        {
+          "id": "HARD@031748ae:team.size|team outing.attendees",
+          "same_slot": false,
+          "left": "team size: 5 engineers",
+          "right": "team outing attendees: 6",
+          "similarity": 0.570192
+        },
+        {
+          "id": "HARD@031748ae:group size.number of engineers|team outing.attendees",
+          "same_slot": false,
+          "left": "group size number of engineers: 5",
+          "right": "team outing attendees: 6",
+          "similarity": 0.567133
+        },
+        {
+          "id": "HARD@031748ae:team size.size|team outing.type",
+          "same_slot": false,
+          "left": "team size size: five engineers",
+          "right": "team outing type: fun activities in the city",
+          "similarity": 0.568873
+        },
+        {
+          "id": "HARD@c6853660:morning coffee limit.new limit|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning coffee limit new limit: two cups",
+          "right": "coffee maker capacity: 8-cup capacity",
+          "similarity": 0.68887
+        },
+        {
+          "id": "HARD@c6853660:morning routine.quantity of coffee cups per morning|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning routine quantity of coffee cups per morning: one cup",
+          "right": "coffee maker capacity: 8-cup capacity",
+          "similarity": 0.629822
+        },
+        {
+          "id": "HARD@c6853660:marketing team.size|dedicated team.responsibility",
+          "same_slot": false,
+          "left": "marketing team size: three people",
+          "right": "dedicated team responsibility: integrating ESG considerations into the investment process and engaging with companies on ESG issues.",
+          "similarity": 0.453196
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|gail.goal",
+          "same_slot": false,
+          "left": "goal level: 150",
+          "right": "gail goal: among the top 50 global energy companies by 2030",
+          "similarity": 0.570406
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|comedian.goal",
+          "same_slot": false,
+          "left": "goal level: 150",
+          "right": "comedian goal: get name out there",
+          "similarity": 0.581092
+        },
+        {
+          "id": "HARD@9bbe84a2:user.goal|apex legends.appeal",
+          "same_slot": false,
+          "left": "user goal: level 150 eventually",
+          "right": "apex legends appeal: Playing with friends is a huge part of its appeal",
+          "similarity": 0.499527
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|project.model",
+          "same_slot": false,
+          "left": "vehicle model: Ford F-150 pickup truck",
+          "right": "project model: Ford Mustang Shelby GT350R",
+          "similarity": 0.755615
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|model car.type",
+          "same_slot": false,
+          "left": "vehicle model: Ford F-150 pickup truck",
+          "right": "model car type: Ford Mustang Shelby GT350R",
+          "similarity": 0.795062
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|rolex watch.model",
+          "same_slot": false,
+          "left": "vehicle model: Ford F-150 pickup truck",
+          "right": "rolex watch model: 1967 Rolex Watch",
+          "similarity": 0.478417
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|processor.model",
+          "same_slot": false,
+          "left": "vehicle model: Ford F-150 pickup truck",
+          "right": "processor model: IPCP Pro 550",
+          "similarity": 0.542547
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.duration|coding practice.key to improvement",
+          "same_slot": false,
+          "left": "coding exercises duration: Two hours a day",
+          "right": "coding practice key to improvement: consistent, persistent, and patient",
+          "similarity": 0.746073
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.frequency|coding buddy.purpose",
+          "same_slot": false,
+          "left": "coding exercises frequency: two hours each day",
+          "right": "coding buddy purpose: learn with, discuss challenges, get feedback",
+          "similarity": 0.722044
+        },
+        {
+          "id": "EASY@031748ae:team.size|infra.host@450",
+          "same_slot": false,
+          "left": "team size: 5 engineers",
+          "right": "infra host: sound of ghostly footsteps",
+          "similarity": 0.449391
+        },
+        {
+          "id": "EASY@031748ae:team.size|organization strategy.general tip@210",
+          "same_slot": false,
+          "left": "team size: 5 engineers",
+          "right": "organization strategy general tip: Group similar items together",
+          "similarity": 0.496087
+        },
+        {
+          "id": "EASY@031748ae:team size.size|blockchain.application@405",
+          "same_slot": false,
+          "left": "team size size: five engineers",
+          "right": "blockchain application: streamline supply chain management",
+          "similarity": 0.495288
+        },
+        {
+          "id": "EASY@031748ae:team size.size|python learning resources.course@476",
+          "same_slot": false,
+          "left": "team size size: five engineers",
+          "right": "python learning resources course: Codecademy's Python Course",
+          "similarity": 0.447342
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|dishwasher.features@228",
+          "same_slot": false,
+          "left": "group size number of engineers: 5",
+          "right": "dishwasher features: multiple cycles, quiet operation, and energy efficiency",
+          "similarity": 0.409012
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|sharp sharp.type@22",
+          "same_slot": false,
+          "left": "group size number of engineers: 5",
+          "right": "sharp sharp type: vegan and gluten-free bakery",
+          "similarity": 0.409131
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|sides.selection@148",
+          "same_slot": false,
+          "left": "coding exercises frequency: two hours each day",
+          "right": "sides selection: Cilantro Lime Rice and Grilled Pineapple Salad",
+          "similarity": 0.412367
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|cleaning tasks.suggestion@291",
+          "same_slot": false,
+          "left": "coding exercises frequency: two hours each day",
+          "right": "cleaning tasks suggestion: Deep clean the refrigerator",
+          "similarity": 0.481531
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|idea prioritization factors.factor4@275",
+          "same_slot": false,
+          "left": "coding exercises time per day: Two hours",
+          "right": "idea prioritization factors factor4: Impact and feasibility",
+          "similarity": 0.48261
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|sushi.origin@227",
+          "same_slot": false,
+          "left": "coding exercises time per day: Two hours",
+          "right": "sushi origin: Southeast Asia",
+          "similarity": 0.255576
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|waste disposal.location@434",
+          "same_slot": false,
+          "left": "coding exercises time spent per day: two hours",
+          "right": "waste disposal location: Pampanga",
+          "similarity": 0.281258
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|ki.weight@459",
+          "same_slot": false,
+          "left": "coding exercises time spent per day: two hours",
+          "right": "ki weight: -1.78 g",
+          "similarity": 0.385829
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|interests.topics@166",
+          "same_slot": false,
+          "left": "coding exercises duration: Two hours a day",
+          "right": "interests topics: jd-r theory, organizational culture, organizational behavior, too-much of a good thing effect and justice",
+          "similarity": 0.369705
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|companies like arco.investment focus@268",
+          "same_slot": false,
+          "left": "coding exercises duration: Two hours a day",
+          "right": "companies like arco investment focus: sustainable energy sources",
+          "similarity": 0.396385
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|infra.threshold@185",
+          "same_slot": false,
+          "left": "client marketing team size: three people",
+          "right": "infra threshold: 1/16 of an inch or less",
+          "similarity": 0.448119
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|asking price.value@312",
+          "same_slot": false,
+          "left": "client marketing team size: three people",
+          "right": "asking price value: $120,000",
+          "similarity": 0.405352
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|stanford california.reputation source@466",
+          "same_slot": false,
+          "left": "marketing team size: three people",
+          "right": "stanford california reputation source: academic excellence",
+          "similarity": 0.315828
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|yoga pants with pockets.tip@110",
+          "same_slot": false,
+          "left": "marketing team size: three people",
+          "right": "yoga pants with pockets tip: Look for slim pockets",
+          "similarity": 0.373668
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|closet organization.strategy@270",
+          "same_slot": false,
+          "left": "team size number of salespeople: 3",
+          "right": "closet organization strategy: Purge and categorize items into keep, donate/sell, and discard piles",
+          "similarity": 0.470486
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|investment decision making process.standard benchmark employed@70",
+          "same_slot": false,
+          "left": "team size number of salespeople: 3",
+          "right": "investment decision making process standard benchmark employed: United Nations Sustainable Development Goals (SDGs) as a framework",
+          "similarity": 0.34742
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|cloud storage services.examples@145",
+          "same_slot": false,
+          "left": "marketing team size size: small",
+          "right": "cloud storage services examples: ['Google Drive', 'Dropbox', 'iCloud']",
+          "similarity": 0.576906
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|investment decision making process.data sources used@70",
+          "same_slot": false,
+          "left": "marketing team size size: small",
+          "right": "investment decision making process data sources used: various ESG data providers and research firms",
+          "similarity": 0.522536
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|diet and nutrition.recommendation@403",
+          "same_slot": false,
+          "left": "morning routine quantity of coffee cups per morning: one cup",
+          "right": "diet and nutrition recommendation: Eat a balanced diet rich in antioxidants, omega-3 fatty acids, and essential vitamins and minerals",
+          "similarity": 0.311326
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|back exercises.exercise 1@52",
+          "same_slot": false,
+          "left": "morning routine quantity of coffee cups per morning: one cup",
+          "right": "back exercises exercise 1: Bent-Over Rows",
+          "similarity": 0.298598
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|routes or lines.reliability@333",
+          "same_slot": false,
+          "left": "morning coffee limit new limit: two cups",
+          "right": "routes or lines reliability: less reliable than others",
+          "similarity": 0.496993
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|armadillos.strategy@426",
+          "same_slot": false,
+          "left": "morning coffee limit new limit: two cups",
+          "right": "armadillos strategy: using their burrows or running away",
+          "similarity": 0.340249
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|developer.company@145",
+          "same_slot": false,
+          "left": "level goal target level: 100",
+          "right": "developer company: Respawn Entertainment",
+          "similarity": 0.544293
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|glasswire.function@298",
+          "same_slot": false,
+          "left": "level goal target level: 100",
+          "right": "glasswire function: provide insights into the traffic and bandwidth usage of your range extender",
+          "similarity": 0.595593
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|cooking ratio.water to rice ratio@388",
+          "same_slot": false,
+          "left": "goal level: 150",
+          "right": "cooking ratio water to rice ratio: 1:1.25 to 1:1.5",
+          "similarity": 0.352365
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|hiring manager for rippling role.desired skills@447",
+          "same_slot": false,
+          "left": "goal level: 150",
+          "right": "hiring manager for rippling role desired skills: ['Demonstrate experience managing a high volume of inbound leads and a willingness to make 20-25 calls per month to engaged prospects', 'Show a track record of successfully navigating a strategic sales process with a 45-day deal time', 'Prove an ability to consistently meet or exceed a monthly quota of $80,000', 'Demonstrate strong organizational and time management skills to effectively prioritize and manage a high volume of inbound leads', 'Exhibit a solid understanding of HRIS/HCM software and security-related products, as well as the ability to become an expert in the Rippling platform', 'Show a passion for helping businesses streamline their HR and IT processes', 'Demonstrate excellent communication skills and an ability to deliver compelling sales presentations and product demos', 'Possess a deep understanding of the competitor landscape and the ability to position Rippling as a superior solution', 'Prove an ability to work collaboratively with the customer success team to ensure a seamless transition for new customers', 'Demonstrate a commitment to continuous learning and development to stay up-to-date on industry trends and new product features']",
+          "similarity": 0.369004
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|manual methods for tracking conversations.examples@338",
+          "same_slot": false,
+          "left": "user goal: level 150 eventually",
+          "right": "manual methods for tracking conversations examples: ['Taking a screenshot of the conversation or comment thread', 'Saving the post or comment in a note-taking app like Evernote or OneNote', 'Creating a reminder or task in your calendar to follow up on the conversation']",
+          "similarity": 0.480717
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|lobbyists and special interest groups.influence@79",
+          "same_slot": false,
+          "left": "user goal: level 150 eventually",
+          "right": "lobbyists and special interest groups influence: passage of bills in Congress",
+          "similarity": 0.36397
+        }
+      ]
+    },
+    "subject_value": {
+      "recall_all": 0.4211,
+      "threshold_all": 0.824461,
+      "margin_vs_hard": {
+        "min_same": 0.5611,
+        "max_neg": 0.8116,
+        "margin": -0.2505,
+        "clean_recall_above_max_neg": 0.4211,
+        "n_same": 19,
+        "n_neg": 16
+      },
+      "margin_vs_all": {
+        "min_same": 0.5611,
+        "max_neg": 0.8116,
+        "margin": -0.2505,
+        "clean_recall_above_max_neg": 0.4211,
+        "n_same": 19,
+        "n_neg": 48
+      },
+      "pairs": [
+        {
+          "id": "team_size@031748ae:team.size|team size.size",
+          "same_slot": true,
+          "left": "team: 5 engineers",
+          "right": "team size: five engineers",
+          "similarity": 0.919071
+        },
+        {
+          "id": "team_size@031748ae:team.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team: 5 engineers",
+          "right": "group size: 5",
+          "similarity": 0.661285
+        },
+        {
+          "id": "team_size@031748ae:team size.size|group size.number of engineers",
+          "same_slot": true,
+          "left": "team size: five engineers",
+          "right": "group size: 5",
+          "similarity": 0.771622
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time per day",
+          "same_slot": true,
+          "left": "coding exercises: two hours each day",
+          "right": "coding exercises: Two hours",
+          "similarity": 0.966465
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises: two hours each day",
+          "right": "coding exercises: two hours",
+          "similarity": 0.967523
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.frequency|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises: two hours each day",
+          "right": "coding exercises: Two hours a day",
+          "similarity": 0.99251
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.time spent per day",
+          "same_slot": true,
+          "left": "coding exercises: Two hours",
+          "right": "coding exercises: two hours",
+          "similarity": 0.998337
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises: Two hours",
+          "right": "coding exercises: Two hours a day",
+          "similarity": 0.960461
+        },
+        {
+          "id": "coding_time@cc5ded98:coding exercises.time spent per day|coding exercises.duration",
+          "same_slot": true,
+          "left": "coding exercises: two hours",
+          "right": "coding exercises: Two hours a day",
+          "similarity": 0.959226
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team.size",
+          "same_slot": true,
+          "left": "client: three people",
+          "right": "marketing team: three people",
+          "similarity": 0.752761
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "client: three people",
+          "right": "team size: 3",
+          "similarity": 0.719381
+        },
+        {
+          "id": "mkt_team_size@c6853660:client.marketing team size|marketing team size.size",
+          "same_slot": true,
+          "left": "client: three people",
+          "right": "marketing team size: small",
+          "similarity": 0.561087
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|team size.number of salespeople",
+          "same_slot": true,
+          "left": "marketing team: three people",
+          "right": "team size: 3",
+          "similarity": 0.690376
+        },
+        {
+          "id": "mkt_team_size@c6853660:marketing team.size|marketing team size.size",
+          "same_slot": true,
+          "left": "marketing team: three people",
+          "right": "marketing team size: small",
+          "similarity": 0.796912
+        },
+        {
+          "id": "mkt_team_size@c6853660:team size.number of salespeople|marketing team size.size",
+          "same_slot": true,
+          "left": "team size: 3",
+          "right": "marketing team size: small",
+          "similarity": 0.750327
+        },
+        {
+          "id": "coffee_limit@c6853660:morning routine.quantity of coffee cups per morning|morning coffee limit.new limit",
+          "same_slot": true,
+          "left": "morning routine: one cup",
+          "right": "morning coffee limit: two cups",
+          "similarity": 0.71864
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|goal.level",
+          "same_slot": true,
+          "left": "level goal: 100",
+          "right": "goal: 150",
+          "similarity": 0.824461
+        },
+        {
+          "id": "apex_goal@9bbe84a2:level goal.target level|user.goal",
+          "same_slot": true,
+          "left": "level goal: 100",
+          "right": "user: level 150 eventually",
+          "similarity": 0.756857
+        },
+        {
+          "id": "apex_goal@9bbe84a2:goal.level|user.goal",
+          "same_slot": true,
+          "left": "goal: 150",
+          "right": "user: level 150 eventually",
+          "similarity": 0.734135
+        },
+        {
+          "id": "HARD@031748ae:team.size|team members.count",
+          "same_slot": false,
+          "left": "team: 5 engineers",
+          "right": "team members: 4 engineers plus manager Rachel",
+          "similarity": 0.750552
+        },
+        {
+          "id": "HARD@031748ae:team.size|team outing.attendees",
+          "same_slot": false,
+          "left": "team: 5 engineers",
+          "right": "team outing: 6",
+          "similarity": 0.556615
+        },
+        {
+          "id": "HARD@031748ae:group size.number of engineers|team outing.attendees",
+          "same_slot": false,
+          "left": "group size: 5",
+          "right": "team outing: 6",
+          "similarity": 0.623814
+        },
+        {
+          "id": "HARD@031748ae:team size.size|team outing.type",
+          "same_slot": false,
+          "left": "team size: five engineers",
+          "right": "team outing: fun activities in the city",
+          "similarity": 0.446009
+        },
+        {
+          "id": "HARD@c6853660:morning coffee limit.new limit|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning coffee limit: two cups",
+          "right": "coffee maker: 8-cup capacity",
+          "similarity": 0.636462
+        },
+        {
+          "id": "HARD@c6853660:morning routine.quantity of coffee cups per morning|coffee maker.capacity",
+          "same_slot": false,
+          "left": "morning routine: one cup",
+          "right": "coffee maker: 8-cup capacity",
+          "similarity": 0.527575
+        },
+        {
+          "id": "HARD@c6853660:marketing team.size|dedicated team.responsibility",
+          "same_slot": false,
+          "left": "marketing team: three people",
+          "right": "dedicated team: integrating ESG considerations into the investment process and engaging with companies on ESG issues.",
+          "similarity": 0.49604
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|gail.goal",
+          "same_slot": false,
+          "left": "goal: 150",
+          "right": "gail: among the top 50 global energy companies by 2030",
+          "similarity": 0.432365
+        },
+        {
+          "id": "HARD@9bbe84a2:goal.level|comedian.goal",
+          "same_slot": false,
+          "left": "goal: 150",
+          "right": "comedian: get name out there",
+          "similarity": 0.438406
+        },
+        {
+          "id": "HARD@9bbe84a2:user.goal|apex legends.appeal",
+          "same_slot": false,
+          "left": "user: level 150 eventually",
+          "right": "apex legends: Playing with friends is a huge part of its appeal",
+          "similarity": 0.576036
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|project.model",
+          "same_slot": false,
+          "left": "vehicle: Ford F-150 pickup truck",
+          "right": "project: Ford Mustang Shelby GT350R",
+          "similarity": 0.801606
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|model car.type",
+          "same_slot": false,
+          "left": "vehicle: Ford F-150 pickup truck",
+          "right": "model car: Ford Mustang Shelby GT350R",
+          "similarity": 0.811557
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|rolex watch.model",
+          "same_slot": false,
+          "left": "vehicle: Ford F-150 pickup truck",
+          "right": "rolex watch: 1967 Rolex Watch",
+          "similarity": 0.441949
+        },
+        {
+          "id": "HARD@3ba21379:vehicle.model|processor.model",
+          "same_slot": false,
+          "left": "vehicle: Ford F-150 pickup truck",
+          "right": "processor: IPCP Pro 550",
+          "similarity": 0.530573
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.duration|coding practice.key to improvement",
+          "same_slot": false,
+          "left": "coding exercises: Two hours a day",
+          "right": "coding practice: consistent, persistent, and patient",
+          "similarity": 0.742632
+        },
+        {
+          "id": "HARD@cc5ded98:coding exercises.frequency|coding buddy.purpose",
+          "same_slot": false,
+          "left": "coding exercises: two hours each day",
+          "right": "coding buddy: learn with, discuss challenges, get feedback",
+          "similarity": 0.744498
+        },
+        {
+          "id": "EASY@031748ae:team.size|infra.host@450",
+          "same_slot": false,
+          "left": "team: 5 engineers",
+          "right": "infra: sound of ghostly footsteps",
+          "similarity": 0.455514
+        },
+        {
+          "id": "EASY@031748ae:team.size|organization strategy.general tip@210",
+          "same_slot": false,
+          "left": "team: 5 engineers",
+          "right": "organization strategy: Group similar items together",
+          "similarity": 0.490074
+        },
+        {
+          "id": "EASY@031748ae:team size.size|blockchain.application@405",
+          "same_slot": false,
+          "left": "team size: five engineers",
+          "right": "blockchain: streamline supply chain management",
+          "similarity": 0.41216
+        },
+        {
+          "id": "EASY@031748ae:team size.size|python learning resources.course@476",
+          "same_slot": false,
+          "left": "team size: five engineers",
+          "right": "python learning resources: Codecademy's Python Course",
+          "similarity": 0.380386
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|dishwasher.features@228",
+          "same_slot": false,
+          "left": "group size: 5",
+          "right": "dishwasher: multiple cycles, quiet operation, and energy efficiency",
+          "similarity": 0.446417
+        },
+        {
+          "id": "EASY@031748ae:group size.number of engineers|sharp sharp.type@22",
+          "same_slot": false,
+          "left": "group size: 5",
+          "right": "sharp sharp: vegan and gluten-free bakery",
+          "similarity": 0.488384
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|sides.selection@148",
+          "same_slot": false,
+          "left": "coding exercises: two hours each day",
+          "right": "sides: Cilantro Lime Rice and Grilled Pineapple Salad",
+          "similarity": 0.442443
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.frequency|cleaning tasks.suggestion@291",
+          "same_slot": false,
+          "left": "coding exercises: two hours each day",
+          "right": "cleaning tasks: Deep clean the refrigerator",
+          "similarity": 0.490269
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|idea prioritization factors.factor4@275",
+          "same_slot": false,
+          "left": "coding exercises: Two hours",
+          "right": "idea prioritization factors: Impact and feasibility",
+          "similarity": 0.518706
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time per day|sushi.origin@227",
+          "same_slot": false,
+          "left": "coding exercises: Two hours",
+          "right": "sushi: Southeast Asia",
+          "similarity": 0.409127
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|waste disposal.location@434",
+          "same_slot": false,
+          "left": "coding exercises: two hours",
+          "right": "waste disposal: Pampanga",
+          "similarity": 0.369119
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.time spent per day|ki.weight@459",
+          "same_slot": false,
+          "left": "coding exercises: two hours",
+          "right": "ki: -1.78 g",
+          "similarity": 0.430965
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|interests.topics@166",
+          "same_slot": false,
+          "left": "coding exercises: Two hours a day",
+          "right": "interests: jd-r theory, organizational culture, organizational behavior, too-much of a good thing effect and justice",
+          "similarity": 0.368246
+        },
+        {
+          "id": "EASY@cc5ded98:coding exercises.duration|companies like arco.investment focus@268",
+          "same_slot": false,
+          "left": "coding exercises: Two hours a day",
+          "right": "companies like arco: sustainable energy sources",
+          "similarity": 0.458748
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|infra.threshold@185",
+          "same_slot": false,
+          "left": "client: three people",
+          "right": "infra: 1/16 of an inch or less",
+          "similarity": 0.481159
+        },
+        {
+          "id": "EASY@c6853660:client.marketing team size|asking price.value@312",
+          "same_slot": false,
+          "left": "client: three people",
+          "right": "asking price: $120,000",
+          "similarity": 0.4045
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|stanford california.reputation source@466",
+          "same_slot": false,
+          "left": "marketing team: three people",
+          "right": "stanford california: academic excellence",
+          "similarity": 0.360517
+        },
+        {
+          "id": "EASY@c6853660:marketing team.size|yoga pants with pockets.tip@110",
+          "same_slot": false,
+          "left": "marketing team: three people",
+          "right": "yoga pants with pockets: Look for slim pockets",
+          "similarity": 0.405331
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|closet organization.strategy@270",
+          "same_slot": false,
+          "left": "team size: 3",
+          "right": "closet organization: Purge and categorize items into keep, donate/sell, and discard piles",
+          "similarity": 0.511688
+        },
+        {
+          "id": "EASY@c6853660:team size.number of salespeople|investment decision making process.standard benchmark employed@70",
+          "same_slot": false,
+          "left": "team size: 3",
+          "right": "investment decision making process: United Nations Sustainable Development Goals (SDGs) as a framework",
+          "similarity": 0.387754
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|cloud storage services.examples@145",
+          "same_slot": false,
+          "left": "marketing team size: small",
+          "right": "cloud storage services: ['Google Drive', 'Dropbox', 'iCloud']",
+          "similarity": 0.42681
+        },
+        {
+          "id": "EASY@c6853660:marketing team size.size|investment decision making process.data sources used@70",
+          "same_slot": false,
+          "left": "marketing team size: small",
+          "right": "investment decision making process: various ESG data providers and research firms",
+          "similarity": 0.470766
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|diet and nutrition.recommendation@403",
+          "same_slot": false,
+          "left": "morning routine: one cup",
+          "right": "diet and nutrition: Eat a balanced diet rich in antioxidants, omega-3 fatty acids, and essential vitamins and minerals",
+          "similarity": 0.381853
+        },
+        {
+          "id": "EASY@c6853660:morning routine.quantity of coffee cups per morning|back exercises.exercise 1@52",
+          "same_slot": false,
+          "left": "morning routine: one cup",
+          "right": "back exercises: Bent-Over Rows",
+          "similarity": 0.388108
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|routes or lines.reliability@333",
+          "same_slot": false,
+          "left": "morning coffee limit: two cups",
+          "right": "routes or lines: less reliable than others",
+          "similarity": 0.484163
+        },
+        {
+          "id": "EASY@c6853660:morning coffee limit.new limit|armadillos.strategy@426",
+          "same_slot": false,
+          "left": "morning coffee limit: two cups",
+          "right": "armadillos: using their burrows or running away",
+          "similarity": 0.331217
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|developer.company@145",
+          "same_slot": false,
+          "left": "level goal: 100",
+          "right": "developer: Respawn Entertainment",
+          "similarity": 0.477331
+        },
+        {
+          "id": "EASY@9bbe84a2:level goal.target level|glasswire.function@298",
+          "same_slot": false,
+          "left": "level goal: 100",
+          "right": "glasswire: provide insights into the traffic and bandwidth usage of your range extender",
+          "similarity": 0.506139
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|cooking ratio.water to rice ratio@388",
+          "same_slot": false,
+          "left": "goal: 150",
+          "right": "cooking ratio: 1:1.25 to 1:1.5",
+          "similarity": 0.480124
+        },
+        {
+          "id": "EASY@9bbe84a2:goal.level|hiring manager for rippling role.desired skills@447",
+          "same_slot": false,
+          "left": "goal: 150",
+          "right": "hiring manager for rippling role: ['Demonstrate experience managing a high volume of inbound leads and a willingness to make 20-25 calls per month to engaged prospects', 'Show a track record of successfully navigating a strategic sales process with a 45-day deal time', 'Prove an ability to consistently meet or exceed a monthly quota of $80,000', 'Demonstrate strong organizational and time management skills to effectively prioritize and manage a high volume of inbound leads', 'Exhibit a solid understanding of HRIS/HCM software and security-related products, as well as the ability to become an expert in the Rippling platform', 'Show a passion for helping businesses streamline their HR and IT processes', 'Demonstrate excellent communication skills and an ability to deliver compelling sales presentations and product demos', 'Possess a deep understanding of the competitor landscape and the ability to position Rippling as a superior solution', 'Prove an ability to work collaboratively with the customer success team to ensure a seamless transition for new customers', 'Demonstrate a commitment to continuous learning and development to stay up-to-date on industry trends and new product features']",
+          "similarity": 0.434855
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|manual methods for tracking conversations.examples@338",
+          "same_slot": false,
+          "left": "user: level 150 eventually",
+          "right": "manual methods for tracking conversations: ['Taking a screenshot of the conversation or comment thread', 'Saving the post or comment in a note-taking app like Evernote or OneNote', 'Creating a reminder or task in your calendar to follow up on the conversation']",
+          "similarity": 0.386374
+        },
+        {
+          "id": "EASY@9bbe84a2:user.goal|lobbyists and special interest groups.influence@79",
+          "same_slot": false,
+          "left": "user: level 150 eventually",
+          "right": "lobbyists and special interest groups: passage of bills in Congress",
+          "similarity": 0.381511
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "model": "gemma4-it:e2b",
+  "n": 8,
+  "correct": 7,
+  "accuracy": 0.875,
+  "pairs": [
+    {
+      "a": "team size: 5 engineers",
+      "b": "group size number of engineers: 5",
+      "gold_same": true,
+      "verdict": "SAME",
+      "correct": true
+    },
+    {
+      "a": "coding exercises duration: Two hours a day",
+      "b": "coding exercises time per day: Two hours",
+      "gold_same": true,
+      "verdict": "SAME",
+      "correct": true
+    },
+    {
+      "a": "level goal target level: 100",
+      "b": "goal level: 150",
+      "gold_same": true,
+      "verdict": "DIFFERENT",
+      "correct": false
+    },
+    {
+      "a": "morning routine quantity of coffee cups per morning: one cup",
+      "b": "morning coffee limit new limit: two cups",
+      "gold_same": true,
+      "verdict": "SAME",
+      "correct": true
+    },
+    {
+      "a": "linkedin posts likes: 20",
+      "b": "linkedin posts comments: 5",
+      "gold_same": false,
+      "verdict": "DIFFERENT",
+      "correct": true
+    },
+    {
+      "a": "corporate team building package capacity: 20 people",
+      "b": "corporate team building package size: 6 people",
+      "gold_same": false,
+      "verdict": "DIFFERENT",
+      "correct": true
+    },
+    {
+      "a": "dessert name: Poffertjes",
+      "b": "dessert name: Dutch apple pie",
+      "gold_same": false,
+      "verdict": "DIFFERENT",
+      "correct": true
+    },
+    {
+      "a": "team size: 5 engineers",
+      "b": "team members count: 4 engineers plus manager Rachel",
+      "gold_same": false,
+      "verdict": "DIFFERENT",
+      "correct": true
+    }
+  ],
+  "note": "dev-only illustrative; pairs drawn from the 5 dev states"
+}

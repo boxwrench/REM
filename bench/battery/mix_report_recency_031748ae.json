@@ -1,0 +1,67 @@
+{
+  "states_dir": "/tmp/onestate",
+  "n_items": 1,
+  "selectors": [
+    "recency"
+  ],
+  "scored": true,
+  "arms": {
+    "recency": {
+      "mix": {
+        "temporal-structure": 1
+      },
+      "items": [
+        {
+          "fitted_tokens": 27870,
+          "fits_budget": true,
+          "gold_in_fitted": {
+            "4 engineers": true,
+            "5 engineers": true
+          },
+          "needle_tiers": {
+            "4 engineers": "slot",
+            "5 engineers": "slot"
+          },
+          "structure_in_fitted": {},
+          "structure_tiers": {},
+          "brief_answer": "You lead five engineers when you just started your new role as Senior Software Engineer.",
+          "answer_contains_gold": false,
+          "answer_contains_structure": false,
+          "failure_mode": "temporal-structure",
+          "engineer_view": {
+            "include_stale_on_render": false,
+            "n_engineer_lines": 3,
+            "any_stale": false,
+            "distinct_slot_keys": [
+              "team members.count",
+              "team size.size",
+              "team.size"
+            ],
+            "lines_in_render_order": [
+              {
+                "turn": 74,
+                "status": "active",
+                "slot_key": "team.size",
+                "text": "team size: 5 engineers"
+              },
+              {
+                "turn": 67,
+                "status": "active",
+                "slot_key": "team size.size",
+                "text": "team size size: five engineers"
+              },
+              {
+                "turn": 12,
+                "status": "active",
+                "slot_key": "team members.count",
+                "text": "team members count: 4 engineers plus manager Rachel"
+              }
+            ]
+          },
+          "question_id": "031748ae",
+          "gold_recency": 0.16326530612244897
+        }
+      ]
+    }
+  }
+}
