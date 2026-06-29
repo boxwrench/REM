@@ -32,6 +32,7 @@ from rem.memory.semantic_identity import (
 from evals.battery.diagnose_memory import gold_in_fitted
 from evals.battery.mix_report import GOLD_NEEDLES, STRUCTURE_NEEDLES
 from evals.battery.mix_report_selector import fit_render_aware, needle_tier
+from evals.memory_methods.state_selection import select_state_records
 
 GEMMA = "gemma4-it:e2b"
 MODEL = "Qwen/Qwen3-Embedding-0.6B"
@@ -67,10 +68,13 @@ def load_embedder():
         show_progress_bar=False)]
 
 
-def run(states_dir, out, threshold, answer):
+def run(states_dir, out, threshold, answer, manifest=None, ids=None):
     settings = Settings(summarizer_model=GEMMA)
     thr = threshold if threshold is not None else settings.embedding_supersession_threshold
-    records = json.loads((Path(states_dir) / "manifest.json").read_text())
+    records = select_state_records(states_dir=states_dir, manifest=manifest, ids=ids)
+    if not records:
+        print("[endtoend] no captured states selected; nothing to do", flush=True)
+        return 0
     embed = load_embedder()
     selector = LexicalSelector()
 
@@ -108,7 +112,7 @@ def run(states_dir, out, threshold, answer):
               f"(-{stats['active_reduction_pct']}%)  merges={stats['semantic_merges_fired']}  "
               f"fitted={n} gold={hits}", flush=True)
 
-    payload = {"states_dir": states_dir, "model": MODEL, "threshold": thr,
+    payload = {"source": manifest or states_dir, "model": MODEL, "threshold": thr,
                "scored": False, "items": items}
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(json.dumps(payload, indent=2))
@@ -154,12 +158,18 @@ def run(states_dir, out, threshold, answer):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--states-dir", default="bench/battery/states")
+    ap.add_argument("--states-dir", default="bench/battery/states",
+                    help="dir with a flat manifest.json (legacy battery layout)")
+    ap.add_argument("--manifest", default=None,
+                    help="frozen development manifest ({'items':[...]}); overrides --states-dir")
+    ap.add_argument("--ids", nargs="*", default=None,
+                    help="optional question_id subset to replay")
     ap.add_argument("--out", default="bench/battery/supersession_endtoend.json")
     ap.add_argument("--threshold", type=float, default=None)
     ap.add_argument("--answer", action="store_true")
     args = ap.parse_args()
-    return run(args.states_dir, args.out, args.threshold, args.answer)
+    return run(args.states_dir, args.out, args.threshold, args.answer,
+               manifest=args.manifest, ids=args.ids)
 
 
 if __name__ == "__main__":

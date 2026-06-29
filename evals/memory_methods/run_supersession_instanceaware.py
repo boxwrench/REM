@@ -22,15 +22,9 @@ from rem.memory.tiers import MemoryState
 from rem.memory.semantic_identity import (
     FullFactEmbeddingMatcher, resupersede_state, quantity_like,
 )
+from evals.memory_methods.state_selection import select_state_records
 
 MODEL = "Qwen/Qwen3-Embedding-0.6B"
-STATES = {
-    "031748ae": "bench/battery/states/031748ae_state.json",
-    "3ba21379": "bench/battery/states/3ba21379_state.json",
-    "9bbe84a2": "bench/battery/states/9bbe84a2_state.json",
-    "c6853660": "bench/battery/states/c6853660_state.json",
-    "cc5ded98": "bench/battery/states/cc5ded98_state.json",
-}
 
 
 def classify(merges):
@@ -70,7 +64,11 @@ def apex_ordered(state):
     return sorted(rows)
 
 
-def run(out):
+def run(out, states_dir="bench/battery/states", manifest=None, ids=None):
+    records = select_state_records(states_dir=states_dir, manifest=manifest, ids=ids)
+    if not records:
+        print("[instanceaware] no captured states selected; nothing to do", flush=True)
+        return 0
     from sentence_transformers import SentenceTransformer
     model = SentenceTransformer(MODEL)
     embed = lambda t: [v.tolist() for v in model.encode(
@@ -81,7 +79,8 @@ def run(out):
     totals = {"plain": {"safe_dedup": 0, "numeric_update": 0, "textual_distinct": 0},
               "instance_aware": {"safe_dedup": 0, "numeric_update": 0, "textual_distinct": 0}}
     print(f"{'state':10s} {'mode':14s} {'active_after':>12s} {'dedup':>6s} {'update':>7s} {'textual':>8s} {'blocked':>8s}")
-    for qid, path in STATES.items():
+    for rec in records:
+        qid, path = rec["question_id"], rec["state_file"]
         base_state = MemoryState.load(path)
         entry = {}
         for mode, va in (("plain", False), ("instance_aware", True)):
@@ -109,20 +108,31 @@ def run(out):
     Path(out).write_text(json.dumps(report, indent=2))
     print(f"\nTOTAL plain:          {totals['plain']}")
     print(f"TOTAL instance_aware: {totals['instance_aware']}")
-    print("\n031748ae team-size (instance-aware):", report["states"]["031748ae"]["team_size_after"])
-    print("9bbe84a2 apex goal  (instance-aware):", report["states"]["9bbe84a2"]["apex_goal_after"])
-    print("\nsample blocked-as-different-instance (031748ae):")
-    for s in report["states"]["031748ae"]["plain"]["textual_samples"]:
-        print("   ", s)
+    # Known diagnostic targets — only print when those items are in the selection.
+    if "031748ae" in report["states"]:
+        print("\n031748ae team-size (instance-aware):",
+              report["states"]["031748ae"].get("team_size_after"))
+        print("sample blocked-as-different-instance (031748ae):")
+        for s in report["states"]["031748ae"]["plain"]["textual_samples"]:
+            print("   ", s)
+    if "9bbe84a2" in report["states"]:
+        print("9bbe84a2 apex goal  (instance-aware):",
+              report["states"]["9bbe84a2"].get("apex_goal_after"))
     print(f"\nWritten to {out}")
     return 0
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--states-dir", default="bench/battery/states",
+                    help="dir with a flat manifest.json (legacy battery layout)")
+    ap.add_argument("--manifest", default=None,
+                    help="frozen development manifest ({'items':[...]}); overrides --states-dir")
+    ap.add_argument("--ids", nargs="*", default=None,
+                    help="optional question_id subset to replay")
     ap.add_argument("--out", default="bench/battery/supersession_instanceaware.json")
     args = ap.parse_args()
-    return run(args.out)
+    return run(args.out, states_dir=args.states_dir, manifest=args.manifest, ids=args.ids)
 
 
 if __name__ == "__main__":
