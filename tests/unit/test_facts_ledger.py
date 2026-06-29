@@ -90,6 +90,56 @@ def test_item_with_only_garbage_keys_is_still_dropped():
         validate_and_repair_items(parsed, turns)
 
 
+def test_recovers_value_less_fact_from_null_value():
+    """Observed live during capture: `{subject, attribute, value:null}` has no
+    'text' and previously raised -> as the only entry in a span it escalated to a
+    hard ExtractionError and the span was kept verbatim. Keep it as a value-less
+    'subject attribute' fact instead (FINDINGS: the value:null missing-text shape).
+    """
+    turns = [Turn(role="user", content="Kowloon Walled City was dense.", turn_id=314, tokens=8)]
+    parsed = [{
+        "kind": "entity", "source_turn_id": 314,
+        "subject": "kowloon walled city", "attribute": "population",
+        "value": None, "is_correction": False,
+    }]
+
+    entries = validate_and_repair_items(parsed, turns)
+
+    assert len(entries) == 1, "value-less fact must be salvaged, not dropped"
+    assert "kowloon walled city" in entries[0].text and "population" in entries[0].text
+    assert entries[0].source_turn_id == 314
+
+
+def test_value_less_fact_with_no_subject_is_still_dropped():
+    """A null value AND no subject/attribute has nothing to derive -> still drop."""
+    turns = [Turn(role="user", content="x", turn_id=7, tokens=1)]
+    parsed = [{"kind": "entity", "source_turn_id": 7, "value": None}]
+    with pytest.raises(ValueError):
+        validate_and_repair_items(parsed, turns)
+
+
+def test_recovers_comma_drop_source_turn_id_artifact():
+    """FINDINGS '"source_turn_id":443,subject"' shape: json_repair fuses the turn
+    id with the dropped 'subject' key and turns the subject value into a bogus key
+    carrying the nested attribute. Reconstruct it instead of losing the fact.
+
+    The parsed dict is the real json_repair output (verified), not hand-built.
+    """
+    raw = ('[{"kind":"entity","source_turn_id":443,subject"team",'
+           '"attribute":"size","value":"5 engineers"}]')
+    turns = [Turn(role="user", content="My team has 5 engineers.", turn_id=443, tokens=8)]
+    import json as _json
+    parsed = _json.loads(clean_json_text(raw))
+
+    entries = validate_and_repair_items(parsed, turns)
+
+    assert len(entries) == 1, "the comma-drop fact must be reconstructed, not lost"
+    e = entries[0]
+    assert e.source_turn_id == 443
+    assert e.subject == "team" and e.attribute == "size"
+    assert "5 engineers" in e.text
+
+
 def test_clean_json_text():
     """Asserts that clean_json_text strips markdown fences, conversational text, and converts sequences of objects."""
     assert clean_json_text("  [1, 2]  ") == "[1, 2]"

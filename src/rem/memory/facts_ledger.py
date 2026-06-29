@@ -886,6 +886,43 @@ def _recover_malformed_keys(item: dict) -> dict:
     return cleaned
 
 
+def _recover_dropped_key_artifact(item: dict) -> dict:
+    """Salvage the comma/quote-drop artifact where a key delimiter is lost.
+
+    When the model emits ``"source_turn_id":443,subject"team","attribute":"size"``
+    (no quote+colon around ``subject``), json_repair produces
+    ``{"source_turn_id": "443,subject", "team": 'attribute":"size', "value": ...}``:
+    the real turn id and the dropped key name are fused into source_turn_id, the
+    subject VALUE becomes a bogus key, and that bogus key's value carries the next
+    field as ``name":"value``. This reconstructs source_turn_id + subject (+ the
+    nested attribute/value) so the fact is not lost. Documented in FINDINGS.md as
+    the ``"source_turn_id":443,subject"`` shape that previously slipped through.
+    """
+    stid = item.get("source_turn_id")
+    if not isinstance(stid, str):
+        return item
+    m = re.match(r"^\s*(\d+)\s*,\s*([a-zA-Z_]+)\s*$", stid)
+    if not m or m.group(2) not in _ALLOWED_FACT_KEYS:
+        return item
+    turn_id, dropped_key = int(m.group(1)), m.group(2)
+    item = dict(item)
+    item["source_turn_id"] = turn_id
+    bogus = [k for k in item if k not in _ALLOWED_FACT_KEYS and isinstance(k, str)]
+    if len(bogus) != 1:
+        return item  # turn id recovered; structure too ambiguous to reconstruct
+    bkey = bogus[0]
+    bval = item.pop(bkey)
+    item.setdefault(dropped_key, bkey)  # the bogus key NAME is the dropped value
+    # The bogus value may carry the next field as `name":"value`.
+    if isinstance(bval, str) and '":"' in bval:
+        nxt_key, _, nxt_val = bval.partition('":"')
+        nxt_key = nxt_key.strip().strip('"').strip()
+        nxt_val = nxt_val.strip().strip('"').strip()
+        if nxt_key in _ALLOWED_FACT_KEYS and nxt_key not in item and nxt_val:
+            item[nxt_key] = nxt_val
+    return item
+
+
 def validate_and_repair_items(parsed: Any, turns: list["Turn"]) -> list[FactEntry]:
     """Validates the parsed JSON list of facts, repairing missing source_turn_id if confident.
 
@@ -911,6 +948,10 @@ def validate_and_repair_items(parsed: Any, turns: list["Turn"]) -> list[FactEntr
         try:
             if not isinstance(item, dict):
                 raise ValueError(f"Fact entry item must be a dictionary, got: {type(item)}")
+
+            # Reconstruct the comma/quote-drop artifact (fused source_turn_id +
+            # bogus subject key) before generic key salvage drops the bogus key.
+            item = _recover_dropped_key_artifact(item)
 
             # Strip/remap json_repair artifact keys and keep the valid core
             # rather than rejecting the whole fact (see _recover_malformed_keys).
@@ -949,6 +990,14 @@ def validate_and_repair_items(parsed: Any, turns: list["Turn"]) -> list[FactEntr
                         item["value"] = val
                 if subj and attr and val:
                     item["text"] = f"{subj} {attr}: {val}"
+                elif subj and attr:
+                    # Value missing/null but subject+attribute are present: keep the
+                    # partial fact as "subject attribute" rather than dropping it.
+                    # When it is the only entry in a span, dropping it escalates to a
+                    # hard ExtractionError -> the whole span kept verbatim (FINDINGS:
+                    # the value:null missing-text shape). A value-less fact is still
+                    # recall signal and never wrongly supersedes (no value to match).
+                    item["text"] = f"{subj} {attr}"
                 else:
                     raise ValueError(
                         "Fact entry is missing 'text' and cannot derive it "
