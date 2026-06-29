@@ -505,6 +505,10 @@ class FactsLedger(BaseModel):
     duplicate_active_suppressions: int = 0
     rendered_text: str | None = Field(default=None, repr=False)
     max_stale_entries: int = 10
+    # Read selectors may deliberately retrieve ordered history for temporal
+    # questions. Persisted/runtime ledgers keep the default and render only the
+    # current view.
+    include_stale_on_render: bool = False
 
     def add(self, entry: FactEntry) -> None:
         """Adds a fact entry to the ledger and marks older slot values stale."""

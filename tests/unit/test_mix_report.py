@@ -34,8 +34,9 @@ def test_label_needs_answer_when_all_present_no_answerer():
     assert out["needle_tiers"]["5 engineers"] == "slot"
 
 
-def test_label_size_when_protected_floor_exceeds_budget():
-    # 200 distinct protected slots blow a tiny budget; cannot fit even minimal.
+def test_label_caps_current_slot_tier_when_it_exceeds_budget():
+    # The revised selector contract is a hard cap: newest slots win when the
+    # current-state tier itself is larger than the budget.
     entries = [FactEntry(kind="number", text=f"metric {i} is forty two units here",
                          source_turn_id=i, status="active",
                          slot_key=f"m.{i}", slot_value=str(i)) for i in range(200)]
@@ -45,8 +46,8 @@ def test_label_size_when_protected_floor_exceeds_budget():
     state = MemoryState(turns=[], summaries=[], ledger=FactsLedger(entries=entries))
     settings = Settings(read_fit_tokens=800)
     out = label_item(state, "headcount?", "5 engineers", ["5 engineers"], settings)
-    assert out["fits_budget"] is False
-    assert out["failure_mode"] == "size"
+    assert out["fits_budget"] is True
+    assert out["gold_in_fitted"]["5 engineers"] is True
 
 
 def test_label_pass_and_temporal_with_injected_answerer():

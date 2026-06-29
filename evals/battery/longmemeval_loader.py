@@ -12,6 +12,9 @@ from pathlib import Path
 from evals.battery.models import QAItem, Session
 
 KNOWLEDGE_UPDATE = "knowledge-update"
+MEMORY_METHOD_CATEGORIES = (
+    "knowledge-update", "temporal-reasoning", "multi-session",
+)
 
 
 def _gold_recency(haystack_ids: list[str], answer_ids: list[str]) -> float:
@@ -29,12 +32,13 @@ def _gold_recency(haystack_ids: list[str], answer_ids: list[str]) -> float:
     return max(positions) / (n - 1)
 
 
-def load_knowledge_update(
+def load_categories(
     path: str | Path,
+    categories: tuple[str, ...] | list[str] | set[str],
     limit: int | None = None,
     max_gold_recency: float | None = None,
 ) -> list[QAItem]:
-    """Load knowledge-update items.
+    """Load selected LongMemEval categories with stable source ordering.
 
     When ``max_gold_recency`` is set, keep only items whose latest gold session
     is at or before that normalized position, sorted oldest-gold first — i.e. the
@@ -43,7 +47,7 @@ def load_knowledge_update(
     raw = json.loads(Path(path).read_text(encoding="utf-8"))
     items: list[QAItem] = []
     for entry in raw:
-        if entry.get("question_type") != KNOWLEDGE_UPDATE:
+        if entry.get("question_type") not in categories:
             continue
         ids = entry["haystack_session_ids"]
         answer_ids = entry.get("answer_session_ids", [])
@@ -56,7 +60,7 @@ def load_knowledge_update(
                 question_id=entry["question_id"],
                 question=entry["question"],
                 answer=entry["answer"],
-                question_type=KNOWLEDGE_UPDATE,
+                question_type=entry["question_type"],
                 sessions=sessions,
                 answer_session_ids=answer_ids,
                 gold_recency=_gold_recency(ids, answer_ids),
@@ -68,3 +72,14 @@ def load_knowledge_update(
     if limit is not None:
         items = items[:limit]
     return items
+
+
+def load_knowledge_update(
+    path: str | Path,
+    limit: int | None = None,
+    max_gold_recency: float | None = None,
+) -> list[QAItem]:
+    return load_categories(
+        path, (KNOWLEDGE_UPDATE,), limit=limit,
+        max_gold_recency=max_gold_recency,
+    )
