@@ -108,14 +108,14 @@ def label_item(state, question, answer, needles, settings, answerer=None,
     }
 
 
-def run(states_dir: str, out: str, settings=None, answerer=None) -> int:
+def run(states_dir: str, out: str, settings=None, answerer=None,
+        manifest: str | None = None, ids=None) -> int:
     settings = settings or Settings(summarizer_model=GEMMA)
-    sdir = Path(states_dir)
-    manifest_path = sdir / "manifest.json"
-    if not manifest_path.exists():
-        print(f"no manifest at {manifest_path}", file=sys.stderr)
+    from evals.memory_methods.state_selection import select_state_records
+    records = select_state_records(states_dir=states_dir, manifest=manifest, ids=ids)
+    if not records:
+        print("no captured states selected", file=sys.stderr)
         return 2
-    records = json.loads(manifest_path.read_text(encoding="utf-8"))
 
     rows = []
     counts: dict[str, int] = {}
@@ -134,7 +134,7 @@ def run(states_dir: str, out: str, settings=None, answerer=None) -> int:
               f"gold_tiers={lab['needle_tiers']} "
               f"struct_tiers={lab['structure_tiers']}", flush=True)
 
-    payload = {"states_dir": str(sdir), "n_items": len(rows),
+    payload = {"source": manifest or states_dir, "n_items": len(rows),
                "mix": counts, "items": rows}
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -145,7 +145,12 @@ def run(states_dir: str, out: str, settings=None, answerer=None) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Failure-mix analysis over captured states")
-    ap.add_argument("--states-dir", default="bench/battery/states")
+    ap.add_argument("--states-dir", default="bench/battery/states",
+                    help="dir with a flat manifest.json (legacy battery layout)")
+    ap.add_argument("--manifest", default=None,
+                    help="frozen development manifest ({'items':[...]}); overrides --states-dir")
+    ap.add_argument("--ids", nargs="*", default=None,
+                    help="optional question_id subset to score")
     ap.add_argument("--out", default="bench/battery/mix_report.json")
     ap.add_argument("--answer", action="store_true",
                     help="Take one brief NPU answer per item (separates pass from "
@@ -158,7 +163,8 @@ def main() -> int:
         npu = NpuClient(Settings(summarizer_model=GEMMA))
         def answerer(ctx, q):
             return answer_question(npu, context=ctx, question=q)
-    return run(args.states_dir, args.out, answerer=answerer)
+    return run(args.states_dir, args.out, answerer=answerer,
+               manifest=args.manifest, ids=args.ids)
 
 
 if __name__ == "__main__":
