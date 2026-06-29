@@ -50,12 +50,20 @@ def test_label_caps_current_slot_tier_when_it_exceeds_budget():
     assert out["gold_in_fitted"]["5 engineers"] is True
 
 
-def test_label_pass_and_temporal_with_injected_answerer():
+def test_label_pass_requires_all_multipart_needles():
+    # Corrected multi-part semantics (FINDINGS): a pass needs EVERY gold needle.
     settings = Settings(read_fit_tokens=4000)
-    good = label_item(_slot_gold(), "headcount?", "5 engineers",
-                      ["4 engineers", "5 engineers"], settings,
-                      answerer=lambda ctx, q: "you lead 5 engineers")
+    good = label_item(
+        _slot_gold(), "headcount?", "5 engineers", ["4 engineers", "5 engineers"],
+        settings,
+        answerer=lambda ctx, q: "you started with 4 engineers and now lead 5 engineers")
     assert good["failure_mode"] == "pass"
+    # The now-only answer omits 'started=4' -> temporal-structure, not a pass.
+    # This is exactly the 031748ae any()-substring artifact the fix removes.
+    now_only = label_item(_slot_gold(), "headcount?", "5 engineers",
+                          ["4 engineers", "5 engineers"], settings,
+                          answerer=lambda ctx, q: "you lead 5 engineers")
+    assert now_only["failure_mode"] == "temporal-structure"
     bad = label_item(_slot_gold(), "headcount?", "5 engineers",
                      ["4 engineers", "5 engineers"], settings,
                      answerer=lambda ctx, q: "the memory does not say")

@@ -180,9 +180,15 @@ def fit_with_selector(state, question, settings):
 
 
 def gold_in_fitted(fitted_text: str, needles: list[str]) -> dict[str, bool]:
-    """Whether each gold needle survives into the fitted slice (case-insensitive)."""
-    low = fitted_text.lower()
-    return {n: n.lower() in low for n in needles}
+    """Whether each gold needle survives into the fitted slice.
+
+    Number-aware, canonicalized match (evals.battery.needles): spelled cardinals
+    equal digits and punctuation is flattened, so "5 engineers" hits "five
+    engineers" and "level 100" hits a "...target level: 100" rendering — fixing
+    the bare-number/spelled-number mislabels documented in FINDINGS.md.
+    """
+    from evals.battery.needles import match
+    return match(needles, fitted_text)
 
 
 def run(data: str, max_gold_recency: float, out: str,
