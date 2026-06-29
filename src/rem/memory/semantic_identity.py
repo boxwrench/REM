@@ -139,6 +139,98 @@ class FullFactEmbeddingMatcher:
         return True
 
 
+class TypedIdentityMatcher(FullFactEmbeddingMatcher):
+    """Embedding fast-path + an LLM judge ONLY in the ambiguous band (cost-bounded).
+
+    Clear cases stay on cosine: sim >= ``high_threshold`` -> SAME, sim <
+    ``low_threshold`` -> DIFFERENT, no judge call. Only pairs in ``[low, high)`` —
+    where similarity and identity diverge — call ``judge(full_fact_a, full_fact_b)
+    -> bool`` (True == SAME slot, i.e. supersede). FINDINGS Gate-4 a2: a reasoning
+    judge separates "number of engineers"~"size" (SAME) from "likes"~"comments"
+    (DIFFERENT), which no single cosine threshold can. The judge is injected, so
+    this is NPU-free under test (stub) and wraps gemma in production
+    (``make_gemma_slot_judge``). ``judge_calls``/``judged`` bound and audit the
+    write-time NPU cost. ``value_aware`` still applies after a SAME decision.
+    """
+
+    def __init__(
+        self,
+        embed: Callable[[Sequence[str]], Sequence[Sequence[float]]],
+        judge: Callable[[str, str], bool],
+        low_threshold: float = 0.70,
+        high_threshold: float = 0.88,
+        value_aware: bool = False,
+    ) -> None:
+        if not (0.0 <= low_threshold <= high_threshold <= 1.0):
+            raise ValueError("require 0 <= low_threshold <= high_threshold <= 1")
+        super().__init__(embed, threshold=high_threshold, value_aware=value_aware)
+        self.low_threshold = low_threshold
+        self.high_threshold = high_threshold
+        self._judge = judge
+        self.judged: list[dict] = []   # audit of band pairs sent to the judge
+        self.judge_calls = 0           # bounded write-time NPU cost
+
+    def same_slot(self, a: FactEntry, b: FactEntry) -> bool:
+        if not (a.slot_value and b.slot_value):
+            return False
+        if self.require_subject_overlap and not self._subjects_overlap(a, b):
+            return False
+        ta, tb = full_fact_text(a), full_fact_text(b)
+        sim = float(np.dot(self._vec(ta), self._vec(tb)))
+        if sim >= self.high_threshold:
+            same = True
+        elif sim < self.low_threshold:
+            same = False
+        else:
+            same = bool(self._judge(ta, tb))
+            self.judge_calls += 1
+            self.judged.append(
+                {"sim": round(sim, 4), "a": ta, "b": tb, "verdict_same": same})
+        if not same:
+            return False
+        if self.value_aware:
+            va = (a.slot_value or "").strip().lower()
+            vb = (b.slot_value or "").strip().lower()
+            if va != vb and not (quantity_like(a.slot_value) and quantity_like(b.slot_value)):
+                self.blocked.append({
+                    "sim": round(sim, 4),
+                    "a_key": a.slot_key, "a_value": a.slot_value,
+                    "b_key": b.slot_key, "b_value": b.slot_value,
+                })
+                return False
+        self.merges.append({
+            "sim": round(sim, 4),
+            "kept_key": b.slot_key, "kept_value": b.slot_value,
+            "merged_key": a.slot_key, "merged_value": a.slot_value,
+        })
+        return True
+
+
+def make_gemma_slot_judge(npu, model: str = "gemma4-it:e2b") -> Callable[[str, str], bool]:
+    """Build a SAME/DIFFERENT slot judge backed by a local gemma call.
+
+    Returns ``judge(fact_a, fact_b) -> bool`` (True == SAME slot). Only touches the
+    NPU when invoked, so constructing it (and importing this module) stays free —
+    the matcher above calls it only for ambiguous-band pairs. Prompt mirrors
+    evals/memory_methods/run_typed_identity_probe.py (7/8 on the decisive pairs).
+    """
+    system = (
+        "You decide whether two stored facts describe the SAME attribute of the "
+        "SAME entity (so a newer one should replace the older as an update) or "
+        "DIFFERENT attributes/entities (both should be kept). Reply with exactly "
+        "one word: SAME or DIFFERENT."
+    )
+
+    def judge(a: str, b: str) -> bool:
+        out = npu.chat(
+            [{"role": "system", "content": system},
+             {"role": "user", "content": f"Fact A: {a}\nFact B: {b}\nAnswer:"}],
+            model=model, max_tokens=8).strip().upper()
+        return "SAME" in out and "DIFFER" not in out
+
+    return judge
+
+
 def resupersede_state(
     state: MemoryState,
     matcher: FullFactEmbeddingMatcher,
