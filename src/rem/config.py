@@ -42,6 +42,13 @@ class Settings(BaseSettings):
     # from max_context_tokens, which is the assemble safety ceiling.
     read_fit_tokens: int = 28000
     deterministic_fact_capture: bool = True
+    # Embedding-based slot identity for supersession (Gate 4 follow-up). When on and
+    # an embedder is wired into the ledger, supersession treats two entries whose
+    # full-fact embeddings ("natural key: value") reach the threshold as the same
+    # slot, collapsing semantically-equivalent keys that exact string matching leaves
+    # fragmented. Off by default (needs an embedder + chosen threshold).
+    embedding_supersession: bool = False
+    embedding_supersession_threshold: float = 0.80
 
     # Wiki parameters (Path B)
     compile_max_pages: int = 15

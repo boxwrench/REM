@@ -4,7 +4,7 @@ import json
 import logging
 import re
 from typing import Any, TYPE_CHECKING, Literal, TypeAlias
-from pydantic import BaseModel, Field, field_validator, model_validator, ValidationError
+from pydantic import BaseModel, Field, PrivateAttr, field_validator, model_validator, ValidationError
 from rem.npu_client import NpuClient
 from rem.memory.prompts import (
     FACT_EXTRACTION_SYSTEM,
@@ -509,6 +509,28 @@ class FactsLedger(BaseModel):
     # questions. Persisted/runtime ledgers keep the default and render only the
     # current view.
     include_stale_on_render: bool = False
+    # Optional pluggable slot-identity matcher (Gate 4). When set, supersession
+    # treats two entries as the same slot if exact slot_key matches OR the matcher
+    # says so (e.g. full-fact embedding identity). Default None preserves the exact
+    # string-key behavior. Excluded from serialization (PrivateAttr).
+    _slot_matcher: Any = PrivateAttr(default=None)
+
+    def set_slot_matcher(self, matcher: Any) -> None:
+        """Install (or clear with None) the semantic slot-identity matcher."""
+        self._slot_matcher = matcher
+
+    def _same_slot(self, existing: "FactEntry", new_entry: "FactEntry") -> bool:
+        """Whether two entries occupy the same current-state slot.
+
+        Exact slot_key equality always counts. When a matcher is installed it can
+        additionally merge semantically-equivalent keys; the matcher decides the
+        cross-key case only (exact matches short-circuit here).
+        """
+        if existing.slot_key and new_entry.slot_key and existing.slot_key == new_entry.slot_key:
+            return True
+        if self._slot_matcher is not None:
+            return bool(self._slot_matcher.same_slot(existing, new_entry))
+        return False
 
     def add(self, entry: FactEntry) -> None:
         """Adds a fact entry to the ledger and marks older slot values stale."""
@@ -552,7 +574,7 @@ class FactsLedger(BaseModel):
         for existing in self.entries:
             if existing.status != "stale":
                 continue
-            if existing.slot_key != new_entry.slot_key:
+            if not self._same_slot(existing, new_entry):
                 continue
             if existing.slot_value == new_entry.slot_value:
                 # The new entry carries a value that has already been superseded.
@@ -562,7 +584,7 @@ class FactsLedger(BaseModel):
                     # Defensive: find the active entry for this slot.
                     for e2 in self.entries:
                         if (e2.status == "active" and
-                                e2.slot_key == new_entry.slot_key and
+                                self._same_slot(e2, new_entry) and
                                 e2.slot_value != new_entry.slot_value):
                             winner_turn = e2.source_turn_id
                             break
@@ -574,7 +596,7 @@ class FactsLedger(BaseModel):
         for existing in self.entries:
             if existing.status != "active":
                 continue
-            if existing.slot_key != new_entry.slot_key:
+            if not self._same_slot(existing, new_entry):
                 continue
             if existing.slot_value == new_entry.slot_value:
                 continue
