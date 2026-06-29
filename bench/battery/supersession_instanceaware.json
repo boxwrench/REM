@@ -1,0 +1,231 @@
+{
+  "model": "Qwen/Qwen3-Embedding-0.6B",
+  "threshold": 0.8,
+  "states": {
+    "031748ae": {
+      "plain": {
+        "active_after": 704,
+        "active_reduction_pct": 25.11,
+        "merges": 434,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 39,
+          "numeric_update": 65,
+          "textual_distinct": 330
+        },
+        "textual_samples": [
+          "city view rooftop.capacity='20 people' -> city view rooftop.type='corporate team outing' (sim 0.8216)",
+          "corporate team building package.capacity='20 people' -> package interest.type='Corporate Team Building Package' (sim 0.871)",
+          "corporate team building package.size='6 people' -> package interest.type='Corporate Team Building Package' (sim 0.8438)",
+          "dessert.name='Poffertjes' -> dessert.name apple pie='Dutch apple pie' (sim 0.8557)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 891,
+        "active_reduction_pct": 5.21,
+        "merges": 104,
+        "blocked": 335,
+        "taxonomy": {
+          "safe_dedup": 39,
+          "numeric_update": 65,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [
+          [
+            "team.size",
+            "5 engineers"
+          ]
+        ],
+        "stale": [
+          [
+            "group size.number of engineers",
+            "5"
+          ],
+          [
+            "team size.size",
+            "five engineers"
+          ]
+        ]
+      },
+      "apex_goal_after": null
+    },
+    "3ba21379": {
+      "plain": {
+        "active_after": 677,
+        "active_reduction_pct": 18.92,
+        "merges": 265,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 28,
+          "numeric_update": 26,
+          "textual_distinct": 211
+        },
+        "textual_samples": [
+          "keywords.category='General AI and Machine Learning Keywords' -> frameworks and tools.frameworks tools=\"['TensorFlow', 'PyTorch', 'Keras', 'Scikit-learn', 'OpenCV', 'Caffe', 'Theano', 'Microsoft Cognitive Toolkit (CNTK)', 'H2O.ai', 'Google Cloud AI Platform']\" (sim 0.8284)",
+          "frameworks and tools.frameworks tools=\"['TensorFlow', 'PyTorch', 'Keras', 'Scikit-learn', 'OpenCV', 'Caffe', 'Theano', 'Microsoft Cognitive Toolkit (CNTK)', 'H2O.ai', 'Google Cloud AI Platform']\" -> skills.tools used=\"['Python', 'TensorFlow', 'PyTorch']\" (sim 0.8254)",
+          "programming languages.languages=\"['Python', 'R', 'Julia', 'Java', 'C++', 'MATLAB']\" -> coding practice.language='Python, R, or Julia' (sim 0.8437)",
+          "frameworks and tools.frameworks tools=\"['TensorFlow', 'PyTorch', 'Keras', 'Scikit-learn', 'OpenCV', 'Caffe', 'Theano', 'Microsoft Cognitive Toolkit (CNTK)', 'H2O.ai', 'Google Cloud AI Platform']\" -> libraries frameworks.examples='TensorFlow, PyTorch, Scikit-learn, Keras, and OpenCV' (sim 0.8289)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 810,
+        "active_reduction_pct": 2.99,
+        "merges": 54,
+        "blocked": 212,
+        "taxonomy": {
+          "safe_dedup": 28,
+          "numeric_update": 26,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    },
+    "9bbe84a2": {
+      "plain": {
+        "active_after": 686,
+        "active_reduction_pct": 19.67,
+        "merges": 238,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 23,
+          "numeric_update": 45,
+          "textual_distinct": 170
+        },
+        "textual_samples": [
+          "gail.event='major acquisitions or divestitures' -> gail.plans='future acquisitions or divestitures' (sim 0.8817)",
+          "gail.plans='future acquisitions or divestitures' -> gail.status='has a lot to navigate in the coming years' (sim 0.8019)",
+          "gail.investment focus='research and development to explore new technologies and alternative sources of energy' -> gail.investment='new technologies' (sim 0.8842)",
+          "gail.investment focus='research and development to explore new technologies and alternative sources of energy' -> gail.efforts='exploring innovative technologies and alternative sources of energy' (sim 0.8244)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 817,
+        "active_reduction_pct": 4.33,
+        "merges": 68,
+        "blocked": 175,
+        "taxonomy": {
+          "safe_dedup": 23,
+          "numeric_update": 45,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": [
+        [
+          61,
+          "stale",
+          "level goal.target level",
+          "100"
+        ],
+        [
+          140,
+          "stale",
+          "user.goal",
+          "level 150 eventually"
+        ],
+        [
+          144,
+          "active",
+          "goal.level",
+          "150"
+        ]
+      ]
+    },
+    "c6853660": {
+      "plain": {
+        "active_after": 724,
+        "active_reduction_pct": 22.81,
+        "merges": 381,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 32,
+          "numeric_update": 55,
+          "textual_distinct": 294
+        },
+        "textual_samples": [
+          "application process.type='asylum application process' -> application process.stage='one step closer to completing asylum application process' (sim 0.8479)",
+          "language exchange partner.type='native speaker tutors' -> language partner.role='help improve English skills and share culture/experiences' (sim 0.9104)",
+          "language exchange partner.type='native speaker tutors' -> partner type.role='language exchange partner' (sim 0.8001)",
+          "language partner.role='help improve English skills and share culture/experiences' -> partner type.role='language exchange partner' (sim 0.8044)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 891,
+        "active_reduction_pct": 5.01,
+        "merges": 87,
+        "blocked": 297,
+        "taxonomy": {
+          "safe_dedup": 32,
+          "numeric_update": 55,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    },
+    "cc5ded98": {
+      "plain": {
+        "active_after": 677,
+        "active_reduction_pct": 24.94,
+        "merges": 410,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 23,
+          "numeric_update": 42,
+          "textual_distinct": 345
+        },
+        "textual_samples": [
+          "ethical implications.type=\"['Autonomy', 'Authenticity', 'Health and Safety', 'Social Justice', 'Responsibility']\" -> actions.criteria=\"['safe', 'legal', 'ethical']\" (sim 0.816)",
+          "reality alteration.consideration='ethical considerations' -> reality.alteration='complex issue' (sim 0.8687)",
+          "using technology.requirement='use technology responsibly and consider the ethical implications of altering reality when using technology' -> ethical considerations and regulations around technology.role='mitigate potential risks and ensure responsible use' (sim 0.8232)",
+          "technology.impact='double-edged sword' -> technology changes.impact='alter our reality in ways that we may not even realize' (sim 0.8128)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 871,
+        "active_reduction_pct": 3.44,
+        "merges": 67,
+        "blocked": 348,
+        "taxonomy": {
+          "safe_dedup": 25,
+          "numeric_update": 42,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    }
+  },
+  "totals": {
+    "plain": {
+      "safe_dedup": 145,
+      "numeric_update": 233,
+      "textual_distinct": 1350
+    },
+    "instance_aware": {
+      "safe_dedup": 147,
+      "numeric_update": 233,
+      "textual_distinct": 0
+    }
+  }
+}

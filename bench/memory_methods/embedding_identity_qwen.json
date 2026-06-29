@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "experiment": "embedding-slot-identity-local",
+  "repository_revision": "b43943636baf5a480b2fb6454193ec515c5e6771",
+  "model": "Qwen/Qwen3-Embedding-0.6B",
+  "backend": "sentence-transformers (local, CPU)",
+  "fixtures": "bench/memory_methods/diagnostic_fixtures.json",
+  "created_at": 1782711066.9186723,
+  "results": {
+    "canonical_fixtures": {
+      "pairs": [
+        {
+          "id": "team-size-paraphrase",
+          "left": "team.size",
+          "right": "group size.number of engineers",
+          "same_slot": true,
+          "similarity": 0.672938
+        },
+        {
+          "id": "coding-duration-paraphrase",
+          "left": "coding exercises.time spent per day",
+          "right": "daily coding practice.duration",
+          "same_slot": true,
+          "similarity": 0.82659
+        },
+        {
+          "id": "coffee-limit-paraphrase",
+          "left": "morning routine.coffee cup limit",
+          "right": "morning coffee.maximum quantity",
+          "same_slot": true,
+          "similarity": 0.932497
+        },
+        {
+          "id": "camera-model-capacity",
+          "left": "camera.model",
+          "right": "camera.capacity",
+          "same_slot": false,
+          "similarity": 0.755081
+        },
+        {
+          "id": "team-size-outing-attendance",
+          "left": "team.size",
+          "right": "team outing.attendees",
+          "same_slot": false,
+          "similarity": 0.619007
+        },
+        {
+          "id": "game-level-target",
+          "left": "game.current level",
+          "right": "game.target level",
+          "same_slot": false,
+          "similarity": 0.792
+        }
+      ],
+      "best_zero_false_merge_threshold": {
+        "threshold": 0.82659,
+        "true_merges": 2,
+        "false_merges": 0,
+        "same_slot_recall": 0.6667
+      },
+      "embedding_latency_ms": 91.038,
+      "n_texts": 12,
+      "wall_ms": 91.6
+    },
+    "extended_real_keys": {
+      "pairs": [
+        {
+          "id": "team-size-a",
+          "left": "team.size",
+          "right": "team size.size",
+          "same_slot": true,
+          "similarity": 0.878206
+        },
+        {
+          "id": "team-size-b",
+          "left": "team size.size",
+          "right": "group size.number of engineers",
+          "same_slot": true,
+          "similarity": 0.754272
+        },
+        {
+          "id": "coding-a",
+          "left": "coding exercises.time per day",
+          "right": "coding exercises.duration",
+          "same_slot": true,
+          "similarity": 0.836226
+        },
+        {
+          "id": "coding-b",
+          "left": "coding exercises.time spent per day",
+          "right": "coding exercises.frequency",
+          "same_slot": true,
+          "similarity": 0.734366
+        },
+        {
+          "id": "apex-goal-a",
+          "left": "goal.level",
+          "right": "level.target level for goal setting",
+          "same_slot": true,
+          "similarity": 0.812506
+        },
+        {
+          "id": "apex-goal-b",
+          "left": "goal.level",
+          "right": "user.goal",
+          "same_slot": true,
+          "similarity": 0.673545
+        },
+        {
+          "id": "trap-team-outing",
+          "left": "team.size",
+          "right": "team members.count",
+          "same_slot": false,
+          "similarity": 0.809309
+        },
+        {
+          "id": "trap-goal-vs-level",
+          "left": "goal.level",
+          "right": "level goal.target level",
+          "same_slot": false,
+          "similarity": 0.790863
+        },
+        {
+          "id": "trap-coffee",
+          "left": "morning coffee.maximum quantity",
+          "right": "morning routine.quantity",
+          "same_slot": false,
+          "similarity": 0.705721
+        }
+      ],
+      "best_zero_false_merge_threshold": {
+        "threshold": 0.812506,
+        "true_merges": 3,
+        "false_merges": 0,
+        "same_slot_recall": 0.5
+      },
+      "embedding_latency_ms": 77.596,
+      "n_texts": 18,
+      "wall_ms": 78.6
+    }
+  }
+}

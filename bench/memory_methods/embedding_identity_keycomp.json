@@ -1,0 +1,693 @@
+{
+  "schema_version": 1,
+  "experiment": "embedding-slot-identity-keycomposition",
+  "repository_revision": "b43943636baf5a480b2fb6454193ec515c5e6771",
+  "model": "Qwen/Qwen3-Embedding-0.6B",
+  "backend": "sentence-transformers (local, CPU)",
+  "created_at": 1782711519.2990146,
+  "canonical_fixtures": {
+    "bare_key": {
+      "pairs": [
+        {
+          "id": "team-size-paraphrase",
+          "same_slot": true,
+          "left": "team.size",
+          "right": "group size.number of engineers",
+          "similarity": 0.672938
+        },
+        {
+          "id": "coding-duration-paraphrase",
+          "same_slot": true,
+          "left": "coding exercises.time spent per day",
+          "right": "daily coding practice.duration",
+          "similarity": 0.82659
+        },
+        {
+          "id": "coffee-limit-paraphrase",
+          "same_slot": true,
+          "left": "morning routine.coffee cup limit",
+          "right": "morning coffee.maximum quantity",
+          "similarity": 0.932497
+        },
+        {
+          "id": "camera-model-capacity",
+          "same_slot": false,
+          "left": "camera.model",
+          "right": "camera.capacity",
+          "similarity": 0.755081
+        },
+        {
+          "id": "team-size-outing-attendance",
+          "same_slot": false,
+          "left": "team.size",
+          "right": "team outing.attendees",
+          "similarity": 0.619007
+        },
+        {
+          "id": "game-level-target",
+          "same_slot": false,
+          "left": "game.current level",
+          "right": "game.target level",
+          "similarity": 0.792
+        }
+      ],
+      "best_zero_false_merge_threshold": {
+        "threshold": 0.82659,
+        "true_merges": 2,
+        "false_merges": 0,
+        "same_slot_recall": 0.6667
+      },
+      "embedding_latency_ms": 95.082,
+      "n_texts": 12
+    },
+    "natural_key": {
+      "pairs": [
+        {
+          "id": "team-size-paraphrase",
+          "same_slot": true,
+          "left": "team size",
+          "right": "group size number of engineers",
+          "similarity": 0.744355
+        },
+        {
+          "id": "coding-duration-paraphrase",
+          "same_slot": true,
+          "left": "coding exercises time spent per day",
+          "right": "daily coding practice duration",
+          "similarity": 0.815794
+        },
+        {
+          "id": "coffee-limit-paraphrase",
+          "same_slot": true,
+          "left": "morning routine coffee cup limit",
+          "right": "morning coffee maximum quantity",
+          "similarity": 0.90944
+        },
+        {
+          "id": "camera-model-capacity",
+          "same_slot": false,
+          "left": "camera model",
+          "right": "camera capacity",
+          "similarity": 0.749429
+        },
+        {
+          "id": "team-size-outing-attendance",
+          "same_slot": false,
+          "left": "team size",
+          "right": "team outing attendees",
+          "similarity": 0.664706
+        },
+        {
+          "id": "game-level-target",
+          "same_slot": false,
+          "left": "game current level",
+          "right": "game target level",
+          "similarity": 0.709277
+        }
+      ],
+      "best_zero_false_merge_threshold": {
+        "threshold": 0.815794,
+        "true_merges": 2,
+        "false_merges": 0,
+        "same_slot_recall": 0.6667
+      },
+      "embedding_latency_ms": 66.59,
+      "n_texts": 12
+    },
+    "subject": {
+      "pairs": [
+        {
+          "id": "team-size-paraphrase",
+          "same_slot": true,
+          "left": "team",
+          "right": "group size",
+          "similarity": 0.653584
+        },
+        {
+          "id": "coding-duration-paraphrase",
+          "same_slot": true,
+          "left": "coding exercises",
+          "right": "daily coding practice",
+          "similarity": 0.747598
+        },
+        {
+          "id": "coffee-limit-paraphrase",
+          "same_slot": true,
+          "left": "morning routine",
+          "right": "morning coffee",
+          "similarity": 0.710106
+        },
+        {
+          "id": "camera-model-capacity",
+          "same_slot": false,
+          "left": "camera",
+          "right": "camera",
+          "similarity": 1.0
+        },
+        {
+          "id": "team-size-outing-attendance",
+          "same_slot": false,
+          "left": "team",
+          "right": "team outing",
+          "similarity": 0.744685
+        },
+        {
+          "id": "game-level-target",
+          "same_slot": false,
+          "left": "game",
+          "right": "game",
+          "similarity": 1.0
+        }
+      ],
+      "best_zero_false_merge_threshold": null,
+      "embedding_latency_ms": 49.204,
+      "n_texts": 12
+    }
+  },
+  "real_entries": {
+    "pairs_def": [
+      {
+        "left": [
+          "team.size",
+          "5 engineers"
+        ],
+        "right": [
+          "group size.number of engineers",
+          "5"
+        ],
+        "same_slot": true
+      },
+      {
+        "left": [
+          "team.size",
+          "5 engineers"
+        ],
+        "right": [
+          "team size.size",
+          "five engineers"
+        ],
+        "same_slot": true
+      },
+      {
+        "left": [
+          "coding exercises.time per day",
+          "Two hours"
+        ],
+        "right": [
+          "coding exercises.duration",
+          "Two hours a day"
+        ],
+        "same_slot": true
+      },
+      {
+        "left": [
+          "coding exercises.frequency",
+          "two hours each day"
+        ],
+        "right": [
+          "coding exercises.time spent per day",
+          "two hours"
+        ],
+        "same_slot": true
+      },
+      {
+        "left": [
+          "morning routine.quantity of coffee cups per morning",
+          "one cup"
+        ],
+        "right": [
+          "morning coffee limit.new limit",
+          "two cups"
+        ],
+        "same_slot": true
+      },
+      {
+        "left": [
+          "level goal.target level",
+          "100"
+        ],
+        "right": [
+          "goal.level",
+          "150"
+        ],
+        "same_slot": true
+      },
+      {
+        "left": [
+          "team.size",
+          "5 engineers"
+        ],
+        "right": [
+          "team members.count",
+          "4 engineers plus manager Rachel"
+        ],
+        "same_slot": false
+      },
+      {
+        "left": [
+          "team.size",
+          "5 engineers"
+        ],
+        "right": [
+          "team outing.attendees",
+          "6"
+        ],
+        "same_slot": false
+      },
+      {
+        "left": [
+          "morning coffee limit.new limit",
+          "two cups"
+        ],
+        "right": [
+          "coffee maker.capacity",
+          "8-cup capacity"
+        ],
+        "same_slot": false
+      },
+      {
+        "left": [
+          "goal.level",
+          "150"
+        ],
+        "right": [
+          "budget.level",
+          "low budget"
+        ],
+        "same_slot": false
+      }
+    ],
+    "results": {
+      "bare_key": {
+        "pairs": [
+          {
+            "id": "team_size_a|team_size_c",
+            "same_slot": true,
+            "left": "team.size",
+            "right": "group size.number of engineers",
+            "similarity": 0.672938
+          },
+          {
+            "id": "team_size_a|team_size_b",
+            "same_slot": true,
+            "left": "team.size",
+            "right": "team size.size",
+            "similarity": 0.878206
+          },
+          {
+            "id": "coding_tpd|coding_dur",
+            "same_slot": true,
+            "left": "coding exercises.time per day",
+            "right": "coding exercises.duration",
+            "similarity": 0.8359
+          },
+          {
+            "id": "coding_freq|coding_tspd",
+            "same_slot": true,
+            "left": "coding exercises.frequency",
+            "right": "coding exercises.time spent per day",
+            "similarity": 0.734426
+          },
+          {
+            "id": "coffee_one|coffee_two",
+            "same_slot": true,
+            "left": "morning routine.quantity of coffee cups per morning",
+            "right": "morning coffee limit.new limit",
+            "similarity": 0.708619
+          },
+          {
+            "id": "goal_prior|goal_now",
+            "same_slot": true,
+            "left": "level goal.target level",
+            "right": "goal.level",
+            "similarity": 0.790863
+          },
+          {
+            "id": "team_size_a|team_outing_count",
+            "same_slot": false,
+            "left": "team.size",
+            "right": "team members.count",
+            "similarity": 0.809309
+          },
+          {
+            "id": "team_size_a|team_outing_attend",
+            "same_slot": false,
+            "left": "team.size",
+            "right": "team outing.attendees",
+            "similarity": 0.619007
+          },
+          {
+            "id": "coffee_two|coffee_maker_cap",
+            "same_slot": false,
+            "left": "morning coffee limit.new limit",
+            "right": "coffee maker.capacity",
+            "similarity": 0.671606
+          },
+          {
+            "id": "goal_now|budget_level",
+            "same_slot": false,
+            "left": "goal.level",
+            "right": "budget.level",
+            "similarity": 0.771922
+          }
+        ],
+        "best_zero_false_merge_threshold": {
+          "threshold": 0.8359,
+          "true_merges": 2,
+          "false_merges": 0,
+          "same_slot_recall": 0.3333
+        },
+        "embedding_latency_ms": 94.267,
+        "n_texts": 20
+      },
+      "natural_key": {
+        "pairs": [
+          {
+            "id": "team_size_a|team_size_c",
+            "same_slot": true,
+            "left": "team size",
+            "right": "group size number of engineers",
+            "similarity": 0.744355
+          },
+          {
+            "id": "team_size_a|team_size_b",
+            "same_slot": true,
+            "left": "team size",
+            "right": "team size size",
+            "similarity": 0.948234
+          },
+          {
+            "id": "coding_tpd|coding_dur",
+            "same_slot": true,
+            "left": "coding exercises time per day",
+            "right": "coding exercises duration",
+            "similarity": 0.844708
+          },
+          {
+            "id": "coding_freq|coding_tspd",
+            "same_slot": true,
+            "left": "coding exercises frequency",
+            "right": "coding exercises time spent per day",
+            "similarity": 0.710207
+          },
+          {
+            "id": "coffee_one|coffee_two",
+            "same_slot": true,
+            "left": "morning routine quantity of coffee cups per morning",
+            "right": "morning coffee limit new limit",
+            "similarity": 0.748508
+          },
+          {
+            "id": "goal_prior|goal_now",
+            "same_slot": true,
+            "left": "level goal target level",
+            "right": "goal level",
+            "similarity": 0.798724
+          },
+          {
+            "id": "team_size_a|team_outing_count",
+            "same_slot": false,
+            "left": "team size",
+            "right": "team members count",
+            "similarity": 0.754474
+          },
+          {
+            "id": "team_size_a|team_outing_attend",
+            "same_slot": false,
+            "left": "team size",
+            "right": "team outing attendees",
+            "similarity": 0.664706
+          },
+          {
+            "id": "coffee_two|coffee_maker_cap",
+            "same_slot": false,
+            "left": "morning coffee limit new limit",
+            "right": "coffee maker capacity",
+            "similarity": 0.692145
+          },
+          {
+            "id": "goal_now|budget_level",
+            "same_slot": false,
+            "left": "goal level",
+            "right": "budget level",
+            "similarity": 0.706529
+          }
+        ],
+        "best_zero_false_merge_threshold": {
+          "threshold": 0.798724,
+          "true_merges": 3,
+          "false_merges": 0,
+          "same_slot_recall": 0.5
+        },
+        "embedding_latency_ms": 88.484,
+        "n_texts": 20
+      },
+      "subject": {
+        "pairs": [
+          {
+            "id": "team_size_a|team_size_c",
+            "same_slot": true,
+            "left": "team",
+            "right": "group size",
+            "similarity": 0.653584
+          },
+          {
+            "id": "team_size_a|team_size_b",
+            "same_slot": true,
+            "left": "team",
+            "right": "team size",
+            "similarity": 0.744928
+          },
+          {
+            "id": "coding_tpd|coding_dur",
+            "same_slot": true,
+            "left": "coding exercises",
+            "right": "coding exercises",
+            "similarity": 1.0
+          },
+          {
+            "id": "coding_freq|coding_tspd",
+            "same_slot": true,
+            "left": "coding exercises",
+            "right": "coding exercises",
+            "similarity": 1.0
+          },
+          {
+            "id": "coffee_one|coffee_two",
+            "same_slot": true,
+            "left": "morning routine",
+            "right": "morning coffee limit",
+            "similarity": 0.631689
+          },
+          {
+            "id": "goal_prior|goal_now",
+            "same_slot": true,
+            "left": "level goal",
+            "right": "goal",
+            "similarity": 0.785314
+          },
+          {
+            "id": "team_size_a|team_outing_count",
+            "same_slot": false,
+            "left": "team",
+            "right": "team members",
+            "similarity": 0.781752
+          },
+          {
+            "id": "team_size_a|team_outing_attend",
+            "same_slot": false,
+            "left": "team",
+            "right": "team outing",
+            "similarity": 0.744685
+          },
+          {
+            "id": "coffee_two|coffee_maker_cap",
+            "same_slot": false,
+            "left": "morning coffee limit",
+            "right": "coffee maker",
+            "similarity": 0.645742
+          },
+          {
+            "id": "goal_now|budget_level",
+            "same_slot": false,
+            "left": "goal",
+            "right": "budget",
+            "similarity": 0.663122
+          }
+        ],
+        "best_zero_false_merge_threshold": {
+          "threshold": 0.785314,
+          "true_merges": 3,
+          "false_merges": 0,
+          "same_slot_recall": 0.5
+        },
+        "embedding_latency_ms": 62.52,
+        "n_texts": 20
+      },
+      "full_fact": {
+        "pairs": [
+          {
+            "id": "team_size_a|team_size_c",
+            "same_slot": true,
+            "left": "team size: 5 engineers",
+            "right": "group size number of engineers: 5",
+            "similarity": 0.941725
+          },
+          {
+            "id": "team_size_a|team_size_b",
+            "same_slot": true,
+            "left": "team size: 5 engineers",
+            "right": "team size size: five engineers",
+            "similarity": 0.870398
+          },
+          {
+            "id": "coding_tpd|coding_dur",
+            "same_slot": true,
+            "left": "coding exercises time per day: Two hours",
+            "right": "coding exercises duration: Two hours a day",
+            "similarity": 0.925844
+          },
+          {
+            "id": "coding_freq|coding_tspd",
+            "same_slot": true,
+            "left": "coding exercises frequency: two hours each day",
+            "right": "coding exercises time spent per day: two hours",
+            "similarity": 0.834231
+          },
+          {
+            "id": "coffee_one|coffee_two",
+            "same_slot": true,
+            "left": "morning routine quantity of coffee cups per morning: one cup",
+            "right": "morning coffee limit new limit: two cups",
+            "similarity": 0.783556
+          },
+          {
+            "id": "goal_prior|goal_now",
+            "same_slot": true,
+            "left": "level goal target level: 100",
+            "right": "goal level: 150",
+            "similarity": 0.806544
+          },
+          {
+            "id": "team_size_a|team_outing_count",
+            "same_slot": false,
+            "left": "team size: 5 engineers",
+            "right": "team members count: 4 engineers plus manager Rachel",
+            "similarity": 0.719499
+          },
+          {
+            "id": "team_size_a|team_outing_attend",
+            "same_slot": false,
+            "left": "team size: 5 engineers",
+            "right": "team outing attendees: 6",
+            "similarity": 0.570192
+          },
+          {
+            "id": "coffee_two|coffee_maker_cap",
+            "same_slot": false,
+            "left": "morning coffee limit new limit: two cups",
+            "right": "coffee maker capacity: 8-cup capacity",
+            "similarity": 0.691608
+          },
+          {
+            "id": "goal_now|budget_level",
+            "same_slot": false,
+            "left": "goal level: 150",
+            "right": "budget level: low budget",
+            "similarity": 0.611231
+          }
+        ],
+        "best_zero_false_merge_threshold": {
+          "threshold": 0.783556,
+          "true_merges": 6,
+          "false_merges": 0,
+          "same_slot_recall": 1.0
+        },
+        "embedding_latency_ms": 109.262,
+        "n_texts": 20
+      },
+      "subject_value": {
+        "pairs": [
+          {
+            "id": "team_size_a|team_size_c",
+            "same_slot": true,
+            "left": "team: 5 engineers",
+            "right": "group size: 5",
+            "similarity": 0.662229
+          },
+          {
+            "id": "team_size_a|team_size_b",
+            "same_slot": true,
+            "left": "team: 5 engineers",
+            "right": "team size: five engineers",
+            "similarity": 0.919446
+          },
+          {
+            "id": "coding_tpd|coding_dur",
+            "same_slot": true,
+            "left": "coding exercises: Two hours",
+            "right": "coding exercises: Two hours a day",
+            "similarity": 0.960122
+          },
+          {
+            "id": "coding_freq|coding_tspd",
+            "same_slot": true,
+            "left": "coding exercises: two hours each day",
+            "right": "coding exercises: two hours",
+            "similarity": 0.966129
+          },
+          {
+            "id": "coffee_one|coffee_two",
+            "same_slot": true,
+            "left": "morning routine: one cup",
+            "right": "morning coffee limit: two cups",
+            "similarity": 0.719872
+          },
+          {
+            "id": "goal_prior|goal_now",
+            "same_slot": true,
+            "left": "level goal: 100",
+            "right": "goal: 150",
+            "similarity": 0.823958
+          },
+          {
+            "id": "team_size_a|team_outing_count",
+            "same_slot": false,
+            "left": "team: 5 engineers",
+            "right": "team members: 4 engineers plus manager Rachel",
+            "similarity": 0.752258
+          },
+          {
+            "id": "team_size_a|team_outing_attend",
+            "same_slot": false,
+            "left": "team: 5 engineers",
+            "right": "team outing: 6",
+            "similarity": 0.553928
+          },
+          {
+            "id": "coffee_two|coffee_maker_cap",
+            "same_slot": false,
+            "left": "morning coffee limit: two cups",
+            "right": "coffee maker: 8-cup capacity",
+            "similarity": 0.637186
+          },
+          {
+            "id": "goal_now|budget_level",
+            "same_slot": false,
+            "left": "goal: 150",
+            "right": "budget: low budget",
+            "similarity": 0.585623
+          }
+        ],
+        "best_zero_false_merge_threshold": {
+          "threshold": 0.823958,
+          "true_merges": 4,
+          "false_merges": 0,
+          "same_slot_recall": 0.6667
+        },
+        "embedding_latency_ms": 100.086,
+        "n_texts": 20
+      }
+    }
+  }
+}

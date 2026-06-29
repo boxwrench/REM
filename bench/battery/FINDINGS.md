@@ -330,3 +330,386 @@ experiment: establish a Qwen embedding baseline before testing DREAM. The planne
 `031748ae` paid answer rerun was skipped because both quantitative candidates had
 already failed the promotion threshold, and that item remains diagnostic rather
 than gating due to its ambiguous source inference.
+
+## Gate 2 — temporal LexicalSelector vs RecencySelector (the skipped paid run)
+
+The canonicalization detour skipped the one paid answer that closes Gate 2: does
+the query-aware `LexicalSelector` (temporal history + ranked fill) resolve
+`031748ae`'s then→now miss that `RecencySelector` produced? Run with the
+selector-parameterized mix runner `evals/battery/mix_report_selector.py` over the
+five captured states. Artifacts: `mix_report_selectors_npufree.json` (recency /
+lexical / lexical-packed, NPU-free, deterministic), `mix_report_lexical.json`
+(lexical, one brief NPU answer per item), and
+`mix_report_recency_031748ae.json` (same-code recency baseline for the headline
+item).
+
+**NPU-free structure (the load-bearing, deterministic evidence).** All five items
+fit the 28k budget under all three selectors (fitted 27,647–27,890). On the
+temporal query the lexical arm correctly flips `include_stale_on_render=True` — but
+on `031748ae` `any_stale=False`. The three engineer facts are all *active* under
+distinct slot keys and render in the same order under recency and lexical:
+
+| turn | status | slot_key | text |
+|---|---|---|---|
+| 74 | active | `team.size` | team size: 5 engineers |
+| 67 | active | `team size.size` | team size size: five engineers |
+| 12 | active | `team members.count` | team members count: 4 engineers plus manager Rachel |
+
+Query-aware ranking reorders the surrounding ~27k of context but cannot create a
+started→now order the write side never recorded. There is no stale edge to surface
+because supersession never fired (the values sit under four different keys; see the
+write-recall audit above).
+
+**Paid answers (one brief Gemma answer per item).** No selector produces the
+correct two-part gold (started = 4, now = 5):
+
+| selector (run) | `031748ae` brief answer | reading |
+|---|---|---|
+| recency (earlier `mix_report.json`) | "The memory does not contain information…" | refusal |
+| recency (same-code rerun) | "You lead five engineers when you just started…" | wrong: 5 attributed to *start*; *now* omitted |
+| lexical | "You lead 5 engineers." | *now* = 5 correct; *then* = 4 omitted |
+
+The runner's `any()`-substring rule labelled lexical's `031748ae` a **pass** — a
+measurement artifact (only "5 engineers" matched). Under the two-part gold it is
+still a **temporal-structure** miss. `9bbe84a2` remains the documented
+retrieval-recall artifact: the brief answer "previous goal … was 100" is correct,
+but the bare-number needle "level 100" does not substring-match. Corrected, the
+lexical mix is the same shape as recency — **4 pass / 1 temporal-structure** — with
+`031748ae` unresolved.
+
+**Two findings, one weak and one strong.** (1) Weak: the brief answerer is *not*
+reproducible run-to-run at temperature 0 — three runs over the same `031748ae`
+state gave a refusal, a wrong-attribution, and a now-only answer. Single brief-answer
+labels are therefore weak evidence; the deterministic NPU-free structural check is
+load-bearing. Needle methodology to fix before the next mix: normalize spelled
+numbers ("five" ≡ "5") and require *all* gold needles for multi-part questions.
+(2) Strong: across every selector and every run the model never reconstructs
+then = 4 / now = 5, because the read path has no ordered then→now structure to
+retrieve.
+
+**Verdict.** The temporal `LexicalSelector` does **not** resolve `031748ae`. Read-path
+query-awareness is exhausted for this item; the residual is write-side slot
+fragmentation (no supersession → no order), which is exactly the Gate 4 trigger. No
+promotion claim is made: these five oldest-gold states are diagnostic, not the
+frozen 30-item development suite (Gate 1), which must still be materialized before
+any Gate 2 promotion verdict. `031748ae` stays diagnostic, not gating (its "4" is
+the team-outing headcount, a dataset inference).
+
+**Next:** Gate 4 — the Qwen embedding-identity baseline, so semantically equivalent
+keys (`team.size` / `team size.size` / `group size.number of engineers`) collapse,
+supersession can order the team-size updates, and an ordered current-state set
+reaches the read path. Then the DREAM challenger.
+
+## Gate 4 — Qwen embedding-identity baseline
+
+The string-first canonicalization residual is semantic, so this is the activated
+embedding baseline DREAM must beat. The FLM NPU server returns null embeddings for
+its generative models, so the baseline runs `Qwen/Qwen3-Embedding-0.6B` locally
+(sentence-transformers, CPU) through the existing `evaluate_pairs` harness. Runner:
+`evals/memory_methods/run_embedding_identity_local.py`; artifact:
+`bench/memory_methods/embedding_identity_qwen.json`. Slot keys are embedded
+symmetrically (no asymmetric query prompt), cosine over L2-normalized vectors.
+Deterministic (re-run reproduces every similarity to 1e-6).
+
+**Canonical 6-pair fixtures.** Best zero-false-merge threshold = **0.827**, same-slot
+recall **0.667 (2/3)**.
+
+| same? | cosine | left ↔ right |
+|---|---:|---|
+| merge | 0.9325 | morning routine.coffee cup limit ↔ morning coffee.maximum quantity |
+| merge | 0.8266 | coding exercises.time spent per day ↔ daily coding practice.duration |
+| merge | **0.6729** | team.size ↔ group size.number of engineers |
+| keep apart | 0.7920 | game.current level ↔ game.target level |
+| keep apart | 0.7551 | camera.model ↔ camera.capacity |
+| keep apart | 0.6190 | team.size ↔ team outing.attendees |
+
+**Extended real fragmented keys (9 pairs, from the write-recall audit).** Best
+zero-false-merge threshold = **0.8125**, same-slot recall **0.5 (3/6)**.
+
+| same? | cosine | left ↔ right |
+|---|---:|---|
+| merge | 0.8782 | team.size ↔ team size.size |
+| merge | 0.8362 | coding exercises.time per day ↔ coding exercises.duration |
+| merge | 0.8125 | goal.level ↔ level.target level for goal setting |
+| merge | 0.7543 | team size.size ↔ group size.number of engineers |
+| merge | 0.7344 | coding exercises.time spent per day ↔ coding exercises.frequency |
+| merge | 0.6735 | goal.level ↔ user.goal |
+| keep apart | **0.8093** | team.size ↔ team members.count  *(031748ae: 5-engineer team vs 4+Rachel outing)* |
+| keep apart | 0.7909 | goal.level ↔ level goal.target level  *(current goal 150 vs prior goal 100)* |
+| keep apart | 0.7057 | morning coffee.maximum quantity ↔ morning routine.quantity |
+
+**Verdict: insufficient as a global-threshold merge — and it fails hardest exactly
+where it must succeed.** The same-slot and different-slot cosine distributions
+overlap. The hardest genuine paraphrase, `team.size ↔ group size.number of engineers`
+(0.673 — the 031748ae fragmentation), scores *below* two must-not-merge traps. Worse,
+on the extended set the `team.size ↔ team members.count` trap scores **0.809, above
+most genuine merges**, so a threshold high enough to reject it recovers only half the
+real fragments. Qwen3-Embedding-0.6B does reach merges string-first could not (coffee
+0.93, coding-duration 0.83, `team.size ↔ team size.size` 0.88), but a single cosine
+threshold cannot give the writer a clean, zero-false-merge supersession signal.
+
+This is the baseline of record. Levers before/at the DREAM challenger: (a) a stronger
+embedder (Qwen3-Embedding-4B/8B); (b) richer keys — embed subject+value or the full
+fact text rather than the bare slot key, since "team members count: 4 engineers plus
+manager Rachel" vs "team size: 5 engineers" carries the distinguishing signal the bare
+keys drop; (c) per-subject local thresholds instead of one global cut. DREAM is now
+unblocked (roadmap: it activates only after this baseline is materialized and scored),
+but the 031748ae trap shows it must clear a genuinely hard separation, not just raise
+average similarity.
+
+### Key-composition sweep (the richer-key lever)
+
+Lever (b) tested directly: the same Qwen-0.6B embedder, but embedding richer key
+compositions. Runner `evals/memory_methods/run_embedding_identity_richkey.py`;
+artifact `bench/memory_methods/embedding_identity_keycomp.json`. Strategies: `bare_key`
+("team.size"), `natural_key` ("team size"), `subject` ("team"), `full_fact`
+("team size: 5 engineers"), `subject_value` ("team: 5 engineers"). Evaluated on a
+10-pair real-entry set built from actual captured-state entries (key + value),
+labelled by *supersession intent* — the same underlying attribute over time is the
+same slot, even when the value changed (coffee one→two, goal 100→150); genuinely
+different concepts are traps. Deterministic.
+
+| strategy | best zero-false-merge thr | same-slot recall |
+|---|---:|---:|
+| bare_key | 0.836 | 0.333 (2/6) |
+| natural_key | 0.799 | 0.500 (3/6) |
+| subject | 0.785 | 0.500 (3/6) |
+| subject_value | 0.824 | 0.667 (4/6) |
+| **full_fact** | **0.784** | **1.000 (6/6, 0 false)** |
+
+**`full_fact` (natural key + value) is the first composition to cleanly separate the
+real fragmented slots.** Lowest same-slot similarity 0.784 (coffee one→two) sits above
+the highest trap 0.720 — a small but real margin. The two pivotal pairs invert versus
+bare keys:
+
+| pair | bare_key | full_fact | label |
+|---|---:|---:|---|
+| team.size ↔ group size.number of engineers | 0.673 | **0.942** | merge (031748ae paraphrase) |
+| team.size="5 engineers" ↔ team members.count="4 engineers plus manager Rachel" | 0.809 | **0.720** | keep apart (031748ae trap) |
+
+The value supplies disambiguating tokens the bare keys drop: "...4 engineers plus
+manager Rachel" reads as a different fact from "team size: 5 engineers", while the
+shared numerals/units pull genuine paraphrases together. Cross-value same-slot updates
+survive (coffee one→two 0.784, goal 100→150 0.807, both ≥ threshold), so a full_fact
+identity check would let "5 engineers" supersede "4…+Rachel"'s sibling keys and give
+the read path the ordered then→now set 031748ae needs.
+
+**Caveats.** (1) Small n (6 same / 4 trap); recall 1.0 here is encouraging, not
+conclusive — confirm on a larger pair set before promoting. (2) The separating margin
+(~0.06) is thin for a single global threshold; per-subject thresholds add robustness.
+(3) full_fact owes its win partly to value tokens, which is double-edged for
+supersession across *large* value changes — the cross-value pairs cleared the bar only
+narrowly. (4) On the key-only canonical fixtures, value-free strategies do not improve
+(natural_key 0.667 = bare; subject fails), so the gain is specifically from value
+inclusion on real entries. Recommendation: adopt `full_fact` (or natural-key+value) as
+the embedding-identity key, re-measure on a larger labelled set, and treat this as the
+bar DREAM must beat — bare-key embedding is not it, but a richer key may close most of
+the gap without a graph rebuild.
+
+### Larger within-state set (n=67) — global threshold breaks, per-subject holds
+
+Caveat (1) tested. Runner `evals/memory_methods/run_embedding_identity_largeset.py`;
+artifact `bench/memory_methods/embedding_identity_largeset.json`. The set is built only
+from real captured-state entries, all pairs within a single state (how supersession
+actually compares), with auditable labels: 19 SAME (within explicit concept clusters),
+16 HARD negatives (same-subject / same-`.model` traps), 32 EASY negatives (seeded
+cross-concept sample). Cluster and trap definitions live in the runner; every resolved
+key→value is saved in the artifact.
+
+Global zero-false-merge recall by strategy: bare_key **0.21**, natural_key 0.21,
+subject 0.32, subject_value 0.42, **full_fact 0.79**. full_fact still dominates by ~4×,
+and it keeps the 031748ae behaviour (team.size ↔ group size.number of engineers 0.942;
+trap team.size ↔ team members.count 0.717). But the clean global separation from the
+10-pair run does **not** survive: margin vs the hardest negative is **−0.029**. One
+collision causes it — `vehicle.model` "Ford F-150 pickup truck" ↔ `model car.type`
+"Ford Mustang Shelby GT350R" at **0.795** (two Ford models) — and that negative sits in
+the vehicle concept, which has *no* same-slot pairs to protect, yet it raises the single
+global bar above genuine merges in other concepts (coffee one→two 0.784; the vague
+"small" marketing-team value 0.766).
+
+Per-subject thresholds remove that cross-concept contamination. Scoring each concept's
+same-slot pairs against only the hard negatives that share its subject, full_fact gives
+**5/5 clean separations**:
+
+| concept | min same-slot | max relevant hard-neg | result |
+|---|---:|---:|---|
+| team size (031748ae) | 0.8463 | 0.7173 | clean |
+| coding time (cc5ded98) | 0.8322 | 0.7461 | clean |
+| marketing team size (c6853660) | 0.7664 | 0.4532 | clean |
+| coffee limit (c6853660) | 0.7837 | 0.6889 | clean |
+| Apex goal (9bbe84a2) | 0.8065 | 0.5811 | clean |
+
+**Conclusion.** The richer key holds up at larger n *for the mechanism that matters*:
+full_fact embedding identity, scoped per subject (compare a new entry only against
+existing entries sharing its subject, or use a subject-local threshold), cleanly
+separates same-slot from different-slot across all five real concepts — including the
+031748ae team-size fragmentation that bare keys, string-first canonicalization, and the
+recency/lexical read path all failed. A single *global* cosine threshold is the wrong
+knob (one unrelated hard collision poisons it); subject-scoped comparison is the right
+one and matches how supersession already works (per slot/subject).
+
+Remaining honest gaps before promotion: the coffee cross-value pair (0.784) is the
+thinnest real merge; the vehicle concept contributed only negatives (no same-slot recall
+measured there); n is tens, not hundreds; and "small" vs "3"/"three people" shows
+value-text quality varies. Next concrete step is to wire a subject-scoped full_fact
+identity check into `_apply_supersession` behind a flag and re-run the five-state mix to
+see whether 031748ae resolves end-to-end — the cheapest path to the then→now fix without
+a graph rebuild, and the baseline DREAM would have to beat.
+
+### End-to-end — embedding supersession over the full states (the curated benchmark lied)
+
+Wired a pluggable slot-identity matcher into `_apply_supersession` behind a flag
+(`Settings.embedding_supersession`, default off; `_slot_matcher` PrivateAttr on
+`FactsLedger`; matcher in `rem/memory/semantic_identity.py`). With the matcher off the
+write path is byte-for-byte the old behavior (NPU-free suite 194/194). Then replayed each
+captured state's ledger through the *flagged* supersession (`full_fact` identity, local
+Qwen, threshold 0.80) and re-ran the temporal LexicalSelector + one brief answer per item.
+Runner `evals/memory_methods/run_supersession_endtoend.py`; artifact
+`bench/battery/supersession_endtoend.json`.
+
+**The target ordering does work.** On 031748ae the three "5 engineers" keys collapse and
+order (`group size.number of engineers` t5 → `team size.size` t67 → `team.size` t74), and
+`team members.count`="4 engineers plus manager Rachel" correctly stays a *separate active*
+fact (0.717 < 0.80 — not merged). On 9bbe84a2 the Apex goal orders 100 → 150 (t61 "100"
+marked stale, superseded by the t144 "150"). So the mechanism produces the ordered
+then→now the read path wanted.
+
+**But on real states a single global threshold over-merges badly.** Across the five states
+it fired **1,583 value-changing merges** (vs only 145 safe same-value dedups) and ~20–25%
+of active entries collapsed — the same unsafe profile as string-first subject-only. Sampled
+false merges:
+
+| sim | wrongly merged |
+|---:|---|
+| 0.856 | `dessert.name`="Poffertjes"  →  `dessert.name apple pie`="Dutch apple pie" (two different desserts) |
+| 0.929 | `corporate team building package.capacity`="20 people"  →  `.size`="6 people" (capacity vs size) |
+| 0.859 | `meets.offering`="vegan banana bread…"  →  `stach.offering`="vegan muffins, bars, cakes" (two different shops) |
+
+The decisive point: genuine merges (team-size 0.87–0.94, apex 0.81) and false merges
+(distinct desserts/shops 0.80–0.86, capacity-vs-size 0.93) **overlap in cosine space**, so
+no global threshold separates them on real data. `full_fact` similarity measures "same kind
+of fact," not "same slot" — it cannot tell *another value for this slot* from *a different
+instance of the same attribute type* (Poffertjes vs apple pie). The curated 67-pair set
+showed 0 false merges only because it never sampled distinct-instance/same-attribute
+negatives; real states are full of them.
+
+**End-to-end mix is unchanged: {4 pass, 1 retrieval-recall}, identical to baseline lexical.**
+031748ae is still a real miss — its auto-`pass` is the substring artifact again (the model
+answers "a team lead with 4 engineers plus manager Rachel, totaling 5 people", i.e. the
+*outing* breakdown, not started=4/now=5). 9bbe84a2 is still wrong ("previous goal … level
+150 eventually") **even though 100 is now correctly ordered as stale** — the small answerer
+does not reliably read ordered stale history out of flat rendered text. Gold needles for the
+three genuine passes (F-150, two hours, two cups) survived the over-merge.
+
+**Verdict.** The cheapest path — richer-key embedding supersession with a global threshold —
+does **not** safely resolve the then→now problem. It confirms three things: (1) 031748ae is
+unresolvable by any *faithful* identity (the "4" is genuinely the outing count; merging it
+would itself be a false merge); (2) global-threshold `full_fact` identity is unsafe on real
+states (instance-vs-update collisions); (3) even when history is ordered, the gemma answerer
+doesn't exploit it, so part of the gap is the answerer, not memory. What a safe mechanism
+needs next: **attribute- and instance-aware identity** — gate merges on matching attribute
+head-noun and value compatibility, not raw fact similarity (cheap), or a typed-claim /
+graph store (heavy). DREAM is justified only if it supplies instance-aware identity, not
+just higher average similarity; that is now the concrete bar. Also: fix the eval needle
+methodology (multi-part/all-needles, spelled numbers) and consider an answerer that is
+prompted to read stale→active ordering. Flag stays off; nothing promoted into the writer.
+
+### Option (a) prototype — instance-aware (value-type) gate
+
+Cheapest fix for the over-merge: gate the merge on value compatibility. A slot *update*
+changes a value to a *compatible* one (quantity→quantity); two distinct *named* values are
+different instances, not an update. `FullFactEmbeddingMatcher(value_aware=True)` blocks a
+merge when the two slot_values differ and are not *both* quantity-like (digit or spelled
+number; `quantity_like` in `rem/memory/semantic_identity.py`). Default off. Runner
+`evals/memory_methods/run_supersession_instanceaware.py`; artifact
+`bench/battery/supersession_instanceaware.json`. Deterministic.
+
+Merge taxonomy over the five states (plain global-threshold matcher vs value-aware):
+
+| class | plain | instance-aware |
+|---|---:|---:|
+| safe_dedup (values equal) | 145 | 147 |
+| numeric_update (differ, both quantity) | 233 | 233 |
+| **textual_distinct (differ, named values)** | **1350** | **0** |
+
+**The value gate removes all 1,350 textual-distinct merges — the entire egregious
+false-merge class** (Poffertjes vs Dutch apple pie, distinct vegan shops, `…type`
+vs `…capacity`) — while preserving every numeric update and the two target collapses:
+031748ae still collapses to a single active `team.size`="5 engineers" with the sibling
+keys ordered stale, and 9bbe84a2 still orders the Apex goal 100 (stale) → 150 (active).
+Active counts go *up* vs plain (e.g. 031748ae 704 → 891), i.e. ~150–190 distinct facts per
+state are correctly kept instead of wrongly collapsed.
+
+**Residual the value gate cannot catch.** Within the 233 surviving numeric merges, some are
+genuine (the target collapses; `number of engineers`="5" ↔ `team.size`="5 engineers" at
+0.94) and some are false: same-subject, *different numeric attributes* — `linkedin posts.likes`
+="20" ↔ `…comments`="5" (0.895), `package.capacity`="20 people" ↔ `package.size`="6 people"
+(0.93). A value-type gate can't separate these (both sides are quantities), and a naive
+attribute-token match can't either, because the genuine merges *also* cross attribute tokens
+(`number of engineers` ↔ `size`). Distinguishing "likes vs comments" from "number of
+engineers vs size" needs *semantic attribute typing*, not string rules — which is exactly the
+typed-claim / graph capability the heavier path provides. (Minor known limit: `quantity_like`
+treats alphanumeric model names like "F-150" as quantity; harmless here since those pairs sit
+below the cosine threshold anyway.)
+
+**Verdict.** Option (a) is a real, cheap safety win — it eliminates the dominant false-merge
+class and preserves all target behavior, turning the unsafe global matcher into one whose
+only remaining errors are a bounded class of same-subject numeric-attribute collisions. It is
+not a complete fix; closing the residual requires attribute-semantic / typed-claim identity,
+which is the sharpened justification for DREAM or a typed store. Flag stays off; this is a
+measured prototype, not a promotion.
+
+### Option (a2) — attribute-similarity gate does NOT work; typed identity does
+
+Tested whether attribute-embedding similarity can close the numeric residual (block
+`likes`↔`comments`, `capacity`↔`size` while keeping `number of engineers`↔`size`). It cannot —
+the genuine and false distributions are *inverted*:
+
+| pair | attr cosine | needed |
+|---|---:|---|
+| number of engineers ↔ size | **0.5496** | ALLOW (same slot) |
+| number of people ↔ size | 0.6481 | ALLOW |
+| capacity ↔ size | 0.7149 | block |
+| likes ↔ comments | **0.7510** | block |
+
+`min(genuine)=0.55 < max(false)=0.75`: any threshold that allows the genuine cross-attribute
+merge admits every false one, and any threshold that blocks the false ones kills the genuine
+ones. Embedding similarity — of the fact (Gate 4), the key (sweep), or now the attribute —
+fundamentally measures *resemblance*, not *identity*: "number of engineers" **is** team size
+yet is embedding-distant, while "likes" and "comments" are different attributes yet embedding-
+close. A2-as-a-similarity-knob is a dead end. (Probe in
+`run_typed_identity_probe.py`'s sibling measurement; values above.)
+
+A reasoning judge separates what similarity cannot. Asking the local gemma "SAME or DIFFERENT
+slot?" on the eight decisive pairs scored **7/8** (`bench/memory_methods/typed_identity_probe.json`):
+SAME for `number of engineers`↔`size`, coding duration↔time-per-day, coffee one↔two; DIFFERENT
+for `likes`↔`comments`, `capacity`↔`size`, Poffertjes↔apple pie, and the 031748ae trap
+(team size vs 4+Rachel). The one miss is the genuinely ambiguous apex pair
+(`target level: 100` vs `level: 150`) — the same item that has been ambiguous throughout. So
+typed/reasoning identity is the mechanism class that fits the residual; this is the concrete,
+evidence-backed justification for a typed-claim store / DREAM (or an LLM-judge supersession
+step), not "more similarity." Open costs before that path: an NPU judge call per candidate
+merge at write time is expensive (the per-item ingests are already ~75 min), and the judge
+itself needs held-out validation.
+
+### Methodology — overfitting / benchmaxing risk (read before promoting anything)
+
+Every Gate 4 result above was developed AND measured on the **same five captured states**
+(the oldest-gold battery items): the 0.80 threshold, the concept clusters, the n=67 labels,
+the value-gate, and these probe pairs. The gates were designed *after* inspecting these
+states' own false merges. That is test-set peeking, so all of it is **diagnostic /
+hypothesis-generating, not validated**. Concretely:
+
+- No number here is a generalization estimate. "textual_distinct 1350→0" and "typed-judge
+  7/8" are dev-set descriptions; they may not hold on unseen states.
+- The mechanisms must be validated on held-out data before any writer promotion: the Gate-1
+  **frozen 30-item development suite** (not yet materialized — the LongMemEval-S source isn't
+  in the repo) for development numbers, and the Gate-5 **held-out LongMemEval-S** run for the
+  promotion verdict. Until then the flag stays off and nothing ships.
+- Deliberately NOT done: tuning a threshold to drive the dev residual to zero. The a2 probe
+  reports the trade-off/overlap as-is precisely to avoid manufacturing a dev-set win.
+
+What is reasonably *general* (mechanism-class claims, lower overfit risk): similarity ≠
+identity (shown three independent ways), and typed/reasoning identity separates cases
+similarity cannot. What is *not* general yet (specific thresholds, counts, the value-gate's
+exact effect): pending the frozen suite.

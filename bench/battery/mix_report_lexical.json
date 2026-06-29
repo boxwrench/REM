@@ -1,0 +1,154 @@
+{
+  "states_dir": "bench/battery/states",
+  "n_items": 5,
+  "selectors": [
+    "lexical"
+  ],
+  "scored": true,
+  "arms": {
+    "lexical": {
+      "mix": {
+        "pass": 4,
+        "retrieval-recall": 1
+      },
+      "items": [
+        {
+          "fitted_tokens": 27657,
+          "fits_budget": true,
+          "gold_in_fitted": {
+            "4 engineers": true,
+            "5 engineers": true
+          },
+          "needle_tiers": {
+            "4 engineers": "slot",
+            "5 engineers": "slot"
+          },
+          "structure_in_fitted": {},
+          "structure_tiers": {},
+          "brief_answer": "You lead 5 engineers.",
+          "answer_contains_gold": true,
+          "answer_contains_structure": false,
+          "failure_mode": "pass",
+          "engineer_view": {
+            "include_stale_on_render": true,
+            "n_engineer_lines": 3,
+            "any_stale": false,
+            "distinct_slot_keys": [
+              "team members.count",
+              "team size.size",
+              "team.size"
+            ],
+            "lines_in_render_order": [
+              {
+                "turn": 74,
+                "status": "active",
+                "slot_key": "team.size",
+                "text": "team size: 5 engineers"
+              },
+              {
+                "turn": 67,
+                "status": "active",
+                "slot_key": "team size.size",
+                "text": "team size size: five engineers"
+              },
+              {
+                "turn": 12,
+                "status": "active",
+                "slot_key": "team members.count",
+                "text": "team members count: 4 engineers plus manager Rachel"
+              }
+            ]
+          },
+          "question_id": "031748ae",
+          "gold_recency": 0.16326530612244897
+        },
+        {
+          "fitted_tokens": 27662,
+          "fits_budget": true,
+          "gold_in_fitted": {
+            "F-150": true
+          },
+          "needle_tiers": {
+            "F-150": "slot"
+          },
+          "structure_in_fitted": {
+            "Mustang": true
+          },
+          "structure_tiers": {
+            "Mustang": "slot"
+          },
+          "brief_answer": "Ford F-150 pickup truck",
+          "answer_contains_gold": true,
+          "answer_contains_structure": false,
+          "failure_mode": "pass",
+          "question_id": "3ba21379",
+          "gold_recency": 0.17777777777777778
+        },
+        {
+          "fitted_tokens": 27653,
+          "fits_budget": true,
+          "gold_in_fitted": {
+            "two hours": true
+          },
+          "needle_tiers": {
+            "two hours": "slot"
+          },
+          "structure_in_fitted": {
+            "an hour each day": true
+          },
+          "structure_tiers": {
+            "an hour each day": "summary"
+          },
+          "brief_answer": "You have been dedicating two hours each day to coding exercises.",
+          "answer_contains_gold": true,
+          "answer_contains_structure": false,
+          "failure_mode": "pass",
+          "question_id": "cc5ded98",
+          "gold_recency": 0.2641509433962264
+        },
+        {
+          "fitted_tokens": 27647,
+          "fits_budget": true,
+          "gold_in_fitted": {
+            "one cup": true,
+            "two cups": true
+          },
+          "needle_tiers": {
+            "one cup": "slot",
+            "two cups": "slot"
+          },
+          "structure_in_fitted": {},
+          "structure_tiers": {},
+          "brief_answer": "The user increased the limit to two cups.",
+          "answer_contains_gold": true,
+          "answer_contains_structure": false,
+          "failure_mode": "pass",
+          "question_id": "c6853660",
+          "gold_recency": 0.2765957446808511
+        },
+        {
+          "fitted_tokens": 27688,
+          "fits_budget": true,
+          "gold_in_fitted": {
+            "level 100": false
+          },
+          "needle_tiers": {
+            "level 100": "absent"
+          },
+          "structure_in_fitted": {
+            "level 150": true
+          },
+          "structure_tiers": {
+            "level 150": "slot"
+          },
+          "brief_answer": "Your previous goal for your Apex Legends level was 100.",
+          "answer_contains_gold": false,
+          "answer_contains_structure": false,
+          "failure_mode": "retrieval-recall",
+          "question_id": "9bbe84a2",
+          "gold_recency": 0.2830188679245283
+        }
+      ]
+    }
+  }
+}
