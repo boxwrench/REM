@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "embedding_identity_pairs": [
+    {
+      "id": "team-size-paraphrase",
+      "left": "team.size",
+      "right": "group size.number of engineers",
+      "same_slot": true
+    },
+    {
+      "id": "coding-duration-paraphrase",
+      "left": "coding exercises.time spent per day",
+      "right": "daily coding practice.duration",
+      "same_slot": true
+    },
+    {
+      "id": "coffee-limit-paraphrase",
+      "left": "morning routine.coffee cup limit",
+      "right": "morning coffee.maximum quantity",
+      "same_slot": true
+    },
+    {
+      "id": "camera-model-capacity",
+      "left": "camera.model",
+      "right": "camera.capacity",
+      "same_slot": false
+    },
+    {
+      "id": "team-size-outing-attendance",
+      "left": "team.size",
+      "right": "team outing.attendees",
+      "same_slot": false
+    },
+    {
+      "id": "game-level-target",
+      "left": "game.current level",
+      "right": "game.target level",
+      "same_slot": false
+    }
+  ],
+  "retrieval_cases": [
+    {
+      "id": "previous-current-historical",
+      "query": "What was the previous goal before it changed?",
+      "required_evidence": ["previous goal: level 100", "current goal: level 150"]
+    },
+    {
+      "id": "stale-derived-summary",
+      "query": "Where does the replica run now?",
+      "derived_summary": "Replica runs in us-east-1.",
+      "newer_source": "Replica moved to us-west-2."
+    },
+    {
+      "id": "paraphrased-retrieval",
+      "query": "How large is the engineering group?",
+      "evidence": "I currently lead five software developers."
+    },
+    {
+      "id": "distributed-multihop",
+      "query": "Which city hosts the project selected by the user?",
+      "session_evidence": ["The user selected Project Atlas.", "Project Atlas is hosted in Portland."]
+    }
+  ]
+}

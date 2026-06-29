@@ -1,0 +1,271 @@
+{
+  "$defs": {
+    "ItemRun": {
+      "properties": {
+        "question_id": {
+          "title": "Question Id",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "arm": {
+          "title": "Arm",
+          "type": "string"
+        },
+        "budget_tokens": {
+          "title": "Budget Tokens",
+          "type": "integer"
+        },
+        "memory_tokens": {
+          "title": "Memory Tokens",
+          "type": "integer"
+        },
+        "source_references": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Source References",
+          "type": "array"
+        },
+        "candidate_count": {
+          "title": "Candidate Count",
+          "type": "integer"
+        },
+        "ingest_latency_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ingest Latency Ms"
+        },
+        "read_latency_ms": {
+          "title": "Read Latency Ms",
+          "type": "number"
+        },
+        "write_recall": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Write Recall"
+        },
+        "read_recall": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Read Recall"
+        },
+        "judged_correct": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Judged Correct"
+        },
+        "extraction_failures": {
+          "default": 0,
+          "title": "Extraction Failures",
+          "type": "integer"
+        },
+        "context_overflow": {
+          "default": false,
+          "title": "Context Overflow",
+          "type": "boolean"
+        },
+        "provenance_lost": {
+          "default": false,
+          "title": "Provenance Lost",
+          "type": "boolean"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error"
+        }
+      },
+      "required": [
+        "question_id",
+        "category",
+        "arm",
+        "budget_tokens",
+        "memory_tokens",
+        "candidate_count",
+        "read_latency_ms"
+      ],
+      "title": "ItemRun",
+      "type": "object"
+    },
+    "ModelVersions": {
+      "properties": {
+        "answer": {
+          "default": "gemma4-it:e2b",
+          "title": "Answer",
+          "type": "string"
+        },
+        "judge": {
+          "default": "claude-haiku-4-5",
+          "title": "Judge",
+          "type": "string"
+        },
+        "extraction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Extraction"
+        },
+        "embedding": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Embedding"
+        },
+        "reranker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reranker"
+        }
+      },
+      "title": "ModelVersions",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "repository_revision": {
+      "title": "Repository Revision",
+      "type": "string"
+    },
+    "system_revision": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "System Revision"
+    },
+    "source_manifest": {
+      "title": "Source Manifest",
+      "type": "string"
+    },
+    "source_dataset_sha256": {
+      "title": "Source Dataset Sha256",
+      "type": "string"
+    },
+    "models": {
+      "$ref": "#/$defs/ModelVersions"
+    },
+    "configuration": {
+      "additionalProperties": true,
+      "title": "Configuration",
+      "type": "object"
+    },
+    "runs": {
+      "items": {
+        "$ref": "#/$defs/ItemRun"
+      },
+      "title": "Runs",
+      "type": "array"
+    },
+    "category_accuracy": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Category Accuracy",
+      "type": "object"
+    },
+    "read_latency_p95_ms": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Read Latency P95 Ms"
+    },
+    "write_latency_p95_ms": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Write Latency P95 Ms"
+    },
+    "resource_contention": {
+      "additionalProperties": true,
+      "title": "Resource Contention",
+      "type": "object"
+    }
+  },
+  "required": [
+    "repository_revision",
+    "source_manifest",
+    "source_dataset_sha256"
+  ],
+  "title": "MemoryMethodArtifact",
+  "type": "object"
+}

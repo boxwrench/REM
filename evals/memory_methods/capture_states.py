@@ -1,0 +1,73 @@
+"""Capture every development item once for paired read-path experiments."""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+from evals.battery.capture_states import capture_item
+from evals.battery.longmemeval_loader import MEMORY_METHOD_CATEGORIES, load_categories
+from evals.battery.context_managers import RemContextManager
+from rem.config import Settings
+from rem.npu_client import NpuClient
+
+GEMMA = "gemma4-it:e2b"
+
+
+def run(data: str, manifest: str, budget_tokens: int = 1000, make_cm=None) -> int:
+    manifest_path = Path(manifest)
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    actual_sha = hashlib.sha256(Path(data).read_bytes()).hexdigest()
+    if actual_sha != payload["source_sha256"]:
+        raise ValueError("dataset SHA-256 does not match the frozen manifest")
+    wanted = {item["question_id"]: item for item in payload["items"]}
+    source_items = {
+        item.question_id: item
+        for item in load_categories(data, MEMORY_METHOD_CATEGORIES)
+        if item.question_id in wanted
+    }
+    missing = sorted(set(wanted) - set(source_items))
+    if missing:
+        raise ValueError(f"manifest IDs missing from dataset: {missing}")
+    if make_cm is None:
+        client = NpuClient(Settings(summarizer_model=GEMMA))
+
+        def make_cm():
+            return RemContextManager(client, Settings(
+                summarizer_model=GEMMA, max_context_tokens=64000
+            ))
+    for question_id, record in wanted.items():
+        state_path = Path(record["state_file"])
+        if state_path.exists():
+            print(f"[{question_id}] state exists, skipping")
+            continue
+        result = capture_item(
+            source_items[question_id], state_path.parent, make_cm, budget_tokens
+        )
+        produced = Path(result["state_file"])
+        if produced != state_path:
+            state_path.parent.mkdir(parents=True, exist_ok=True)
+            produced.replace(state_path)
+        record["capture"] = {
+            "ingest_secs": result["ingest_secs"],
+            "assembled_total_tokens": result["assembled_total_tokens"],
+            "captured_at": result["captured_at"],
+        }
+        manifest_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data", required=True)
+    parser.add_argument(
+        "--manifest", default="bench/memory_methods/development_manifest.json"
+    )
+    parser.add_argument("--budget", type=int, default=1000)
+    args = parser.parse_args()
+    return run(args.data, args.manifest, args.budget)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

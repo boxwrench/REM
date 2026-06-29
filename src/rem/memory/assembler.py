@@ -60,6 +60,10 @@ def assemble(
     # Compute slot quarantine
     recent_slots = recent_slot_values(state)
     quarantine = get_quarantined_stale_values(state)
+    if state.ledger.include_stale_on_render:
+        # A temporal selector intentionally requested ordered history. Applying
+        # the current-state quarantine here would silently remove that evidence.
+        quarantine = {}
     all_quarantined_vals = {val for vals in quarantine.values() for val in vals}
 
     # 3. Episodic Summaries (ordered oldest-first, matching insertion order in state.summaries)
@@ -79,7 +83,11 @@ def assemble(
 
     # 4. Facts Ledger (always rendered in full, never truncated/omitted)
     if state.ledger.rendered_text is None:
-        state.ledger.rendered_text = state.ledger.render(suppress_slots=recent_slots, quarantine=quarantine)
+        state.ledger.rendered_text = state.ledger.render(
+            include_stale=state.ledger.include_stale_on_render,
+            suppress_slots=recent_slots,
+            quarantine=quarantine,
+        )
     if state.ledger.rendered_text:
         parts.append(f"=== FACTS LEDGER ===\n{state.ledger.rendered_text}")
 
@@ -128,6 +136,8 @@ def assemble_messages(
     # Compute slot quarantine
     recent_slots = recent_slot_values(state)
     quarantine = get_quarantined_stale_values(state)
+    if state.ledger.include_stale_on_render:
+        quarantine = {}
     all_quarantined_vals = {val for vals in quarantine.values() for val in vals}
 
     if state.summaries:
@@ -145,7 +155,11 @@ def assemble_messages(
             parts.append("=== EPISODIC SUMMARIES ===\n" + "\n".join(summary_lines))
 
     if state.ledger.rendered_text is None:
-        state.ledger.rendered_text = state.ledger.render(suppress_slots=recent_slots, quarantine=quarantine)
+        state.ledger.rendered_text = state.ledger.render(
+            include_stale=state.ledger.include_stale_on_render,
+            suppress_slots=recent_slots,
+            quarantine=quarantine,
+        )
     if state.ledger.rendered_text:
         parts.append(f"=== FACTS LEDGER ===\n{state.ledger.rendered_text}")
 

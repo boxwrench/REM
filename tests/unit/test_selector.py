@@ -80,5 +80,21 @@ def test_recency_selector_prefers_newest_summaries():
     assert 0 not in kept_ids
 
 
+def test_recency_selector_caps_oversized_current_slot_tier():
+    entries = [
+        FactEntry(
+            kind="entity", text=(f"slot fact {i} " * 20), source_turn_id=i,
+            slot_key=f"subject{i}.value", slot_value=str(i),
+        )
+        for i in range(200)
+    ]
+    state = MemoryState(ledger=FactsLedger(entries=entries))
+    fitted = RecencySelector().select(state, "current values?", 2000)
+    rendered = assemble(fitted, system="", task="current values?")
+    assert count_tokens(rendered) <= 2000
+    assert len(fitted.ledger.entries) < len(entries)
+    assert max(entry.source_turn_id for entry in fitted.ledger.entries) == 199
+
+
 def test_read_fit_tokens_default():
     assert Settings().read_fit_tokens == 28000
