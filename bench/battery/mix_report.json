@@ -8,7 +8,7 @@
   },
   "items": [
     {
-      "fitted_tokens": 27996,
+      "fitted_tokens": 27870,
       "fits_budget": true,
       "gold_in_fitted": {
         "4 engineers": true,
@@ -20,7 +20,7 @@
       },
       "structure_in_fitted": {},
       "structure_tiers": {},
-      "brief_answer": "The memory does not contain information on how many engineers you lead when you started your new role as a Senior Software Engineer or how many you lead now.",
+      "brief_answer": "The memory does not contain information about how many engineers you lead when you started your new role as a Senior Software Engineer or how many you lead now.",
       "answer_contains_gold": false,
       "answer_contains_structure": false,
       "failure_mode": "temporal-structure",
@@ -28,7 +28,7 @@
       "gold_recency": 0.16326530612244897
     },
     {
-      "fitted_tokens": 27999,
+      "fitted_tokens": 27853,
       "fits_budget": true,
       "gold_in_fitted": {
         "F-150": true
@@ -42,7 +42,7 @@
       "structure_tiers": {
         "Mustang": "slot"
       },
-      "brief_answer": "Ford F-150 pickup truck, 1/25 scale.",
+      "brief_answer": "Ford F-150 pickup truck",
       "answer_contains_gold": true,
       "answer_contains_structure": false,
       "failure_mode": "pass",
@@ -50,7 +50,7 @@
       "gold_recency": 0.17777777777777778
     },
     {
-      "fitted_tokens": 27891,
+      "fitted_tokens": 27876,
       "fits_budget": true,
       "gold_in_fitted": {
         "two hours": true
@@ -64,7 +64,7 @@
       "structure_tiers": {
         "an hour each day": "absent"
       },
-      "brief_answer": "Two hours each day.",
+      "brief_answer": "Two hours a day.",
       "answer_contains_gold": true,
       "answer_contains_structure": false,
       "failure_mode": "pass",
@@ -72,7 +72,7 @@
       "gold_recency": 0.2641509433962264
     },
     {
-      "fitted_tokens": 27912,
+      "fitted_tokens": 27890,
       "fits_budget": true,
       "gold_in_fitted": {
         "one cup": true,
@@ -92,7 +92,7 @@
       "gold_recency": 0.2765957446808511
     },
     {
-      "fitted_tokens": 27979,
+      "fitted_tokens": 27797,
       "fits_budget": true,
       "gold_in_fitted": {
         "level 100": false
@@ -106,9 +106,9 @@
       "structure_tiers": {
         "level 150": "slot"
       },
-      "brief_answer": "Your previous goal for your Apex Legends level was 100.",
+      "brief_answer": "Your previous goal for your Apex Legends level was level 150.",
       "answer_contains_gold": false,
-      "answer_contains_structure": false,
+      "answer_contains_structure": true,
       "failure_mode": "retrieval-recall",
       "question_id": "9bbe84a2",
       "gold_recency": 0.2830188679245283
