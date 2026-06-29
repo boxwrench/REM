@@ -306,3 +306,27 @@ that matches semantically-equivalent keys) so updates collapse (4→5, one→two
 100→150). That shrinks the ledger and hands the read path an ordered current-state
 set, which is the most likely single fix for the 031748ae temporal-structure miss —
 without a graph rebuild. This is the concrete write-recall work the mix called for.
+
+## Slot-key canonicalization
+
+The post-hoc string-first experiment is complete over all five captured states
+(`canonicalize_audit.json`). It retained every existing gold needle and did not
+mutate the captures.
+
+| granularity | active entries | fragmented values | superseded entries | merge-risk groups |
+|---|---:|---:|---:|---:|
+| full key | 4,469 → 4,426 (-0.96%) | 212 → 205 (-3.30%) | 53 → 96 | 36 |
+| subject only | 4,469 → 3,349 (-25.06%) | 212 → 130 (-38.68%) | 53 → 1,173 | 592 |
+
+The conservative key barely changes the observed fragmentation. Subject-only
+grouping is more aggressive but still misses the required 50% reduction and
+groups hundreds of distinct current values under one subject signature. Synthetic
+same-slot/different-slot fixtures pass, but the real-state merge-risk count makes
+subject-only identity unsafe for the writer.
+
+Decision: do **not** promote either string strategy into `_apply_supersession`.
+The residual fragmentation is semantic, which activates the embedding-identity
+experiment: establish a Qwen embedding baseline before testing DREAM. The planned
+`031748ae` paid answer rerun was skipped because both quantitative candidates had
+already failed the promotion threshold, and that item remains diagnostic rather
+than gating due to its ambiguous source inference.
