@@ -1,5 +1,18 @@
 # Slot-Key Canonicalization — Implementation Plan
 
+> **STATUS: EXECUTED (2026-06-28) — string-first insufficient; do not promote.** The
+> experiment ran via a parallel build. The actual implementation lives in
+> `src/rem/memory/canonicalize.py` (`canonical_slot_key`, `recanonicalize`) and the
+> audit in `evals/battery/canonicalize_audit.py` (`bench/battery/canonicalize_audit.json`)
+> — these supersede the inline code below, which differs in structure. Result: full-key
+> granularity buys ~1%, subject-only buys ~25% but creates ~592 merge-risk groups
+> (unsafe for the writer); the residual fragmentation is semantic. **Decision: neither
+> string strategy is promoted into `_apply_supersession`; escalate to embedding-based
+> identity (Qwen baseline, then DREAM).** See `bench/battery/FINDINGS.md`
+> "## Slot-key canonicalization" and roadmap Gate 0. The 031748ae paid rerun was
+> skipped (both candidates already failed the promotion threshold). The inline tasks
+> below are retained as the SDD trail of what was designed; they are not live work.
+
 **Goal:** Test string-first slot-key canonicalization as the fix for near-absent
 supersession, NPU-free against the five captured states; measure its ceiling so the
 embedding decision (Thread 2) rests on evidence.
