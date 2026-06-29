@@ -50,15 +50,15 @@ STRUCTURE_NEEDLES = {
 
 
 def needle_tier(state, question, settings, needle) -> str:
-    """Which tier of the FITTED state carries the needle."""
+    """Which tier of the FITTED state carries the needle (number-aware match)."""
+    from evals.battery.needles import present, value_aware_entry
     fitted = RecencySelector().select(state, question, settings.read_fit_tokens)
-    low = needle.lower()
     for e in fitted.ledger.entries:
-        if low in e.text.lower():
+        if present(needle, e.text) or value_aware_entry(needle, e.slot_key, e.slot_value):
             return "slot" if e.slot_key else "free"
     for s in fitted.summaries:
         txt = s.rendered_text if s.rendered_text is not None else s.text
-        if low in txt.lower():
+        if present(needle, txt):
             return "summary"
     return "absent"
 
@@ -80,10 +80,12 @@ def label_item(state, question, answer, needles, settings, answerer=None,
     answer_contains_gold = None
     answer_contains_structure = None
     if answerer is not None:
+        from evals.battery.needles import all_present, any_present
         brief_answer = (answerer(fitted_text, question) or "").strip()
-        low = brief_answer.lower()
-        answer_contains_gold = any(n.lower() in low for n in needles)
-        answer_contains_structure = any(n.lower() in low for n in structure_needles)
+        # Multi-part gold (031748ae: started=4 AND now=5) requires EVERY needle.
+        answer_contains_gold = all_present(needles, brief_answer)
+        # Structure needles stay diagnostic (any), never gating.
+        answer_contains_structure = any_present(structure_needles, brief_answer)
 
     if not fits:
         mode = "size"

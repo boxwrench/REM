@@ -77,14 +77,14 @@ def fit_render_aware(selector, state, question, budget):
 
 
 def needle_tier(fitted, needle) -> str:
-    """Which tier of the FITTED state carries the needle (case-insensitive)."""
-    low = needle.lower()
+    """Which tier of the FITTED state carries the needle (number-aware match)."""
+    from evals.battery.needles import present, value_aware_entry
     for e in fitted.ledger.entries:
-        if low in e.text.lower():
+        if present(needle, e.text) or value_aware_entry(needle, e.slot_key, e.slot_value):
             return "slot" if e.slot_key else "free"
     for s in fitted.summaries:
         txt = s.rendered_text if s.rendered_text is not None else s.text
-        if low in txt.lower():
+        if present(needle, txt):
             return "summary"
     return "absent"
 

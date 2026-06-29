@@ -32,6 +32,7 @@ from rem.memory.semantic_identity import (
 from evals.battery.diagnose_memory import gold_in_fitted
 from evals.battery.mix_report import GOLD_NEEDLES, STRUCTURE_NEEDLES
 from evals.battery.mix_report_selector import fit_render_aware, needle_tier
+from evals.battery.needles import all_present
 from evals.memory_methods.state_selection import select_state_records
 
 GEMMA = "gemma4-it:e2b"
@@ -134,8 +135,8 @@ def run(states_dir, out, threshold, answer, manifest=None, ids=None):
                                            settings.read_fit_tokens)
         needles = GOLD_NEEDLES.get(item["question_id"], [])
         ans = (answer_question(npu, context=text, question=item["question"]) or "").strip()
-        low = ans.lower()
-        contains = any(x.lower() in low for x in needles)
+        # Multi-part gold (started=4 AND now=5) requires every needle, number-aware.
+        contains = all_present(needles, ans)
         if not item["fits_budget"]:
             mode = "size"
         elif not all(item["gold_in_fitted"].values()):
