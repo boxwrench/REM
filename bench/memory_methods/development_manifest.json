@@ -1,0 +1,1435 @@
+{
+  "schema_version": 1,
+  "suite": "rem-memory-methods-development",
+  "development_only": true,
+  "source_file": "longmemeval_s",
+  "source_sha256": "08d8dad4be43ee2049a22ff5674eb86725d0ce5ff434cde2627e5e8e7e117894",
+  "selection": {
+    "per_category": 10,
+    "categories": [
+      "knowledge-update",
+      "temporal-reasoning",
+      "multi-session"
+    ],
+    "excluded_ambiguous_question_ids": [
+      "031748ae"
+    ],
+    "preference": "distributed evidence, then oldest gold, then question_id"
+  },
+  "items": [
+    {
+      "question_id": "3ba21379",
+      "category": "knowledge-update",
+      "question": "What type of vehicle model am I currently working on?",
+      "answer": "Ford F-150 pickup truck",
+      "answer_session_ids": [
+        "answer_cd345582_1",
+        "answer_cd345582_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68
+        ],
+        [
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80
+        ]
+      ],
+      "gold_recency": 0.17777777777777778,
+      "distributed_evidence": true,
+      "n_sessions": 46,
+      "state_file": "bench/memory_methods/states/3ba21379_state.json"
+    },
+    {
+      "question_id": "cc5ded98",
+      "category": "knowledge-update",
+      "question": "How much time do I dedicate to coding exercises each day?",
+      "answer": "about two hours",
+      "answer_session_ids": [
+        "answer_a5b68517_1",
+        "answer_a5b68517_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22
+        ],
+        [
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143
+        ]
+      ],
+      "gold_recency": 0.2641509433962264,
+      "distributed_evidence": true,
+      "n_sessions": 54,
+      "state_file": "bench/memory_methods/states/cc5ded98_state.json"
+    },
+    {
+      "question_id": "c6853660",
+      "category": "knowledge-update",
+      "question": "Did I mostly recently increase or decrease the limit on the number of cups of coffee in the morning?",
+      "answer": "You increased the limit (from one cup to two cups)",
+      "answer_session_ids": [
+        "answer_626e93c4_1",
+        "answer_626e93c4_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        [
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137
+        ]
+      ],
+      "gold_recency": 0.2765957446808511,
+      "distributed_evidence": true,
+      "n_sessions": 48,
+      "state_file": "bench/memory_methods/states/c6853660_state.json"
+    },
+    {
+      "question_id": "9bbe84a2",
+      "category": "knowledge-update",
+      "question": "What was my previous goal for my Apex Legends level before I updated my goal?",
+      "answer": "level 100",
+      "answer_session_ids": [
+        "answer_c6a0c6c2_1",
+        "answer_c6a0c6c2_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72
+        ],
+        [
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145
+        ]
+      ],
+      "gold_recency": 0.2830188679245283,
+      "distributed_evidence": true,
+      "n_sessions": 54,
+      "state_file": "bench/memory_methods/states/9bbe84a2_state.json"
+    },
+    {
+      "question_id": "ce6d2d27",
+      "category": "knowledge-update",
+      "question": "What day of the week do I take a cocktail-making class?",
+      "answer": "Friday",
+      "answer_session_ids": [
+        "answer_73540165_1",
+        "answer_73540165_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        [
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173
+        ]
+      ],
+      "gold_recency": 0.34,
+      "distributed_evidence": true,
+      "n_sessions": 51,
+      "state_file": "bench/memory_methods/states/ce6d2d27_state.json"
+    },
+    {
+      "question_id": "945e3d21",
+      "category": "knowledge-update",
+      "question": "How often do I attend yoga classes to help with my anxiety?",
+      "answer": "Three times a week.",
+      "answer_session_ids": [
+        "answer_6a4f8626_1",
+        "answer_6a4f8626_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53
+        ],
+        [
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          198
+        ]
+      ],
+      "gold_recency": 0.4,
+      "distributed_evidence": true,
+      "n_sessions": 51,
+      "state_file": "bench/memory_methods/states/945e3d21_state.json"
+    },
+    {
+      "question_id": "6071bd76",
+      "category": "knowledge-update",
+      "question": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+      "answer": "You switched to less water (5 ounces) per tablespoon of coffee.",
+      "answer_session_ids": [
+        "answer_4dac77cb_1",
+        "answer_4dac77cb_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        [
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220
+        ]
+      ],
+      "gold_recency": 0.40425531914893614,
+      "distributed_evidence": true,
+      "n_sessions": 48,
+      "state_file": "bench/memory_methods/states/6071bd76_state.json"
+    },
+    {
+      "question_id": "22d2cb42",
+      "category": "knowledge-update",
+      "question": "Where did I get my guitar serviced?",
+      "answer": "The music shop on Main St.",
+      "answer_session_ids": [
+        "answer_bcce0b73_1",
+        "answer_bcce0b73_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104
+        ],
+        [
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248
+        ]
+      ],
+      "gold_recency": 0.5,
+      "distributed_evidence": true,
+      "n_sessions": 49,
+      "state_file": "bench/memory_methods/states/22d2cb42_state.json"
+    },
+    {
+      "question_id": "dfde3500",
+      "category": "knowledge-update",
+      "question": "What day of the week did I meet with my previous language exchange tutor Juan?",
+      "answer": "Wednesday",
+      "answer_session_ids": [
+        "answer_35d6c0be_1",
+        "answer_35d6c0be_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155
+        ],
+        [
+          250,
+          251,
+          252,
+          253,
+          254,
+          255,
+          256,
+          257,
+          258,
+          259,
+          260,
+          261
+        ]
+      ],
+      "gold_recency": 0.5,
+      "distributed_evidence": true,
+      "n_sessions": 47,
+      "state_file": "bench/memory_methods/states/dfde3500_state.json"
+    },
+    {
+      "question_id": "affe2881",
+      "category": "knowledge-update",
+      "question": "How many different species of birds have I seen in my local park?",
+      "answer": "32",
+      "answer_session_ids": [
+        "answer_90de9b4d_1",
+        "answer_90de9b4d_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185
+        ],
+        [
+          272,
+          273,
+          274,
+          275,
+          276,
+          277,
+          278,
+          279,
+          280,
+          281,
+          282,
+          283
+        ]
+      ],
+      "gold_recency": 0.5625,
+      "distributed_evidence": true,
+      "n_sessions": 49,
+      "state_file": "bench/memory_methods/states/affe2881_state.json"
+    },
+    {
+      "question_id": "gpt4_45189cb4",
+      "category": "temporal-reasoning",
+      "question": "What is the order of the sports events I watched in January?",
+      "answer": "First, I attended a NBA game at the Staples Center, then I watched the College Football National Championship game, and finally, I watched the NFL playoffs.",
+      "answer_session_ids": [
+        "answer_e6c20e52_3",
+        "answer_e6c20e52_2",
+        "answer_e6c20e52_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24
+        ],
+        [
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44
+        ],
+        [
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56
+        ]
+      ],
+      "gold_recency": 0.08333333333333333,
+      "distributed_evidence": true,
+      "n_sessions": 49,
+      "state_file": "bench/memory_methods/states/gpt4_45189cb4_state.json"
+    },
+    {
+      "question_id": "gpt4_fe651585_abs",
+      "category": "temporal-reasoning",
+      "question": "Who became a parent first, Tom or Alex?",
+      "answer": "The information provided is not enough. You mentioned Alex becoming a parent in January, but you didn't mention anything about Tom.",
+      "answer_session_ids": [
+        "answer_65600ff6_abs_1",
+        "answer_65600ff6_abs_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36
+        ],
+        [
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101
+        ]
+      ],
+      "gold_recency": 0.18,
+      "distributed_evidence": true,
+      "n_sessions": 51,
+      "state_file": "bench/memory_methods/states/gpt4_fe651585_abs_state.json"
+    },
+    {
+      "question_id": "gpt4_7a0daae1",
+      "category": "temporal-reasoning",
+      "question": "How many weeks passed between the day I bought my new tennis racket and the day I received it?",
+      "answer": "1 week",
+      "answer_session_ids": [
+        "answer_4d5490f1_1",
+        "answer_4d5490f1_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99
+        ],
+        [
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121
+        ]
+      ],
+      "gold_recency": 0.1875,
+      "distributed_evidence": true,
+      "n_sessions": 65,
+      "state_file": "bench/memory_methods/states/gpt4_7a0daae1_state.json"
+    },
+    {
+      "question_id": "9a707b82",
+      "category": "temporal-reasoning",
+      "question": "I mentioned cooking something for my friend a couple of days ago. What was it?",
+      "answer": "a chocolate cake",
+      "answer_session_ids": [
+        "answer_dba89488_2",
+        "answer_dba89488_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133
+        ],
+        [
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145
+        ]
+      ],
+      "gold_recency": 0.23636363636363636,
+      "distributed_evidence": true,
+      "n_sessions": 56,
+      "state_file": "bench/memory_methods/states/9a707b82_state.json"
+    },
+    {
+      "question_id": "gpt4_98f46fc6",
+      "category": "temporal-reasoning",
+      "question": "Which event did I participate in first, the charity gala or the charity bake sale?",
+      "answer": "I participated in the charity bake sale first.",
+      "answer_session_ids": [
+        "answer_5850de18_2",
+        "answer_5850de18_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77
+        ],
+        [
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152
+        ]
+      ],
+      "gold_recency": 0.2708333333333333,
+      "distributed_evidence": true,
+      "n_sessions": 49,
+      "state_file": "bench/memory_methods/states/gpt4_98f46fc6_state.json"
+    },
+    {
+      "question_id": "gpt4_1916e0ea",
+      "category": "temporal-reasoning",
+      "question": "How many days passed between the day I cancelled my FarmFresh subscription and the day I did my online grocery shopping from Instacart?",
+      "answer": "54 days. 55 days (including the last day) is also acceptable.",
+      "answer_session_ids": [
+        "answer_447052a5_2",
+        "answer_447052a5_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56
+        ],
+        [
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173
+        ]
+      ],
+      "gold_recency": 0.2982456140350877,
+      "distributed_evidence": true,
+      "n_sessions": 58,
+      "state_file": "bench/memory_methods/states/gpt4_1916e0ea_state.json"
+    },
+    {
+      "question_id": "gpt4_213fd887",
+      "category": "temporal-reasoning",
+      "question": "Which event did I participate in first, the volleyball league or the charity 5K run to raise money for a local children's hospital?",
+      "answer": "volleyball league",
+      "answer_session_ids": [
+        "answer_53582e7e_2",
+        "answer_53582e7e_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92
+        ],
+        [
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177
+        ]
+      ],
+      "gold_recency": 0.34782608695652173,
+      "distributed_evidence": true,
+      "n_sessions": 47,
+      "state_file": "bench/memory_methods/states/gpt4_213fd887_state.json"
+    },
+    {
+      "question_id": "gpt4_8c8961ae",
+      "category": "temporal-reasoning",
+      "question": "Which trip did I take first, the one to Europe with family or the solo trip to Thailand?",
+      "answer": "The solo trip to Thailand",
+      "answer_session_ids": [
+        "answer_72d9aa58_1",
+        "answer_72d9aa58_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55
+        ],
+        [
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207
+        ]
+      ],
+      "gold_recency": 0.37037037037037035,
+      "distributed_evidence": true,
+      "n_sessions": 55,
+      "state_file": "bench/memory_methods/states/gpt4_8c8961ae_state.json"
+    },
+    {
+      "question_id": "gpt4_2f584639",
+      "category": "temporal-reasoning",
+      "question": "Which gift did I buy first, the necklace for my sister or the photo album for my mom?",
+      "answer": "the photo album for my mom",
+      "answer_session_ids": [
+        "answer_11a8f823_2",
+        "answer_11a8f823_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118
+        ],
+        [
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204
+        ]
+      ],
+      "gold_recency": 0.375,
+      "distributed_evidence": true,
+      "n_sessions": 49,
+      "state_file": "bench/memory_methods/states/gpt4_2f584639_state.json"
+    },
+    {
+      "question_id": "gpt4_d6585ce9",
+      "category": "temporal-reasoning",
+      "question": "Who did I go with to the music event last Saturday?",
+      "answer": "my parents",
+      "answer_session_ids": [
+        "answer_f999b05c_1",
+        "answer_f999b05c_4",
+        "answer_f999b05c_2",
+        "answer_f999b05c_5",
+        "answer_f999b05c_3"
+      ],
+      "gold_source_turn_groups": [
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        [
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90
+        ],
+        [
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126
+        ],
+        [
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138
+        ],
+        [
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186
+        ]
+      ],
+      "gold_recency": 0.38095238095238093,
+      "distributed_evidence": true,
+      "n_sessions": 43,
+      "state_file": "bench/memory_methods/states/gpt4_d6585ce9_state.json"
+    },
+    {
+      "question_id": "60159905",
+      "category": "multi-session",
+      "question": "How many dinner parties have I attended in the past month?",
+      "answer": "three",
+      "answer_session_ids": [
+        "answer_75eca223_2",
+        "answer_75eca223_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38
+        ],
+        [
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ]
+      ],
+      "gold_recency": 0.1702127659574468,
+      "distributed_evidence": true,
+      "n_sessions": 48,
+      "state_file": "bench/memory_methods/states/60159905_state.json"
+    },
+    {
+      "question_id": "a96c20ee",
+      "category": "multi-session",
+      "question": "At which university did I present a poster on my thesis research?",
+      "answer": "Harvard University",
+      "answer_session_ids": [
+        "answer_ef84b994_1",
+        "answer_ef84b994_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78
+        ],
+        [
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ]
+      ],
+      "gold_recency": 0.22641509433962265,
+      "distributed_evidence": true,
+      "n_sessions": 54,
+      "state_file": "bench/memory_methods/states/a96c20ee_state.json"
+    },
+    {
+      "question_id": "1f2b8d4f",
+      "category": "multi-session",
+      "question": "What is the difference in price between my luxury boots and the similar pair found at the budget store?",
+      "answer": "$750",
+      "answer_session_ids": [
+        "answer_d8454588_1",
+        "answer_d8454588_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132
+        ],
+        [
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144
+        ]
+      ],
+      "gold_recency": 0.23076923076923078,
+      "distributed_evidence": true,
+      "n_sessions": 53,
+      "state_file": "bench/memory_methods/states/1f2b8d4f_state.json"
+    },
+    {
+      "question_id": "gpt4_f2262a51",
+      "category": "multi-session",
+      "question": "How many different doctors did I visit?",
+      "answer": "I visited three different doctors: a primary care physician, an ENT specialist, and a dermatologist.",
+      "answer_session_ids": [
+        "answer_55a6940c_3",
+        "answer_55a6940c_1",
+        "answer_55a6940c_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36
+        ],
+        [
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72
+        ],
+        [
+          155,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166
+        ]
+      ],
+      "gold_recency": 0.25,
+      "distributed_evidence": true,
+      "n_sessions": 49,
+      "state_file": "bench/memory_methods/states/gpt4_f2262a51_state.json"
+    },
+    {
+      "question_id": "bc149d6b",
+      "category": "multi-session",
+      "question": "What is the total weight of the new feed I purchased in the past two months?",
+      "answer": "70 pounds",
+      "answer_session_ids": [
+        "answer_92147866_1",
+        "answer_92147866_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103
+        ],
+        [
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113
+        ]
+      ],
+      "gold_recency": 0.2653061224489796,
+      "distributed_evidence": true,
+      "n_sessions": 50,
+      "state_file": "bench/memory_methods/states/bc149d6b_state.json"
+    },
+    {
+      "question_id": "1192316e",
+      "category": "multi-session",
+      "question": "What is the total time it takes I to get ready and commute to work?",
+      "answer": "an hour and a half",
+      "answer_session_ids": [
+        "answer_e184e4c3_2",
+        "answer_e184e4c3_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44
+        ],
+        [
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130
+        ]
+      ],
+      "gold_recency": 0.2857142857142857,
+      "distributed_evidence": true,
+      "n_sessions": 43,
+      "state_file": "bench/memory_methods/states/1192316e_state.json"
+    },
+    {
+      "question_id": "9aaed6a3",
+      "category": "multi-session",
+      "question": "How much cashback did I earn at SaveMart last Thursday?",
+      "answer": "$0.75",
+      "answer_session_ids": [
+        "answer_353d3c6d_2",
+        "answer_353d3c6d_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110
+        ],
+        [
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150
+        ]
+      ],
+      "gold_recency": 0.32075471698113206,
+      "distributed_evidence": true,
+      "n_sessions": 54,
+      "state_file": "bench/memory_methods/states/9aaed6a3_state.json"
+    },
+    {
+      "question_id": "3a704032",
+      "category": "multi-session",
+      "question": "How many plants did I acquire in the last month?",
+      "answer": 3,
+      "answer_session_ids": [
+        "answer_c2204106_2",
+        "answer_c2204106_3",
+        "answer_c2204106_1"
+      ],
+      "gold_source_turn_groups": [
+        [
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        [
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150
+        ],
+        [
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175
+        ]
+      ],
+      "gold_recency": 0.36,
+      "distributed_evidence": true,
+      "n_sessions": 51,
+      "state_file": "bench/memory_methods/states/3a704032_state.json"
+    },
+    {
+      "question_id": "60bf93ed",
+      "category": "multi-session",
+      "question": "How many days did it take for my laptop backpack to arrive after I bought it?",
+      "answer": "5 days. 6 days (including the last day) is also acceptable.",
+      "answer_session_ids": [
+        "answer_e0956e0a_1",
+        "answer_e0956e0a_2"
+      ],
+      "gold_source_turn_groups": [
+        [
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118
+        ],
+        [
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183
+        ]
+      ],
+      "gold_recency": 0.36,
+      "distributed_evidence": true,
+      "n_sessions": 51,
+      "state_file": "bench/memory_methods/states/60bf93ed_state.json"
+    },
+    {
+      "question_id": "e3038f8c",
+      "category": "multi-session",
+      "question": "How many rare items do I have in total?",
+      "answer": 99,
+      "answer_session_ids": [
+        "answer_b6018747_2",
+        "answer_b6018747_4",
+        "answer_b6018747_1",
+        "answer_b6018747_3"
+      ],
+      "gold_source_turn_groups": [
+        [
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79
+        ],
+        [
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97
+        ],
+        [
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109
+        ],
+        [
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153
+        ]
+      ],
+      "gold_recency": 0.3617021276595745,
+      "distributed_evidence": true,
+      "n_sessions": 48,
+      "state_file": "bench/memory_methods/states/e3038f8c_state.json"
+    }
+  ]
+}
