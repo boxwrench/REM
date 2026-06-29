@@ -15,7 +15,8 @@ from rem.npu_client import NpuClient
 GEMMA = "gemma4-it:e2b"
 
 
-def run(data: str, manifest: str, budget_tokens: int = 1000, make_cm=None) -> int:
+def run(data: str, manifest: str, budget_tokens: int = 1000, make_cm=None,
+        limit: int | None = None) -> int:
     manifest_path = Path(manifest)
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     actual_sha = hashlib.sha256(Path(data).read_bytes()).hexdigest()
@@ -37,11 +38,20 @@ def run(data: str, manifest: str, budget_tokens: int = 1000, make_cm=None) -> in
             return RemContextManager(client, Settings(
                 summarizer_model=GEMMA, max_context_tokens=64000
             ))
+    captured = 0
     for question_id, record in wanted.items():
         state_path = Path(record["state_file"])
         if state_path.exists():
             print(f"[{question_id}] state exists, skipping")
             continue
+        if limit is not None and captured >= limit:
+            remaining = sum(
+                1 for it in wanted.values()
+                if not Path(it["state_file"]).exists()
+            )
+            print(f"limit reached ({limit} new capture(s) this run); "
+                  f"{remaining} item(s) still uncaptured")
+            break
         result = capture_item(
             source_items[question_id], state_path.parent, make_cm, budget_tokens
         )
@@ -55,6 +65,7 @@ def run(data: str, manifest: str, budget_tokens: int = 1000, make_cm=None) -> in
             "captured_at": result["captured_at"],
         }
         manifest_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        captured += 1
     return 0
 
 
@@ -65,8 +76,13 @@ def main() -> int:
         "--manifest", default="bench/memory_methods/development_manifest.json"
     )
     parser.add_argument("--budget", type=int, default=1000)
+    parser.add_argument(
+        "--limit", type=int, default=None,
+        help="max NEW captures this run (skips of existing states don't count); "
+             "resumable, so repeated runs advance through the manifest",
+    )
     args = parser.parse_args()
-    return run(args.data, args.manifest, args.budget)
+    return run(args.data, args.manifest, args.budget, limit=args.limit)
 
 
 if __name__ == "__main__":
