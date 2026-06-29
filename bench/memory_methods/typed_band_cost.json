@@ -1,0 +1,104 @@
+{
+  "model": "Qwen/Qwen3-Embedding-0.6B",
+  "low": 0.7,
+  "high": 0.88,
+  "states": {
+    "3ba21379": {
+      "entries": 846,
+      "different": {
+        "judge_calls": 1142,
+        "auto_same_merges": 55,
+        "band_merges": 0,
+        "active_after": 798
+      },
+      "same": {
+        "judge_calls": 1118,
+        "auto_same_merges": 54,
+        "band_merges": 1118,
+        "active_after": 399
+      }
+    },
+    "cc5ded98": {
+      "entries": 913,
+      "different": {
+        "judge_calls": 1701,
+        "auto_same_merges": 108,
+        "band_merges": 0,
+        "active_after": 830
+      },
+      "same": {
+        "judge_calls": 1695,
+        "auto_same_merges": 106,
+        "band_merges": 1695,
+        "active_after": 373
+      }
+    },
+    "c6853660": {
+      "entries": 948,
+      "different": {
+        "judge_calls": 1627,
+        "auto_same_merges": 105,
+        "band_merges": 0,
+        "active_after": 865
+      },
+      "same": {
+        "judge_calls": 1590,
+        "auto_same_merges": 101,
+        "band_merges": 1590,
+        "active_after": 387
+      }
+    },
+    "9bbe84a2": {
+      "entries": 865,
+      "different": {
+        "judge_calls": 1147,
+        "auto_same_merges": 64,
+        "band_merges": 0,
+        "active_after": 807
+      },
+      "same": {
+        "judge_calls": 1147,
+        "auto_same_merges": 64,
+        "band_merges": 1147,
+        "active_after": 394
+      }
+    },
+    "ce6d2d27": {
+      "entries": 909,
+      "different": {
+        "judge_calls": 1562,
+        "auto_same_merges": 78,
+        "band_merges": 0,
+        "active_after": 846
+      },
+      "same": {
+        "judge_calls": 1520,
+        "auto_same_merges": 77,
+        "band_merges": 1520,
+        "active_after": 361
+      }
+    },
+    "945e3d21": {
+      "entries": 923,
+      "different": {
+        "judge_calls": 1766,
+        "auto_same_merges": 71,
+        "band_merges": 0,
+        "active_after": 876
+      },
+      "same": {
+        "judge_calls": 1734,
+        "auto_same_merges": 64,
+        "band_merges": 1734,
+        "active_after": 385
+      }
+    }
+  },
+  "totals": {
+    "n_states": 6,
+    "judge_calls_upper_total": 8945,
+    "judge_calls_lower_total": 8804,
+    "judge_calls_upper_per_item_avg": 1490.8,
+    "judge_calls_lower_per_item_avg": 1467.3
+  }
+}
