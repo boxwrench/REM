@@ -714,6 +714,33 @@ Caveat: measured on the 6 captured states (4 are the original overfit dev states
 fresh KU); deterministic and NPU-free, but the specific band thresholds are
 illustrative, not tuned. Same overfitting caveat as below.
 
+### Held-out check (first clean fresh state) — value-gate over-fires numerics
+
+The recapture's first clean held-out KU state (`ce6d2d27`, fixed extractor) was
+replayed NPU-free through the option (a) value-gate (`run_supersession_instanceaware`
++ `run_numeric_merge_audit`; artifact `bench/memory_methods/numeric_merge_audit.json`).
+The headline mimics the dev states — textual_distinct **304 → 0**, and 46
+numeric_update merges fire — but reading those 46, they are **dominated by FALSE
+merges**, not then→now updates:
+
+| sim | wrongly merged (held-out, ce6d2d27) |
+|---:|---|
+| 0.930 | `dates.start date`="May 26th" ↔ `dates.end date`="May 28th" |
+| 0.909 | `price range.minimum`="40" ↔ `price range.maximum`="50" |
+| 0.893 | `storage time freezer.duration`="3 months" ↔ `…refrigerator.duration`="5 days" |
+| 0.875 | `daily grind.walk distance`="10-minute" ↔ `coffee club.walk distance`="15-minute" |
+| 0.805 | `women in energy.percentage`="27%" ↔ `construction workers women.percentage`="12%" |
+
+So the value-gate kills the named-**string** false class but not the **numeric** class,
+and on held-out data the numeric false-merge problem is **large**, not the small tail
+the five dev states implied. An attribute-overlap heuristic cannot rescue it — it
+labels `start date ↔ end date` "genuine" (similarity ≠ identity, a fourth time).
+Native supersession on this state is unchanged (10 stale / 921 = 1.09%, the same
+defect). Conclusion: **the value-gate alone is unsafe to ship**; this is concrete
+held-out justification for attribute-/instance-aware (typed) identity. The candidate
+pre-filter (`share_key_token`) and the typed judge are the path; n=1 fresh state so
+far — confirm as the remaining clean states land.
+
 ### Methodology — overfitting / benchmaxing risk (read before promoting anything)
 
 Every Gate 4 result above was developed AND measured on the **same five captured states**
