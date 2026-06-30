@@ -692,6 +692,28 @@ step), not "more similarity." Open costs before that path: an NPU judge call per
 merge at write time is expensive (the per-item ingests are already ~75 min), and the judge
 itself needs held-out validation.
 
+### Typed-judge write-cost — the band is large on real states
+
+The typed/reasoning judge is the right mechanism class (above), but a write-time NPU
+judge call per candidate pair is expensive, so `TypedIdentityMatcher`
+(`rem/memory/semantic_identity.py`) judges **only** the cosine-ambiguous band
+`[low, high)` — clear pairs stay on cosine (>=high SAME, <low DIFFERENT, no call).
+`run_typed_band_cost.py` measures how big that band is = judge calls per ingest
+(NPU-free: counting stub judge over `resupersede_state`, two bracketing policies).
+Artifact: `bench/memory_methods/typed_band_cost.json`.
+
+On the captured KU states the default band `[0.70, 0.88]` needs **~1467–1491 judge
+calls per ingest** (upper/lower policy bracket within ~2%, so the band size is stable
+regardless of merge decisions). That is prohibitive on top of the ~75-min ingest. A
+narrower band `[0.80, 0.86]` cut observed calls **~6–8×** (3ba21379 1142→180,
+cc5ded98 1701→266). So the cost lever is **band width + a candidate pre-filter**
+(e.g. only judge same-subject or same-attribute-head pairs), not "judge the whole
+band" — and that pre-filter should be chosen before any real NPU judge is wired in.
+
+Caveat: measured on the 6 captured states (4 are the original overfit dev states + 2
+fresh KU); deterministic and NPU-free, but the specific band thresholds are
+illustrative, not tuned. Same overfitting caveat as below.
+
 ### Methodology — overfitting / benchmaxing risk (read before promoting anything)
 
 Every Gate 4 result above was developed AND measured on the **same five captured states**

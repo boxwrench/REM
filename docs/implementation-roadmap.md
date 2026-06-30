@@ -48,9 +48,14 @@ under `bench/memory_methods/`.
   category accuracy, extraction failures, overflow/provenance failures, and
   contention data.
 
-The LongMemEval-S source file is not in this repository, so the actual 30 IDs and
-states must be materialized from the locally supplied dataset rather than
-invented. Until that manifest exists, no development accuracy claim is valid.
+The LongMemEval-S source file is not in this repository (gitignored), so the 30 IDs
+and states are materialized from the locally supplied dataset rather than invented.
+The manifest is now **frozen** at `bench/memory_methods/development_manifest.json`
+(10/10/10, `031748ae` excluded, `source_sha256` pinned to the dataset). State capture
+is resumable (`capture_states.py --limit` caps NEW captures per run; existing-state
+skips are free) and runs the ~75-min/item NPU compaction. Until the states are
+captured **and** the mechanisms are validated on this held-out suite, no development
+accuracy claim is valid — every Gate-4 number remains diagnostic/overfit.
 
 ## Gate 2 — Native read-path ladder
 
@@ -147,14 +152,28 @@ default successor to the bounded read path.
 
 ## Commands
 
-```bash
-# Freeze the 30-item development set from a local LongMemEval-S file.
-PYTHONPATH=.:src python3 evals/memory_methods/freeze_manifest.py \
-  --data /path/to/longmemeval_s.json
+Local dataset path on the dev box: `/home/keith/datasets/longmemeval/longmemeval_s`
+(raw HF download, no `.json` extension; the loader reads by path). Substitute your own.
 
-# Capture each state once (resumable; this invokes the NPU compaction path).
-PYTHONPATH=.:src python3 evals/memory_methods/capture_states.py \
-  --data /path/to/longmemeval_s.json
+```bash
+DATA=/home/keith/datasets/longmemeval/longmemeval_s
+
+# Freeze the 30-item development set + pin the dataset SHA (NPU-free, instant).
+PYTHONPATH=.:src python3 evals/memory_methods/freeze_manifest.py --data "$DATA"
+
+# Capture states (resumable; --limit caps NEW captures/run, existing skips are free;
+# this invokes the ~75-min/item NPU compaction). KU items come first in the manifest.
+PYTHONPATH=.:src python3 evals/memory_methods/capture_states.py --data "$DATA" --limit 6
+
+# Replay supersession NPU-free straight from the frozen manifest (go/no-go).
+PYTHONPATH=.:src python3 evals/memory_methods/run_supersession_instanceaware.py \
+  --manifest bench/memory_methods/development_manifest.json
+PYTHONPATH=.:src python3 evals/memory_methods/run_supersession_endtoend.py \
+  --manifest bench/memory_methods/development_manifest.json   # add --answer for the NPU mix
+
+# Typed-judge write-cost (NPU-free): how many judge calls/ingest the band would need.
+PYTHONPATH=.:src python3 evals/memory_methods/run_typed_band_cost.py \
+  --manifest bench/memory_methods/development_manifest.json
 
 # Paired recall-only run, then the fixed answer/judge run.
 PYTHONPATH=.:src python3 evals/memory_methods/run_development.py
