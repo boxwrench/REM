@@ -227,7 +227,12 @@
       "gold_recency": 0.34,
       "distributed_evidence": true,
       "n_sessions": 51,
-      "state_file": "bench/memory_methods/states/ce6d2d27_state.json"
+      "state_file": "bench/memory_methods/states/ce6d2d27_state.json",
+      "capture": {
+        "ingest_secs": 4589.3,
+        "assembled_total_tokens": 56932,
+        "captured_at": 1782791242.7923925
+      }
     },
     {
       "question_id": "945e3d21",
@@ -271,7 +276,12 @@
       "gold_recency": 0.4,
       "distributed_evidence": true,
       "n_sessions": 51,
-      "state_file": "bench/memory_methods/states/945e3d21_state.json"
+      "state_file": "bench/memory_methods/states/945e3d21_state.json",
+      "capture": {
+        "ingest_secs": 4454.9,
+        "assembled_total_tokens": 52295,
+        "captured_at": 1782795697.7328796
+      }
     },
     {
       "question_id": "6071bd76",
@@ -315,7 +325,12 @@
       "gold_recency": 0.40425531914893614,
       "distributed_evidence": true,
       "n_sessions": 48,
-      "state_file": "bench/memory_methods/states/6071bd76_state.json"
+      "state_file": "bench/memory_methods/states/6071bd76_state.json",
+      "capture": {
+        "ingest_secs": 4393.5,
+        "assembled_total_tokens": 38940,
+        "captured_at": 1782800091.2452419
+      }
     },
     {
       "question_id": "22d2cb42",
@@ -359,7 +374,12 @@
       "gold_recency": 0.5,
       "distributed_evidence": true,
       "n_sessions": 49,
-      "state_file": "bench/memory_methods/states/22d2cb42_state.json"
+      "state_file": "bench/memory_methods/states/22d2cb42_state.json",
+      "capture": {
+        "ingest_secs": 4488.5,
+        "assembled_total_tokens": 31835,
+        "captured_at": 1782804579.7793694
+      }
     },
     {
       "question_id": "dfde3500",
@@ -401,7 +421,12 @@
       "gold_recency": 0.5,
       "distributed_evidence": true,
       "n_sessions": 47,
-      "state_file": "bench/memory_methods/states/dfde3500_state.json"
+      "state_file": "bench/memory_methods/states/dfde3500_state.json",
+      "capture": {
+        "ingest_secs": 4450.0,
+        "assembled_total_tokens": 52313,
+        "captured_at": 1782809029.7456906
+      }
     },
     {
       "question_id": "affe2881",
@@ -445,7 +470,12 @@
       "gold_recency": 0.5625,
       "distributed_evidence": true,
       "n_sessions": 49,
-      "state_file": "bench/memory_methods/states/affe2881_state.json"
+      "state_file": "bench/memory_methods/states/affe2881_state.json",
+      "capture": {
+        "ingest_secs": 4202.4,
+        "assembled_total_tokens": 52050,
+        "captured_at": 1782813232.1939573
+      }
     },
     {
       "question_id": "gpt4_45189cb4",
