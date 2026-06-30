@@ -7,8 +7,13 @@ import pytest
 
 from rem.memory.facts_ledger import FactEntry
 from rem.memory.semantic_identity import (
-    TypedIdentityMatcher, full_fact_text, make_gemma_slot_judge,
+    TypedIdentityMatcher, FullFactEmbeddingMatcher, full_fact_text,
+    make_gemma_slot_judge, share_key_token,
 )
+
+
+def _boom_embed(texts):
+    raise AssertionError("embed must not be called for a pre-filtered pair")
 
 
 def _entry(key, value, turn=1):
@@ -83,6 +88,54 @@ def test_invalid_threshold_order_raises():
     with pytest.raises(ValueError):
         TypedIdentityMatcher(lambda t: [], lambda a, b: True,
                              low_threshold=0.9, high_threshold=0.8)
+
+
+def test_share_key_token_prefilter_predicate():
+    # genuine cross-subject fragmentation still shares a token ("size") -> eligible
+    assert share_key_token(_entry("team.size", "5 engineers"),
+                           _entry("group size.number of engineers", "5"))
+    # same key -> eligible (value-gate/judge separates by value downstream)
+    assert share_key_token(_entry("dessert.name", "Poffertjes"),
+                           _entry("dessert.name", "apple pie"))
+    assert share_key_token(_entry("posts.likes", "20"), _entry("posts.comments", "5"))
+    # zero shared key token -> NOT eligible
+    assert not share_key_token(_entry("camera.model", "Sony A7"),
+                               _entry("linkedin posts.likes", "20"))
+    # function words don't count as shared content
+    assert not share_key_token(_entry("a.of", "x"), _entry("the.for", "y"))
+
+
+def test_typed_prefilter_skips_cosine_and_judge_for_unrelated_keys():
+    a, b = _entry("camera.model", "Sony A7"), _entry("linkedin posts.likes", "20")
+    m = TypedIdentityMatcher(_boom_embed, lambda x, y: True,
+                             prefilter=share_key_token)
+    assert m.same_slot(a, b) is False      # blocked before embed/judge
+    assert m.prefiltered == 1
+    assert m.judge_calls == 0 and m.merges == []
+
+
+def test_typed_prefilter_lets_related_band_pair_through_to_judge():
+    a, b, embed = _pair("team.size", "5 engineers",
+                        "group size.number of engineers", "5",
+                        [1.0, 0.0], [0.8, 0.6])  # share "size" -> eligible; band sim
+    m = TypedIdentityMatcher(embed, lambda x, y: True, prefilter=share_key_token)
+    assert m.same_slot(a, b) is True
+    assert m.prefiltered == 0 and m.judge_calls == 1 and len(m.merges) == 1
+
+
+def test_embedding_matcher_prefilter_blocks_and_passes():
+    # blocked pair: no shared key token -> embed never called
+    blk = FullFactEmbeddingMatcher(_boom_embed, threshold=0.8, prefilter=share_key_token)
+    assert blk.same_slot(_entry("camera.model", "X"),
+                         _entry("dessert.name", "Y")) is False
+    assert blk.prefiltered == 1 and blk.merges == []
+    # eligible pair (shares team/size) at high cosine -> merges
+    a, b = _entry("team.size", "5 engineers"), _entry("team size.size", "5 engineers")
+    ta, tb = full_fact_text(a), full_fact_text(b)
+    ok = FullFactEmbeddingMatcher(_embed_from({ta: [1.0, 0.0], tb: [1.0, 0.0]}),
+                                  threshold=0.8, prefilter=share_key_token)
+    assert ok.same_slot(a, b) is True
+    assert ok.prefiltered == 0 and len(ok.merges) == 1
 
 
 def test_make_gemma_slot_judge_parses_verdict_without_npu():

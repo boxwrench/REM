@@ -61,6 +61,35 @@ def subject_of(entry: FactEntry) -> str:
     return ""
 
 
+# Stopwords stripped before comparing slot-key tokens — true function words only, so
+# real content ("size", "engineers", "value", "number") is never dropped.
+_KEY_STOPWORDS = {
+    "the", "a", "an", "of", "for", "per", "to", "and", "in", "on", "with", "by",
+    "current", "new", "my", "our", "your",
+}
+
+
+def _key_tokens(entry: FactEntry) -> set[str]:
+    """Content tokens of an entry's slot key (dots/underscores -> spaces)."""
+    raw = (entry.slot_key or "").replace(".", " ").replace("_", " ").lower()
+    return {t for t in re.findall(r"[a-z0-9]+", raw)
+            if len(t) > 1 and t not in _KEY_STOPWORDS}
+
+
+def share_key_token(a: FactEntry, b: FactEntry) -> bool:
+    """Candidate pre-filter: do the two slot keys share any content token?
+
+    Pairs with ZERO key-token overlap are almost never the same slot, so they can
+    skip the expensive embedding/judge identity decision and be treated as
+    different. This both cuts judge cost (FINDINGS: the cosine band is ~1.5k pairs
+    per ingest) and removes cross-concept false-merge candidates. Genuine
+    cross-subject fragmentation usually still shares a token — `team.size` <->
+    `group size.number of engineers` share "size" — so the recall cost is only
+    genuine merges with NO shared key token, which must be measured, not assumed.
+    """
+    return bool(_key_tokens(a) & _key_tokens(b))
+
+
 class FullFactEmbeddingMatcher:
     """Same-slot iff cosine(full_fact(a), full_fact(b)) >= threshold.
 
@@ -76,6 +105,7 @@ class FullFactEmbeddingMatcher:
         threshold: float = 0.80,
         require_subject_overlap: bool = False,
         value_aware: bool = False,
+        prefilter: "Callable[[FactEntry, FactEntry], bool] | None" = None,
     ) -> None:
         self._embed = embed
         self.threshold = threshold
@@ -84,9 +114,21 @@ class FullFactEmbeddingMatcher:
         # DIFFERENT values is allowed only if both values are quantity-like (a
         # plausible update), blocking distinct-named-instance collisions.
         self.value_aware = value_aware
+        # Optional cheap candidate pre-filter: a pair that fails it is treated as
+        # different WITHOUT computing cosine / calling the judge (e.g. share_key_token).
+        self._prefilter = prefilter
         self._cache: dict[str, np.ndarray] = {}
         self.merges: list[dict] = []  # audit log of fired merges
         self.blocked: list[dict] = []  # audit log of merges blocked by the value gate
+        self.prefiltered = 0  # pairs short-circuited to "different" by the pre-filter
+
+    def _prefilter_ok(self, a: FactEntry, b: FactEntry) -> bool:
+        if self._prefilter is None:
+            return True
+        if self._prefilter(a, b):
+            return True
+        self.prefiltered += 1
+        return False
 
     def preembed(self, texts: Sequence[str]) -> None:
         todo = sorted({t for t in texts if t and t not in self._cache})
@@ -114,6 +156,8 @@ class FullFactEmbeddingMatcher:
         if not (a.slot_value and b.slot_value):
             return False  # need a value on both sides for full-fact identity
         if self.require_subject_overlap and not self._subjects_overlap(a, b):
+            return False
+        if not self._prefilter_ok(a, b):
             return False
         ta, tb = full_fact_text(a), full_fact_text(b)
         sim = float(np.dot(self._vec(ta), self._vec(tb)))
@@ -160,10 +204,12 @@ class TypedIdentityMatcher(FullFactEmbeddingMatcher):
         low_threshold: float = 0.70,
         high_threshold: float = 0.88,
         value_aware: bool = False,
+        prefilter: "Callable[[FactEntry, FactEntry], bool] | None" = None,
     ) -> None:
         if not (0.0 <= low_threshold <= high_threshold <= 1.0):
             raise ValueError("require 0 <= low_threshold <= high_threshold <= 1")
-        super().__init__(embed, threshold=high_threshold, value_aware=value_aware)
+        super().__init__(embed, threshold=high_threshold, value_aware=value_aware,
+                         prefilter=prefilter)
         self.low_threshold = low_threshold
         self.high_threshold = high_threshold
         self._judge = judge
@@ -175,6 +221,8 @@ class TypedIdentityMatcher(FullFactEmbeddingMatcher):
             return False
         if self.require_subject_overlap and not self._subjects_overlap(a, b):
             return False
+        if not self._prefilter_ok(a, b):
+            return False  # skip cosine AND the judge for unrelated-key pairs
         ta, tb = full_fact_text(a), full_fact_text(b)
         sim = float(np.dot(self._vec(ta), self._vec(tb)))
         if sim >= self.high_threshold:

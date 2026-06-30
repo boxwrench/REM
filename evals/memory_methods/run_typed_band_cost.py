@@ -28,7 +28,7 @@ if str(_root) not in sys.path:
 
 from rem.memory.tiers import MemoryState
 from rem.memory.semantic_identity import (
-    TypedIdentityMatcher, resupersede_state, full_fact_text,
+    TypedIdentityMatcher, resupersede_state, full_fact_text, share_key_token,
 )
 from evals.memory_methods.state_selection import select_state_records
 
@@ -53,11 +53,12 @@ def _counting_judge(verdict: bool):
     return judge, calls
 
 
-def run(states_dir, manifest, ids, low, high, out):
+def run(states_dir, manifest, ids, low, high, out, prefilter=False):
     records = select_state_records(states_dir=states_dir, manifest=manifest, ids=ids)
     if not records:
         print("[band-cost] no captured states selected; nothing to do", flush=True)
         return 0
+    pf = share_key_token if prefilter else None
     embed = load_embedder()
 
     report = {"model": MODEL, "low": low, "high": high, "states": {}}
@@ -70,11 +71,12 @@ def run(states_dir, manifest, ids, low, high, out):
         for label, verdict in (("different", False), ("same", True)):
             judge, calls = _counting_judge(verdict)
             matcher = TypedIdentityMatcher(embed, judge, low_threshold=low,
-                                           high_threshold=high)
+                                           high_threshold=high, prefilter=pf)
             _, stats = resupersede_state(base, matcher)
             auto_same = sum(1 for m in matcher.merges if m["sim"] >= high)
             per_policy[label] = {
                 "judge_calls": matcher.judge_calls,
+                "prefiltered": matcher.prefiltered,
                 "auto_same_merges": auto_same,
                 "band_merges": sum(1 for j in matcher.judged if j["verdict_same"]),
                 "active_after": stats["active_after"],
@@ -88,6 +90,7 @@ def run(states_dir, manifest, ids, low, high, out):
 
     diffs = [s["different"]["judge_calls"] for s in report["states"].values()]
     sames = [s["same"]["judge_calls"] for s in report["states"].values()]
+    report["prefilter"] = bool(prefilter)
     report["totals"] = {
         "n_states": len(diffs),
         "judge_calls_upper_total": sum(diffs),
@@ -112,9 +115,13 @@ def main():
     ap.add_argument("--ids", nargs="*", default=None)
     ap.add_argument("--low", type=float, default=0.70)
     ap.add_argument("--high", type=float, default=0.88)
+    ap.add_argument("--prefilter", action="store_true",
+                    help="apply the share_key_token candidate pre-filter (skip cosine/"
+                         "judge for zero-key-overlap pairs); compare judge_calls vs without")
     ap.add_argument("--out", default="bench/memory_methods/typed_band_cost.json")
     args = ap.parse_args()
-    return run(args.states_dir, args.manifest, args.ids, args.low, args.high, args.out)
+    return run(args.states_dir, args.manifest, args.ids, args.low, args.high, args.out,
+               prefilter=args.prefilter)
 
 
 if __name__ == "__main__":
