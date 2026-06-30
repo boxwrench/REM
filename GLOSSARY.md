@@ -89,6 +89,35 @@ memory systems keep provenance for the old value, but do not render it as active
 replace, stale, or conflict with an existing ledger entry when memory is written, rather
 than hoping the answer model resolves contradictions later.
 
+**Slot fragmentation** — the core write defect: the extractor's exact-string slot keys put
+the same attribute under many keys (`team.size`, `team size.size`, `group size.number of
+engineers`), so genuine updates never collapse, the ledger bloats, and there is no ordered
+then→now state. The lever the supersession work targets.
+
+**full_fact identity** — deciding "same slot" from the cosine similarity of two entries'
+`"natural key: value"` text rather than the bare key. Separates same-slot from
+different-slot far better than bare keys, but a single *global* cosine threshold
+over-merges on real states (distinct instances at the same similarity as real updates).
+
+**Value-gate (instance-aware identity)** — block an embedding merge when the two values
+differ and are not *both* quantity-like, so a slot UPDATE (5→5, one→two, 100→150) collapses
+while two distinct *named* instances (Poffertjes vs Dutch apple pie) stay separate. Removes
+the whole textual-distinct false-merge class; residual is same-subject different-numeric
+attributes (likes vs comments).
+
+**Typed-judge identity (`TypedIdentityMatcher`)** — using an LLM SAME/DIFFERENT judgment
+instead of a cosine threshold to decide slot identity. Separates what similarity cannot
+(number-of-engineers vs size = SAME; likes vs comments = DIFFERENT). Called *only* for
+cosine-ambiguous **band** pairs to bound write-time NPU cost.
+
+**Band cost** — judge calls per ingest = how many candidate pairs fall in the typed-judge's
+ambiguous cosine band `[low, high)`. ~1,490 on real states at the default band (prohibitive
+on top of the ~75-min ingest); the lever is band width + a candidate pre-filter.
+
+**Frozen development suite** — the Gate-1 30-item LongMemEval-S manifest (10 knowledge-update
+/ 10 temporal / 10 multi-session, SHA-pinned to the dataset, `031748ae` excluded) used to
+validate write-side mechanisms on held-out data instead of the 5 overfit dev states.
+
 **Render-time suppression** — hiding an older active ledger value during context
 assembly when the recent verbatim window contains a newer, different value for the
 same known slot. The old value can remain as audit state, but it should not be

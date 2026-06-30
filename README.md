@@ -140,6 +140,16 @@ PYTHONPATH=.:src python3 evals/battery/throughput_probe.py \
 # Comparative memory battery (REM vs truncation, independent judge)
 PYTHONPATH=.:src python3 evals/battery/run_battery_spike.py \
   --data /path/to/longmemeval_s.json --limit 5 --budget 2000
+
+# Gate-1 memory-methods dev suite: freeze a balanced 30-item set (SHA-pinned),
+# capture states (resumable; --limit caps NEW captures/run; ~75 min/item NPU),
+# then replay supersession NPU-free straight from the frozen manifest.
+PYTHONPATH=.:src python3 evals/memory_methods/freeze_manifest.py \
+  --data /path/to/longmemeval_s.json
+PYTHONPATH=.:src python3 evals/memory_methods/capture_states.py \
+  --data /path/to/longmemeval_s.json --limit 6
+PYTHONPATH=.:src python3 evals/memory_methods/run_supersession_instanceaware.py \
+  --manifest bench/memory_methods/development_manifest.json
 ```
 
 The battery/probe use the LongMemEval `knowledge-update` subset — download it locally
