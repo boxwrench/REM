@@ -3,11 +3,17 @@
 import json
 import logging
 import threading
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable, Any
 import http.server
 import httpx
 from filelock import FileLock
+
+
+def _now_iso() -> str:
+    """UTC wall-clock as an ISO-8601 string for turn provenance."""
+    return datetime.now(timezone.utc).isoformat()
 
 from rem.config import Settings
 from rem.npu_client import NpuClient
@@ -95,6 +101,8 @@ class MemorySidecar:
                     content=msg["content"],
                     turn_id=next_turn_id,
                     tokens=count_tokens(msg["content"]),
+                    session_id=session_id,
+                    timestamp=_now_iso(),
                 )
                 state.turns.append(turn)
 
@@ -130,11 +138,20 @@ class MemorySidecar:
                 if all_covered:
                     next_turn_id = max(all_covered) + 1
 
+            # Recover the session_id from the state filename ("{sid}_memory_state.json"),
+            # falling back to the most recent turn's session_id, so the assistant turn
+            # carries the same provenance as the user turns it answers.
+            session_id = Path(state_path).name.removesuffix("_memory_state.json") or None
+            if session_id is None and state.turns:
+                session_id = state.turns[-1].session_id
+
             assistant_turn = Turn(
                 role="assistant",
                 content=response_content,
                 turn_id=next_turn_id,
                 tokens=count_tokens(response_content),
+                session_id=session_id,
+                timestamp=_now_iso(),
             )
             state.turns.append(assistant_turn)
             state.save(state_path)

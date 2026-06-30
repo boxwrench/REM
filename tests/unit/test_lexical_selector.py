@@ -2,7 +2,12 @@
 
 from rem.memory.assembler import assemble
 from rem.memory.facts_ledger import FactEntry, FactsLedger
-from rem.memory.selector import LexicalSelector, PackedLexicalSelector
+from rem.memory.selector import (
+    LexicalSelector,
+    PackedLexicalSelector,
+    SparseChronologicalSelector,
+    SPARSE_TOP_K,
+)
 from rem.memory.tiers import MemoryState, SpanSummary, count_tokens
 
 
@@ -49,6 +54,40 @@ def test_packed_selector_enforces_budget_and_is_deterministic():
     second_text = assemble(second, system="", task=query)
     assert first_text == second_text
     assert count_tokens(first_text) <= 800
+
+
+def test_sparse_selector_floors_distractors_and_does_not_fill_budget():
+    """Sparse keeps the genuine match, drops pure-recency distractors, stays bounded."""
+    state = _retrieval_state()
+    query = "Which vehicle model am I working on?"
+    big_budget = 28000
+    sparse = SparseChronologicalSelector().select(state, query, big_budget)
+    lexical = LexicalSelector().select(state, query, big_budget)
+    s_text = assemble(sparse, system="", task=query)
+    l_text = assemble(lexical, system="", task=query)
+    # the real query match survives
+    assert "Ford F-150" in s_text
+    # top-k cap holds and the 30 gardening / 20 cooking distractors are floored out
+    assert len(sparse.ledger.entries) + len(sparse.summaries) <= SPARSE_TOP_K
+    # lexical fills the budget; sparse does not
+    assert len(sparse.ledger.entries) < len(lexical.ledger.entries)
+    assert count_tokens(s_text) < count_tokens(l_text)
+
+
+def test_sparse_selector_renders_chronologically():
+    """Survivors are emitted oldest -> newest, not in score order."""
+    entries = [
+        _fact("project status update alpha", 5, key="proj.a", value="alpha"),
+        _fact("project status update gamma", 30, key="proj.c", value="gamma"),
+        _fact("project status update beta", 12, key="proj.b", value="beta"),
+    ]
+    state = MemoryState(ledger=FactsLedger(entries=entries))
+    selected = SparseChronologicalSelector().select(
+        state, "project status update", 28000
+    )
+    turn_order = [e.source_turn_id for e in selected.ledger.entries]
+    assert turn_order == sorted(turn_order)
+    assert turn_order == [5, 12, 30]
 
 
 def test_packed_selector_deduplicates_fact_text_and_preserves_source_reference():

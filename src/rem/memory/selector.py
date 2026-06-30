@@ -294,3 +294,68 @@ class PackedLexicalSelector:
         return _build_selected_state(
             state, turns, selected, include_history=include_history
         )
+
+
+# A pure-recency candidate scores at most this (recency term = turn_id/max_turn * 0.001,
+# so <= 0.001). One actual query-term match contributes >= log(2) ~= 0.69, far above it.
+# A floor here therefore admits only candidates that share at least one query term —
+# the "nonzero relevance" the agent's read path requires — and excludes the recency
+# fill that lets LexicalSelector pack the whole budget with distractors.
+SPARSE_RELEVANCE_FLOOR = 0.01
+SPARSE_TOP_K = 24
+
+
+class SparseChronologicalSelector:
+    """Top-k, relevance-floored, chronologically-rendered evidence (gate arm 'sparse').
+
+    Three deliberate differences from LexicalSelector, each targeting a measured
+    confound in the current read path:
+
+      * RELEVANCE FLOOR — keep only candidates whose score clears
+        ``relevance_floor`` (i.e. that actually matched a query term), instead of
+        giving every entry a positive recency score (selector.py score = lexical +
+        recency*0.001) and admitting all of them.
+      * TOP-K, NOT BUDGET-FILL — cap the evidence at ``top_k`` survivors so a 28k
+        budget is never packed full of weak matches; sparse means sparse.
+      * CHRONOLOGICAL RENDER — emit the survivors oldest -> newest so the answerer
+        sees an ordered then -> now trail (the structure temporal questions need),
+        rather than score order.
+
+    Deduplicates near-identical observations. For temporal queries it includes
+    ordered history (stale entries) exactly as the lexical arms do, so a then->now
+    sequence can surface when one exists.
+    """
+
+    def __init__(self, top_k: int = SPARSE_TOP_K,
+                 relevance_floor: float = SPARSE_RELEVANCE_FLOOR) -> None:
+        self.top_k = top_k
+        self.relevance_floor = relevance_floor
+
+    def select(self, state: MemoryState, query: str, budget_tokens: int) -> MemoryState:
+        include_history = _is_temporal_query(query)
+        remaining, turns = _available_budget(state, query, budget_tokens)
+        candidates = _scored_candidates(
+            state, query, deduplicate=True, include_history=include_history
+        )
+        relevant = [c for c in candidates if c.score > self.relevance_floor]
+        if not relevant:
+            # No query-term match at all: fall back to the most recent candidates so
+            # the evidence set is not empty, but STILL bounded by top_k (never the
+            # whole budget). This keeps the arm honest on questions our tokenizer
+            # can't lexically anchor.
+            relevant = sorted(candidates, key=lambda c: -c.turn_id)
+        relevant.sort(key=lambda c: (-c.score, -c.turn_id, c.kind, c.text))
+        top = relevant[: self.top_k]
+
+        selected = []
+        for candidate in top:
+            if candidate.cost <= remaining:
+                selected.append(candidate)
+                remaining -= candidate.cost
+
+        # Render oldest -> newest. _build_selected_state preserves this order into the
+        # ledger/summaries, so the assembled evidence reads chronologically.
+        selected.sort(key=lambda c: (c.turn_id, c.kind, c.text))
+        return _build_selected_state(
+            state, turns, selected, include_history=include_history
+        )

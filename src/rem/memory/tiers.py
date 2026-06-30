@@ -25,6 +25,13 @@ class Turn(BaseModel):
     content: str
     turn_id: int
     tokens: int
+    # Provenance (additive, nullable; backward-compatible with pre-existing states
+    # serialized without these fields). session_id ties a turn to its conversation;
+    # timestamp is an ISO-8601 string. Both default None so old captures still load.
+    # Needed for temporal reasoning and an honest "freeze with known limits": the
+    # observation store must be able to express WHEN and WHO, which it could not before.
+    session_id: str | None = None
+    timestamp: str | None = None
 
 
 class SpanSummary(BaseModel):

@@ -16,6 +16,10 @@ venv/
 # Local memory state / runtime vaults
 vault/
 
+# Runtime logs / pids from eval + capture runs (keep results, drop process junk)
+bench/**/*.log
+bench/**/*.pid
+
 # Secrets & local config
 .env
 *.local

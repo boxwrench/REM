@@ -339,6 +339,12 @@ class FactEntry(BaseModel):
     # are NOT written back to the prompt or used as a hard constraint.
     value: str | None = None
     is_correction: bool = False
+    # Provenance/modality (additive, nullable; SCHEMA ONLY for now). Intended values:
+    # "actual" | "planned" | "hypothetical" | "assistant_inference". Deliberately NOT
+    # populated by the small extractor yet — a 2-4B model emitting a 4-class label is
+    # unvalidated, so nothing reads or acts on this until there is labeled validation.
+    # It exists so the store CAN carry modality without another schema migration later.
+    modality: str | None = None
 
     @field_validator("kind", mode="before")
     @classmethod
