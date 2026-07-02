@@ -1,8 +1,6 @@
 """Unit tests for the Path B wiki schema validation logic."""
 
-import pytest
-from pathlib import Path
-from rem.wiki.schema import validate_page, validate_vault, Violation
+from rem.wiki.schema import validate_page, validate_vault
 
 def test_validate_page_valid(tmp_path):
     page_file = tmp_path / "valid-page.md"

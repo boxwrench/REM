@@ -220,7 +220,7 @@ def run_igpu_decode(port: int, max_tokens: int = 150) -> float:
                 if data_str == "[DONE]":
                     break
                 try:
-                    data = json.loads(data_str)
+                    json.loads(data_str)
                     num_tokens += 1
                     ts = time.perf_counter()
                     if num_tokens == 1:

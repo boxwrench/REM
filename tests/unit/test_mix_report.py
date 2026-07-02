@@ -1,7 +1,7 @@
 """mix_report labels each item's read-path miss NPU-free."""
 from rem.config import Settings
 from rem.memory.facts_ledger import FactEntry, FactsLedger
-from rem.memory.tiers import MemoryState, SpanSummary, Turn
+from rem.memory.tiers import MemoryState, Turn
 from evals.battery.mix_report import label_item
 
 

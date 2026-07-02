@@ -13,7 +13,9 @@ class _Resp:
 
 
 class FakeMessages:
-    def __init__(self, payload): self._payload = payload; self.kwargs = None
+    def __init__(self, payload):
+        self._payload = payload
+        self.kwargs = None
     def create(self, **kwargs):
         self.kwargs = kwargs
         return _Resp(self._payload)

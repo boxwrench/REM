@@ -49,3 +49,9 @@ markers = [
 ]
 addopts = "-q -m 'not npu'"
 asyncio_mode = "auto"
+
+[tool.ruff.lint.per-file-ignores]
+# Eval/bench scripts bootstrap sys.path (sys.path.insert(...)) before importing
+# rem/evals, so imports intentionally follow executable statements (E402). Scoped to
+# the eval trees only; src/ stays under the default rules.
+"evals/**" = ["E402"]
