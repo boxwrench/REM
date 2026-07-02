@@ -20,6 +20,22 @@ class ContextLimitExceeded(Exception):
     pass
 
 
+def _render_summary(summary, text: str) -> str:
+    """Render filtered summary text with retained source provenance."""
+    provenance = []
+    if summary.session_ids:
+        provenance.append(f"Sessions {', '.join(summary.session_ids)}")
+    if summary.start_timestamp:
+        if summary.end_timestamp and summary.end_timestamp != summary.start_timestamp:
+            provenance.append(
+                f"Timestamps {summary.start_timestamp} to {summary.end_timestamp}"
+            )
+        else:
+            provenance.append(f"Timestamp {summary.start_timestamp}")
+    prefix = f"[{'; '.join(provenance)}] " if provenance else ""
+    return f"{prefix}{text}"
+
+
 def recent_slot_values(state: MemoryState) -> dict[str, list[SlotObservation]]:
     """Returns known current-state slot values observed in recent verbatim turns."""
     values: dict[str, list[SlotObservation]] = {}
@@ -77,7 +93,7 @@ def assemble(
             if s.rendered_text is None:
                 s.rendered_text = filter_summary_text(s.text, all_quarantined_vals)
             if s.rendered_text.strip():
-                summary_lines.append(f"- {s.rendered_text}")
+                summary_lines.append(f"- {_render_summary(s, s.rendered_text)}")
         if summary_lines:
             parts.append("=== EPISODIC SUMMARIES ===\n" + "\n".join(summary_lines))
 
@@ -150,7 +166,7 @@ def assemble_messages(
             if s.rendered_text is None:
                 s.rendered_text = filter_summary_text(s.text, all_quarantined_vals)
             if s.rendered_text.strip():
-                summary_lines.append(f"- {s.rendered_text}")
+                summary_lines.append(f"- {_render_summary(s, s.rendered_text)}")
         if summary_lines:
             parts.append("=== EPISODIC SUMMARIES ===\n" + "\n".join(summary_lines))
 

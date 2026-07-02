@@ -1,0 +1,1089 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-02T17:35:11.476053+00:00",
+  "manifest": "bench/memory_methods/development_manifest.json",
+  "summary": {
+    "expected": 30,
+    "available": 10,
+    "valid": 10,
+    "invalid": 0,
+    "in_progress": 0,
+    "missing": 20
+  },
+  "question_ids": {
+    "valid": [
+      "3ba21379",
+      "cc5ded98",
+      "c6853660",
+      "9bbe84a2",
+      "ce6d2d27",
+      "945e3d21",
+      "6071bd76",
+      "22d2cb42",
+      "dfde3500",
+      "affe2881"
+    ],
+    "invalid": [],
+    "in_progress": [],
+    "missing": [
+      "gpt4_45189cb4",
+      "gpt4_fe651585_abs",
+      "gpt4_7a0daae1",
+      "9a707b82",
+      "gpt4_98f46fc6",
+      "gpt4_1916e0ea",
+      "gpt4_213fd887",
+      "gpt4_8c8961ae",
+      "gpt4_2f584639",
+      "gpt4_d6585ce9",
+      "60159905",
+      "a96c20ee",
+      "1f2b8d4f",
+      "gpt4_f2262a51",
+      "bc149d6b",
+      "1192316e",
+      "9aaed6a3",
+      "3a704032",
+      "60bf93ed",
+      "e3038f8c"
+    ]
+  },
+  "items": [
+    {
+      "question_id": "3ba21379",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/3ba21379_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: ingest_secs, assembled_total_tokens, captured_at, extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "3ba21379",
+          "expected_filename": "3ba21379_state.json",
+          "actual_filename": "3ba21379_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 846,
+            "complete": 0,
+            "missing": 846,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 406,
+            "complete": 0,
+            "missing": 406,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 846,
+          "summaries": 406,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "ingest_secs",
+            "assembled_total_tokens",
+            "captured_at",
+            "extraction"
+          ],
+          "values": null,
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "cc5ded98",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/cc5ded98_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: ingest_secs, assembled_total_tokens, captured_at, extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "cc5ded98",
+          "expected_filename": "cc5ded98_state.json",
+          "actual_filename": "cc5ded98_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 913,
+            "complete": 0,
+            "missing": 913,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 454,
+            "complete": 0,
+            "missing": 454,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 913,
+          "summaries": 454,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "ingest_secs",
+            "assembled_total_tokens",
+            "captured_at",
+            "extraction"
+          ],
+          "values": null,
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "c6853660",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/c6853660_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: ingest_secs, assembled_total_tokens, captured_at, extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "c6853660",
+          "expected_filename": "c6853660_state.json",
+          "actual_filename": "c6853660_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 948,
+            "complete": 0,
+            "missing": 948,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 459,
+            "complete": 0,
+            "missing": 459,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 948,
+          "summaries": 459,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "ingest_secs",
+            "assembled_total_tokens",
+            "captured_at",
+            "extraction"
+          ],
+          "values": null,
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "9bbe84a2",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/9bbe84a2_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: ingest_secs, assembled_total_tokens, captured_at, extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "9bbe84a2",
+          "expected_filename": "9bbe84a2_state.json",
+          "actual_filename": "9bbe84a2_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 865,
+            "complete": 0,
+            "missing": 865,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 440,
+            "complete": 0,
+            "missing": 440,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 865,
+          "summaries": 440,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "ingest_secs",
+            "assembled_total_tokens",
+            "captured_at",
+            "extraction"
+          ],
+          "values": null,
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "ce6d2d27",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/ce6d2d27_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "ce6d2d27",
+          "expected_filename": "ce6d2d27_state.json",
+          "actual_filename": "ce6d2d27_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 921,
+            "complete": 0,
+            "missing": 921,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 483,
+            "complete": 0,
+            "missing": 483,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 921,
+          "summaries": 483,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "extraction"
+          ],
+          "values": {
+            "ingest_secs": 4589.3,
+            "assembled_total_tokens": 56932,
+            "captured_at": 1782791242.7923925
+          },
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "945e3d21",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/945e3d21_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "945e3d21",
+          "expected_filename": "945e3d21_state.json",
+          "actual_filename": "945e3d21_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 927,
+            "complete": 0,
+            "missing": 927,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 453,
+            "complete": 0,
+            "missing": 453,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 927,
+          "summaries": 453,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "extraction"
+          ],
+          "values": {
+            "ingest_secs": 4454.9,
+            "assembled_total_tokens": 52295,
+            "captured_at": 1782795697.7328796
+          },
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "6071bd76",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/6071bd76_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "6071bd76",
+          "expected_filename": "6071bd76_state.json",
+          "actual_filename": "6071bd76_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 920,
+            "complete": 0,
+            "missing": 920,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 467,
+            "complete": 0,
+            "missing": 467,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 920,
+          "summaries": 467,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "extraction"
+          ],
+          "values": {
+            "ingest_secs": 4393.5,
+            "assembled_total_tokens": 38940,
+            "captured_at": 1782800091.2452419
+          },
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "22d2cb42",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/22d2cb42_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "22d2cb42",
+          "expected_filename": "22d2cb42_state.json",
+          "actual_filename": "22d2cb42_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 941,
+            "complete": 0,
+            "missing": 941,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 445,
+            "complete": 0,
+            "missing": 445,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 941,
+          "summaries": 445,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "extraction"
+          ],
+          "values": {
+            "ingest_secs": 4488.5,
+            "assembled_total_tokens": 31835,
+            "captured_at": 1782804579.7793694
+          },
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "dfde3500",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/dfde3500_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "dfde3500",
+          "expected_filename": "dfde3500_state.json",
+          "actual_filename": "dfde3500_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 882,
+            "complete": 0,
+            "missing": 882,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 464,
+            "complete": 0,
+            "missing": 464,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 882,
+          "summaries": 464,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "extraction"
+          ],
+          "values": {
+            "ingest_secs": 4450.0,
+            "assembled_total_tokens": 52313,
+            "captured_at": 1782809029.7456906
+          },
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "affe2881",
+      "category": "knowledge-update",
+      "state_file": "bench/memory_methods/states/affe2881_state.json",
+      "status": "valid",
+      "path_c_required": false,
+      "errors": [],
+      "warnings": [
+        "legacy capture has incomplete provenance for: facts, summaries, recent_turns",
+        "legacy capture metadata missing: extraction"
+      ],
+      "checks": {
+        "question_id": {
+          "expected": "affe2881",
+          "expected_filename": "affe2881_state.json",
+          "actual_filename": "affe2881_state.json",
+          "matches": true,
+          "embedded": null
+        },
+        "json_loadable": true,
+        "extraction_state_structure": {
+          "schema_version_present": true,
+          "turns_present": true,
+          "summaries_present": true,
+          "ledger_present": true,
+          "ledger_entries_present": true
+        },
+        "memory_state_loadable": true,
+        "provenance": {
+          "facts": {
+            "total": 857,
+            "complete": 0,
+            "missing": 857,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          },
+          "summaries": {
+            "total": 422,
+            "complete": 0,
+            "missing": 422,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_ids",
+              "start_timestamp",
+              "end_timestamp"
+            ]
+          },
+          "recent_turns": {
+            "total": 8,
+            "complete": 0,
+            "missing": 8,
+            "coverage": 0.0,
+            "required_fields": [
+              "session_id",
+              "timestamp"
+            ]
+          }
+        },
+        "extraction_counts": {
+          "facts": 857,
+          "summaries": 422,
+          "recent_turns": 8
+        },
+        "capture_metadata": {
+          "present": false,
+          "missing_fields": [
+            "extraction"
+          ],
+          "values": {
+            "ingest_secs": 4202.4,
+            "assembled_total_tokens": 52050,
+            "captured_at": 1782813232.1939573
+          },
+          "extraction_failures": null
+        }
+      }
+    },
+    {
+      "question_id": "gpt4_45189cb4",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_45189cb4_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_fe651585_abs",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_fe651585_abs_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_7a0daae1",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_7a0daae1_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "9a707b82",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/9a707b82_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_98f46fc6",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_98f46fc6_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_1916e0ea",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_1916e0ea_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_213fd887",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_213fd887_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_8c8961ae",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_8c8961ae_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_2f584639",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_2f584639_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_d6585ce9",
+      "category": "temporal-reasoning",
+      "state_file": "bench/memory_methods/states/gpt4_d6585ce9_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "60159905",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/60159905_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "a96c20ee",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/a96c20ee_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "1f2b8d4f",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/1f2b8d4f_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "gpt4_f2262a51",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/gpt4_f2262a51_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "bc149d6b",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/bc149d6b_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "1192316e",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/1192316e_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "9aaed6a3",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/9aaed6a3_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "3a704032",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/3a704032_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "60bf93ed",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/60bf93ed_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    },
+    {
+      "question_id": "e3038f8c",
+      "category": "multi-session",
+      "state_file": "bench/memory_methods/states/e3038f8c_state.json",
+      "status": "missing",
+      "path_c_required": true,
+      "errors": [],
+      "warnings": [],
+      "checks": {
+        "state_exists": false
+      }
+    }
+  ]
+}

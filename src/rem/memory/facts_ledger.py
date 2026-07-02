@@ -9,8 +9,6 @@ from rem.npu_client import NpuClient
 from rem.memory.prompts import (
     FACT_EXTRACTION_SYSTEM,
     FACT_EXTRACTION_USER_TEMPLATE,
-    FACT_EXTRACTION_RETRY_MESSAGE,
-    FACT_EXTRACTION_TRUNCATION_RETRY_MESSAGE,
 )
 
 if TYPE_CHECKING:
@@ -339,7 +337,11 @@ class FactEntry(BaseModel):
     # are NOT written back to the prompt or used as a hard constraint.
     value: str | None = None
     is_correction: bool = False
-    # Provenance/modality (additive, nullable; SCHEMA ONLY for now). Intended values:
+    # Source provenance is assigned by the compactor from source_turn_id rather
+    # than trusted to model output. Nullable defaults keep old states loadable.
+    session_id: str | None = None
+    timestamp: str | None = None
+    # Modality (additive, nullable; SCHEMA ONLY for now). Intended values:
     # "actual" | "planned" | "hypothetical" | "assistant_inference". Deliberately NOT
     # populated by the small extractor yet — a 2-4B model emitting a 4-class label is
     # unvalidated, so nothing reads or acts on this until there is labeled validation.
@@ -547,6 +549,8 @@ class FactsLedger(BaseModel):
                 # Keep the newer turn ID, keep active status if either was active
                 if entry.source_turn_id > existing.source_turn_id:
                     existing.source_turn_id = entry.source_turn_id
+                    existing.session_id = entry.session_id
+                    existing.timestamp = entry.timestamp
                 if entry.status == "active":
                     existing.status = "active"
                     existing.superseded_by_turn_id = None
@@ -644,6 +648,8 @@ class FactsLedger(BaseModel):
                 existing = existing_normalized[norm]
                 if entry.source_turn_id > existing.source_turn_id:
                     existing.source_turn_id = entry.source_turn_id
+                    existing.session_id = entry.session_id
+                    existing.timestamp = entry.timestamp
                 if entry.status == "active":
                     existing.status = "active"
                     existing.superseded_by_turn_id = None
@@ -726,8 +732,13 @@ class FactsLedger(BaseModel):
         lines = ["Facts Ledger:"]
         for entry in entries:
             status = "" if entry.status == "active" else " stale"
+            provenance = [f"Turn {entry.source_turn_id}"]
+            if entry.session_id:
+                provenance.append(f"Session {entry.session_id}")
+            if entry.timestamp:
+                provenance.append(f"Timestamp {entry.timestamp}")
             lines.append(
-                f"- [{entry.kind}{status}] {entry.text} (Turn {entry.source_turn_id})"
+                f"- [{entry.kind}{status}] {entry.text} ({'; '.join(provenance)})"
             )
         return "\n".join(lines)
 

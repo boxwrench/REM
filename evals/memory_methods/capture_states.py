@@ -63,6 +63,7 @@ def run(data: str, manifest: str, budget_tokens: int = 1000, make_cm=None,
             "ingest_secs": result["ingest_secs"],
             "assembled_total_tokens": result["assembled_total_tokens"],
             "captured_at": result["captured_at"],
+            "extraction": result["extraction"],
         }
         manifest_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         captured += 1

@@ -1,7 +1,7 @@
 """Unit tests for the memory compactor component."""
 
 import threading
-import time
+import json
 import httpx
 from filelock import FileLock
 
@@ -9,6 +9,7 @@ from rem.config import Settings
 from rem.npu_client import NpuClient
 from rem.memory.tiers import MemoryState, Turn, count_tokens
 from rem.memory.compactor import should_compact, compact_once, run_background
+from rem.memory.assembler import assemble, assemble_messages
 
 
 def test_should_compact():
@@ -107,6 +108,57 @@ def test_compaction_swap_and_ordering(mock_npu):
     # Ledger should contain the extracted decision
     assert len(state.ledger.entries) == 1
     assert state.ledger.entries[0].text == "Planted Decision"
+
+
+def test_compaction_preserves_and_renders_source_provenance(mock_npu):
+    client = NpuClient()
+    settings = Settings(keep_recent_turns=1, compact_span_turns=3)
+    first_date = "2023/05/20 (Sat) 02:21"
+    second_date = "2023/06/11 (Sun) 14:05"
+    state = MemoryState(turns=[
+        Turn(role="user", content="Initial context", turn_id=1, tokens=10,
+             session_id="s1", timestamp=first_date),
+        Turn(role="user", content="The launch city is Portland", turn_id=2,
+             tokens=10, session_id="s1", timestamp=first_date),
+        Turn(role="assistant", content="Noted", turn_id=3, tokens=10,
+             session_id="s2", timestamp=second_date),
+        Turn(role="user", content="Current question", turn_id=4, tokens=10,
+             session_id="s3", timestamp="2023/07/01 (Sat) 09:00"),
+    ])
+    mock_npu.post("/v1/chat/completions").mock(side_effect=[
+        httpx.Response(200, json={"choices": [{"message": {"content": json.dumps([{
+            "kind": "entity",
+            "text": "The launch city is Portland",
+            "source_turn_id": 2,
+        }])}}]}),
+        httpx.Response(200, json={"choices": [{"message": {
+            "content": "The launch planning covered Portland."
+        }}]}),
+    ])
+
+    result = compact_once(state, client, settings)
+
+    assert result.compacted is True
+    assert [turn.turn_id for turn in state.turns] == [4]
+    fact = state.ledger.entries[0]
+    assert fact.session_id == "s1"
+    assert fact.timestamp == first_date
+    summary = state.summaries[0]
+    assert summary.session_ids == ["s1", "s2"]
+    assert summary.start_timestamp == first_date
+    assert summary.end_timestamp == second_date
+
+    summarizer_request = json.loads(mock_npu.calls.last.request.content)
+    summarizer_text = summarizer_request["messages"][1]["content"]
+    assert f"Session s1; Timestamp {first_date}" in summarizer_text
+    assert f"Session s2; Timestamp {second_date}" in summarizer_text
+
+    prompt = assemble(state, "System", "Task")
+    system_message = assemble_messages(state, "System", "Task")[0]["content"]
+    for rendered in (prompt, system_message):
+        assert f"Timestamp {first_date}" in rendered
+        assert f"Timestamps {first_date} to {second_date}" in rendered
+        assert "Sessions s1, s2" in rendered
 
 
 def test_token_reduction_after_compaction(mock_npu):

@@ -74,6 +74,32 @@ def test_schema_version_refusal(tmp_path):
     assert "schema version 2 is higher than supported version 1" in str(exc_info.value)
 
 
+def test_old_state_without_compacted_provenance_loads(tmp_path):
+    state_file = tmp_path / "old_state.json"
+    state_file.write_text(json.dumps({
+        "schema_version": 1,
+        "turns": [],
+        "summaries": [{
+            "covers_turn_ids": [1],
+            "text": "Old summary",
+            "tokens": 3,
+        }],
+        "ledger": {"entries": [{
+            "kind": "decision",
+            "text": "Old fact",
+            "source_turn_id": 1,
+        }]},
+    }), encoding="utf-8")
+
+    state = MemoryState.load(state_file)
+
+    assert state.summaries[0].session_ids == []
+    assert state.summaries[0].start_timestamp is None
+    assert state.summaries[0].end_timestamp is None
+    assert state.ledger.entries[0].session_id is None
+    assert state.ledger.entries[0].timestamp is None
+
+
 def test_atomic_save_failure_keeps_original(tmp_path, monkeypatch):
     """Asserts that a failure during save does not corrupt the existing file."""
     state_file = tmp_path / "atomic_state.json"

@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from evals.battery.longmemeval_loader import load_knowledge_update
 
 
@@ -14,6 +16,10 @@ def _write_fixture(tmp_path):
             "haystack_sessions": [
                 [{"role": "user", "content": "I work at Globex"}],
                 [{"role": "user", "content": "Update: I now work at Acme"}],
+            ],
+            "haystack_dates": [
+                "2023/05/20 (Sat) 02:21",
+                "2023/06/11 (Sun) 14:05",
             ],
             "answer_session_ids": ["s2"],
         },
@@ -40,6 +46,7 @@ def test_loader_keeps_only_knowledge_update(tmp_path):
     assert it.question_type == "knowledge-update"
     assert len(it.sessions) == 2
     assert it.sessions[1].session_id == "s2"
+    assert it.sessions[1].timestamp == "2023/06/11 (Sun) 14:05"
     assert it.sessions[1].turns[0]["content"] == "Update: I now work at Acme"
     assert it.answer_session_ids == ["s2"]
 
@@ -47,6 +54,27 @@ def test_loader_keeps_only_knowledge_update(tmp_path):
 def test_loader_respects_limit(tmp_path):
     items = load_knowledge_update(_write_fixture(tmp_path), limit=0)
     assert items == []
+
+
+def test_loader_without_haystack_dates_uses_null_timestamp(tmp_path):
+    path = _write_fixture(tmp_path)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data[0].pop("haystack_dates")
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+    item = load_knowledge_update(path)[0]
+
+    assert [session.timestamp for session in item.sessions] == [None, None]
+
+
+def test_loader_rejects_misaligned_haystack_dates(tmp_path):
+    path = _write_fixture(tmp_path)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data[0]["haystack_dates"] = data[0]["haystack_dates"][:1]
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="session alignment mismatch"):
+        load_knowledge_update(path)
 
 
 def _write_recency_fixture(tmp_path):

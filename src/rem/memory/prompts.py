@@ -71,3 +71,19 @@ FACT_COMPACTION_USER_TEMPLATE = (
     "Write the prose summary."
 )
 
+EPISODE_CARD_SYSTEM = (
+    "You are a precise memory compaction assistant.\n"
+    "Extract load-bearing facts and write a concise prose summary in one response.\n"
+    "Respond ONLY with one JSON object with exactly two top-level fields: facts and summary.\n"
+    "facts must be a JSON array. Each fact must have exactly these fields: kind, "
+    "source_turn_id, subject, attribute, value, is_correction.\n"
+    "kind must be entity, number, decision, or quote. source_turn_id must match an input turn.\n"
+    "Extract at most 3 key facts. summary must be a short JSON string consistent with the facts.\n"
+    "Do not use markdown fences and do not add commentary."
+)
+
+EPISODE_CARD_USER_TEMPLATE = (
+    "Here are the conversation turns to compact:\n\n"
+    "{conversation_text}\n\n"
+    "Return the structured episode card now."
+)
