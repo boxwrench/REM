@@ -1,0 +1,682 @@
+{
+  "schema_version": 1,
+  "experiment": "path-b-post-hoc-role-aware-rekey",
+  "repository_revision": "7005cdb02f3bcfd39ee6d85a2bd31e5b8ecf189e",
+  "created_at": 1783009574.548147,
+  "manifest": "bench/memory_methods/development_manifest.json",
+  "n_items": 6,
+  "mutates_persisted_states": false,
+  "audit_reports": [
+    {
+      "path": "bench/memory_methods/rem_supersession_heldout_audit.md",
+      "sha256": "02682908c7b87eb1779b0025c67bda9e6bb1ed0d7df9694731709901dfce2c76"
+    },
+    {
+      "path": "bench/memory_methods/rem_supersession_heldout_audit_2026-07-01.md",
+      "sha256": "094c69acb49a88e80b257fff3ecca221bcd485b5c022ad2237d8de9ebda8d646"
+    },
+    {
+      "path": "bench/memory_methods/rem_supersession_heldout_audit_2026-07-02.md",
+      "sha256": "0fa7f60ade723665fc863b5ed9d478145d8be8aff7aca7a91a6329bfb9d2e0ba"
+    }
+  ],
+  "summary": {
+    "fragmented_values_before": 302,
+    "fragmented_values_after": 222,
+    "fragmentation_reduction_rate": 0.2649,
+    "fragmentation_target": 0.5,
+    "fragmentation_target_met": false,
+    "all_gold_preserved": true,
+    "all_negative_sentinels_preserved": true,
+    "all_positive_sentinels_collide": true,
+    "go": false
+  },
+  "negative_sentinels": [
+    {
+      "family": "start_end",
+      "left": "event dates.start date",
+      "right": "event dates.end date",
+      "preserved": true
+    },
+    {
+      "family": "min_max",
+      "left": "price range.minimum price",
+      "right": "price range.maximum price",
+      "preserved": true
+    },
+    {
+      "family": "fridge_freezer",
+      "left": "chicken.refrigerator duration",
+      "right": "chicken.freezer duration",
+      "preserved": true
+    },
+    {
+      "family": "sets_reps",
+      "left": "plank.sets",
+      "right": "plank.reps",
+      "preserved": true
+    },
+    {
+      "family": "per_instance",
+      "left": "onibus coffee.walk distance",
+      "right": "streamer coffee.walk distance",
+      "preserved": true
+    }
+  ],
+  "positive_sentinels": [
+    {
+      "case": "coffee_ratio_update",
+      "left": "coffee ratio.tablespoon of coffee per ounces of water",
+      "right": "coffee brewing.ratio",
+      "collides": true
+    },
+    {
+      "case": "bird_count_update",
+      "left": "bird species.count",
+      "right": "species count.total species count",
+      "collides": true
+    }
+  ],
+  "items": [
+    {
+      "question_id": "ce6d2d27",
+      "before": {
+        "ledger_total": 921,
+        "ledger_active": 911,
+        "superseded": 10,
+        "supersession_rate": 0.0109,
+        "write_recall_gold": {
+          "Friday": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 66,
+        "fragmentation_examples": {
+          "35g": [
+            "grilled chicken and brown rice bowl with roasted vegetables and side of steamed broccoli.protein",
+            "grilled chicken and vegetable soup with quinoa and side of whole grain bread.protein",
+            "salmon and quinoa bowl with roasted sweet potatoes and steamed green beans.protein",
+            "salmon fillet on top of brown rice and mixed greens with lemon tahini dressing.protein",
+            "turkey and black bean wrap with whole wheat tortilla sliced turkey breast black beans and avocado.protein",
+            "turkey and cheese on whole grain bread with apple slices and almonds.protein"
+          ],
+          "7": [
+            "agreement level.rating",
+            "oster gentle paws grooming kit.pieces",
+            "statement.agreement score",
+            "user.value"
+          ],
+          "shinjuku-ku": [
+            "all press espresso.location",
+            "cooking sun.location",
+            "onibus coffee.location",
+            "streamer coffee company.location"
+          ],
+          "south africa": [
+            "cultural dance performance.location",
+            "replica.region",
+            "safari tour operators.location",
+            "safari tours.location"
+          ],
+          "rachel": [
+            "individual.friend",
+            "lessons.coach",
+            "manager.name"
+          ]
+        }
+      },
+      "after": {
+        "ledger_total": 921,
+        "ledger_active": 801,
+        "superseded": 120,
+        "supersession_rate": 0.1303,
+        "write_recall_gold": {
+          "Friday": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 47,
+        "fragmentation_examples": {
+          "35g": [
+            "grilled chicken and brown rice bowl with roasted vegetables and side of steamed broccoli.protein",
+            "grilled chicken and vegetable soup with quinoa and side of whole grain bread.protein",
+            "salmon and quinoa bowl with roasted sweet potatoes and steamed green beans.protein",
+            "salmon fillet on top of brown rice and mixed greens with lemon tahini dressing.protein",
+            "turkey and black bean wrap with whole wheat tortilla sliced turkey breast black beans and avocado.protein",
+            "turkey and cheese on whole grain bread with apple slices and almonds.protein"
+          ],
+          "7": [
+            "agreement level.rating",
+            "audit-role:user.interest",
+            "oster gentle paws grooming kit.pieces",
+            "statement.agreement score"
+          ],
+          "shinjuku-ku": [
+            "all press espresso.location",
+            "cooking sun.location",
+            "onibus coffee.location",
+            "streamer coffee company.location"
+          ],
+          "rachel": [
+            "individual.friend",
+            "lessons.coach",
+            "manager.name"
+          ],
+          "coconut oil": [
+            "audit-role:coconut oil.benefit",
+            "audit-role:vegetable korma recipe.ingredient",
+            "cooking method.oil type"
+          ]
+        }
+      },
+      "fragmented_values_reduction": 19,
+      "gold_survival": {
+        "Friday": {
+          "active_before": true,
+          "active_after": true
+        }
+      },
+      "gold_preserved": true,
+      "candidate_groups": 94
+    },
+    {
+      "question_id": "945e3d21",
+      "before": {
+        "ledger_total": 927,
+        "ledger_active": 917,
+        "superseded": 10,
+        "supersession_rate": 0.0108,
+        "write_recall_gold": {
+          "three times a week": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 60,
+        "fragmentation_examples": {
+          "30": [
+            "linux lab excercise.number of questions",
+            "linux lab exercise.command count",
+            "linux lab exercise.number of commands",
+            "linux lab exercise.number of questions",
+            "spartan training regimen.end age"
+          ],
+          "river walk": [
+            "activity.location",
+            "omni la mansi\u00f3n del rio.location",
+            "place.visited"
+          ],
+          "helicopter & snorkel package": [
+            "blue hawaiian helicopters.package offering",
+            "island helicopters.package offering",
+            "maverick helicopters.package offering"
+          ],
+          "5-7 pages": [
+            "financial projections length.pages",
+            "market analysis length.pages",
+            "marketing and sales length.pages"
+          ],
+          "the 1975": [
+            "artist.name",
+            "band.performance context",
+            "concert.artist"
+          ]
+        }
+      },
+      "after": {
+        "ledger_total": 927,
+        "ledger_active": 819,
+        "superseded": 108,
+        "supersession_rate": 0.1165,
+        "write_recall_gold": {
+          "three times a week": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 42,
+        "fragmentation_examples": {
+          "30": [
+            "audit-role:linux lab exercise.command count",
+            "linux lab excercise.number of questions",
+            "linux lab exercise.number of questions",
+            "spartan training regimen.end age"
+          ],
+          "helicopter & snorkel package": [
+            "blue hawaiian helicopters.package offering",
+            "island helicopters.package offering",
+            "maverick helicopters.package offering"
+          ],
+          "5-7 pages": [
+            "financial projections length.pages",
+            "market analysis length.pages",
+            "marketing and sales length.pages"
+          ],
+          "the 1975": [
+            "artist.name",
+            "band.performance context",
+            "concert.artist"
+          ],
+          "give yourself a try": [
+            "electric whispers playlist.addition suggestion",
+            "song.name",
+            "song.title"
+          ]
+        }
+      },
+      "fragmented_values_reduction": 18,
+      "gold_survival": {
+        "three times a week": {
+          "active_before": true,
+          "active_after": true
+        }
+      },
+      "gold_preserved": true,
+      "candidate_groups": 84
+    },
+    {
+      "question_id": "6071bd76",
+      "before": {
+        "ledger_total": 920,
+        "ledger_active": 909,
+        "superseded": 11,
+        "supersession_rate": 0.012,
+        "write_recall_gold": {
+          "5 ounces of water": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 48,
+        "fragmentation_examples": {
+          "15-30 seconds": [
+            "calf stretch.hold time",
+            "chest stretch.hold time",
+            "glute stretch.hold time",
+            "hamstring stretch.hold time",
+            "neck stretch.hold time",
+            "quad stretch.hold time"
+          ],
+          "12-15 reps": [
+            "clamshell exercise reps.reps per set",
+            "glute bridges reps.reps per set",
+            "lateral band walks reps.reps per set",
+            "leg raises.reps",
+            "russian twists.reps",
+            "step ups reps.reps per set"
+          ],
+          "one in, one out": [
+            "closet decluttering journey.policy",
+            "closet organization.policy",
+            "policy.rule",
+            "policy.type"
+          ],
+          "30 minutes": [
+            "cleaning french press.step 3 soaking time",
+            "kimchi slaw.reheating time",
+            "recipe.prep time"
+          ],
+          "america's test kitchen": [
+            "cookbook.author publisher",
+            "publisher.author brand",
+            "publisher.publisher"
+          ]
+        }
+      },
+      "after": {
+        "ledger_total": 920,
+        "ledger_active": 803,
+        "superseded": 117,
+        "supersession_rate": 0.1272,
+        "write_recall_gold": {
+          "5 ounces of water": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 39,
+        "fragmentation_examples": {
+          "15-30 seconds": [
+            "calf stretch.hold time",
+            "chest stretch.hold time",
+            "glute stretch.hold time",
+            "hamstring stretch.hold time",
+            "neck stretch.hold time",
+            "quad stretch.hold time"
+          ],
+          "12-15 reps": [
+            "clamshell exercise reps.reps per set",
+            "glute bridges reps.reps per set",
+            "lateral band walks reps.reps per set",
+            "leg raises.reps",
+            "russian twists.reps",
+            "step ups reps.reps per set"
+          ],
+          "30 minutes": [
+            "audit-role:cleaning french press.step 3 soaking time",
+            "kimchi slaw.reheating time",
+            "recipe.prep time"
+          ],
+          "3-5 sets": [
+            "leg raises.sets",
+            "plank.sets",
+            "russian twists.sets"
+          ],
+          "30 seconds": [
+            "glute bridges rest time.rest duration",
+            "heel taps.duration",
+            "single leg balance.duration"
+          ]
+        }
+      },
+      "fragmented_values_reduction": 9,
+      "gold_survival": {
+        "5 ounces of water": {
+          "active_before": true,
+          "active_after": true
+        }
+      },
+      "gold_preserved": true,
+      "candidate_groups": 90
+    },
+    {
+      "question_id": "22d2cb42",
+      "before": {
+        "ledger_total": 941,
+        "ledger_active": 931,
+        "superseded": 10,
+        "supersession_rate": 0.0106,
+        "write_recall_gold": {
+          "Main St": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 52,
+        "fragmentation_examples": {
+          "3": [
+            "bird dog.sets",
+            "box jumps.sets",
+            "calf raises.sets",
+            "donkey kicks.sets",
+            "glute bridges.sets",
+            "hip thrusts.sets",
+            "jump squats.sets",
+            "lateral band walks.sets",
+            "plank sets.sets",
+            "russian twists with medicine ball.sets",
+            "side plank.sets",
+            "step ups.sets"
+          ],
+          "12-15": [
+            "bird dog.reps",
+            "box jumps.reps",
+            "calf raises.reps",
+            "donkey kicks.reps",
+            "glute bridges.reps",
+            "hip thrusts.reps",
+            "jump squats.reps",
+            "lateral band walks.reps per leg",
+            "russian twists with medicine ball.reps",
+            "step ups.reps per leg"
+          ],
+          "indie rock": [
+            "libertines.genre",
+            "music genre.listened to",
+            "music genre.preferred style",
+            "wolf alice.genre"
+          ],
+          "4-12 players": [
+            "deception murder in hong kong.player count",
+            "junk art.player count",
+            "monikers.player count",
+            "wits wagers.player count"
+          ],
+          "12-15 reps": [
+            "calf raises reps per set.reps per set",
+            "deadlifts reps per set.reps per set",
+            "leg raises reps per set.reps per set",
+            "squats reps per set.reps per set"
+          ]
+        }
+      },
+      "after": {
+        "ledger_total": 941,
+        "ledger_active": 832,
+        "superseded": 109,
+        "supersession_rate": 0.1158,
+        "write_recall_gold": {
+          "Main St": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 38,
+        "fragmentation_examples": {
+          "3": [
+            "bird dog.sets",
+            "box jumps.sets",
+            "calf raises.sets",
+            "donkey kicks.sets",
+            "glute bridges.sets",
+            "hip thrusts.sets",
+            "jump squats.sets",
+            "lateral band walks.sets",
+            "russian twists with medicine ball.sets",
+            "step ups.sets"
+          ],
+          "12-15": [
+            "bird dog.reps",
+            "box jumps.reps",
+            "calf raises.reps",
+            "donkey kicks.reps",
+            "glute bridges.reps",
+            "hip thrusts.reps",
+            "jump squats.reps",
+            "lateral band walks.reps per leg",
+            "russian twists with medicine ball.reps",
+            "step ups.reps per leg"
+          ],
+          "4-12 players": [
+            "audit-role:deception murder in hong kong.player count",
+            "junk art.player count",
+            "monikers.player count",
+            "wits wagers.player count"
+          ],
+          "12-15 reps": [
+            "calf raises reps per set.reps per set",
+            "deadlifts reps per set.reps per set",
+            "leg raises reps per set.reps per set",
+            "squats reps per set.reps per set"
+          ],
+          "main st": [
+            "guitar servicing.location",
+            "location.street",
+            "music shop.location"
+          ]
+        }
+      },
+      "fragmented_values_reduction": 14,
+      "gold_survival": {
+        "Main St": {
+          "active_before": true,
+          "active_after": true
+        }
+      },
+      "gold_preserved": true,
+      "candidate_groups": 87
+    },
+    {
+      "question_id": "dfde3500",
+      "before": {
+        "ledger_total": 882,
+        "ledger_active": 871,
+        "superseded": 11,
+        "supersession_rate": 0.0125,
+        "write_recall_gold": {
+          "Wednesday": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 31,
+        "fragmentation_examples": {
+          "10": [
+            "at t international day pass.cost",
+            "group size.number of people",
+            "model hyperparameter.max depth",
+            "ui elements.count"
+          ],
+          "amsterdam": [
+            "amsterdam.travel destination",
+            "food.location",
+            "person.location",
+            "tourism industry.location"
+          ],
+          "12-15": [
+            "glute bridges reps.reps per set",
+            "lunges reps.reps per set per leg",
+            "squats reps.reps per set",
+            "step ups reps.reps per set per leg"
+          ],
+          "yes": [
+            "bodhran makers and shops.mentioned by user",
+            "i 80 w.traffic concern",
+            "video interview.recommendation requested"
+          ],
+          "maria": [
+            "meeting.attendee",
+            "practice session.partner",
+            "tutor.name"
+          ]
+        }
+      },
+      "after": {
+        "ledger_total": 882,
+        "ledger_active": 769,
+        "superseded": 113,
+        "supersession_rate": 0.1281,
+        "write_recall_gold": {
+          "Wednesday": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 26,
+        "fragmentation_examples": {
+          "10": [
+            "at t international day pass.cost",
+            "audit-role:ui elements.count",
+            "group size.number of people",
+            "model hyperparameter.max depth"
+          ],
+          "amsterdam": [
+            "amsterdam.travel destination",
+            "food.location",
+            "person.location",
+            "tourism industry.location"
+          ],
+          "12-15": [
+            "glute bridges reps.reps per set",
+            "lunges reps.reps per set per leg",
+            "squats reps.reps per set",
+            "step ups reps.reps per set per leg"
+          ],
+          "maria": [
+            "meeting.attendee",
+            "practice session.partner",
+            "tutor.name"
+          ],
+          "2014": [
+            "edge of tomorrow.year",
+            "ex machina.year",
+            "interstellar.year"
+          ]
+        }
+      },
+      "fragmented_values_reduction": 5,
+      "gold_survival": {
+        "Wednesday": {
+          "active_before": true,
+          "active_after": true
+        }
+      },
+      "gold_preserved": true,
+      "candidate_groups": 87
+    },
+    {
+      "question_id": "affe2881",
+      "before": {
+        "ledger_total": 857,
+        "ledger_active": 847,
+        "superseded": 10,
+        "supersession_rate": 0.0117,
+        "write_recall_gold": {
+          "32": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 45,
+        "fragmentation_examples": {
+          "32": [
+            "age.value",
+            "species count.total species count",
+            "species count.total species found",
+            "user.age"
+          ],
+          "50 meters": [
+            "apple watch series 3.water resistance",
+            "fitbit charge 3.water resistance",
+            "fitbit inspire hr.water resistance",
+            "samsung galaxy fit.water resistance"
+          ],
+          "male": [
+            "assistant.gender",
+            "assistant.gender identity",
+            "persona.gender"
+          ],
+          "three": [
+            "assistant.number of children",
+            "film festivals attended.count",
+            "pancakes amsterdam.number of locations"
+          ],
+          "unknown": [
+            "chat.topic",
+            "egg freezing.success rates",
+            "names.status"
+          ]
+        }
+      },
+      "after": {
+        "ledger_total": 857,
+        "ledger_active": 744,
+        "superseded": 113,
+        "supersession_rate": 0.1319,
+        "write_recall_gold": {
+          "32": "slot"
+        },
+        "write_recall_structure": {},
+        "fragmented_values": 30,
+        "fragmentation_examples": {
+          "32": [
+            "audit-role:age.value",
+            "audit-role:species count.number of species",
+            "audit-role:user.age",
+            "species count.total species found"
+          ],
+          "50 meters": [
+            "apple watch series 3.water resistance",
+            "fitbit charge 3.water resistance",
+            "fitbit inspire hr.water resistance",
+            "samsung galaxy fit.water resistance"
+          ],
+          "three": [
+            "assistant.number of children",
+            "film festivals attended.count",
+            "pancakes amsterdam.number of locations"
+          ],
+          "2012": [
+            "bol bachchan.year",
+            "housefull 2.year",
+            "kadence s career start.year"
+          ],
+          "local search strategy": [
+            "genetic algorithms.strategy type",
+            "hill climbing.strategy type",
+            "simulated annealing.strategy type"
+          ]
+        }
+      },
+      "fragmented_values_reduction": 15,
+      "gold_survival": {
+        "32": {
+          "active_before": true,
+          "active_after": true
+        }
+      },
+      "gold_preserved": true,
+      "candidate_groups": 92
+    }
+  ]
+}
