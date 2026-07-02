@@ -35,8 +35,13 @@ def run(data: str, manifest: str, budget_tokens: int = 1000, make_cm=None,
         client = NpuClient(Settings(summarizer_model=GEMMA))
 
         def make_cm():
+            # The capture-time ceiling only gates ingest's final DIAGNOSTIC assemble
+            # (self._assembled, used for stats/evidence). Temporal/multi items render a
+            # full ledger > 64k and crashed capture before the (valid) state was saved.
+            # Raise it so any item ingests and the full immutable state persists; the
+            # read path fits it down at query time. Does not change captured content.
             return RemContextManager(client, Settings(
-                summarizer_model=GEMMA, max_context_tokens=64000
+                summarizer_model=GEMMA, max_context_tokens=1_000_000
             ))
     captured = 0
     for question_id, record in wanted.items():
