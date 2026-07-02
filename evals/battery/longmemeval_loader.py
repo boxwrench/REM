@@ -50,10 +50,20 @@ def load_categories(
         if entry.get("question_type") not in categories:
             continue
         ids = entry["haystack_session_ids"]
+        raw_sessions = entry["haystack_sessions"]
+        dates = entry.get("haystack_dates")
+        if dates is None:
+            dates = [None] * len(ids)
+        if not (len(ids) == len(raw_sessions) == len(dates)):
+            raise ValueError(
+                "LongMemEval session alignment mismatch for "
+                f"{entry.get('question_id')}: ids={len(ids)}, "
+                f"sessions={len(raw_sessions)}, dates={len(dates)}"
+            )
         answer_ids = entry.get("answer_session_ids", [])
         sessions = [
-            Session(session_id=sid, turns=turns)
-            for sid, turns in zip(ids, entry["haystack_sessions"])
+            Session(session_id=sid, turns=turns, timestamp=date)
+            for sid, turns, date in zip(ids, raw_sessions, dates)
         ]
         items.append(
             QAItem(

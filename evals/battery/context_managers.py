@@ -122,7 +122,8 @@ class RemContextManager:
                 self._gold_texts.append((sess.session_id, turn.get("content", "")))
                 self._state.turns.append(
                     Turn(role=turn.get("role", "user"), content=text,
-                         turn_id=turn_id, tokens=count_tokens(text))
+                         turn_id=turn_id, tokens=count_tokens(text),
+                         session_id=sess.session_id, timestamp=sess.timestamp)
                 )
                 while should_compact(self._state, s):
                     res = compact_once(self._state, self._client, s)

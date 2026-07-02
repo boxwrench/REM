@@ -41,7 +41,13 @@ class Settings(BaseSettings):
     # the answering model's ~32-40k window so it never returns HTTP 400. Distinct
     # from max_context_tokens, which is the assemble safety ceiling.
     read_fit_tokens: int = 28000
+    # Cross-key newest preference remains experimental until fresh confirmation.
+    # The validated sparse selector ships without it by default.
+    read_newest_preference: bool = False
     deterministic_fact_capture: bool = True
+    # Path D experiment: one structured call emits facts + episodic summary.
+    # Default-off until ledger-equivalence and live wall-clock gates pass.
+    episode_card_consolidation: bool = False
     # Embedding-based slot identity for supersession (Gate 4 follow-up). When on and
     # an embedder is wired into the ledger, supersession treats two entries whose
     # full-fact embeddings ("natural key: value") reach the threshold as the same

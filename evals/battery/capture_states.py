@@ -16,10 +16,14 @@ _project_root = Path(__file__).resolve().parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from evals.battery.context_managers import RemContextManager
-from evals.battery.longmemeval_loader import load_knowledge_update
-from rem.config import Settings
-from rem.memory.tiers import count_tokens
+from evals.battery.context_managers import RemContextManager  # noqa: E402
+from evals.battery.longmemeval_loader import load_knowledge_update  # noqa: E402
+from rem.config import Settings  # noqa: E402
+from rem.memory.facts_ledger import (  # noqa: E402
+    get_extraction_stats,
+    reset_extraction_stats,
+)
+from rem.memory.tiers import count_tokens  # noqa: E402
 
 GEMMA = "gemma4-it:e2b"
 DIAG_WINDOW_TOKENS = 64000  # match diagnose_memory so all states are comparable
@@ -53,14 +57,20 @@ def capture_item(it, out_dir: Path, make_cm, budget_tokens: int = 1000) -> dict:
     out_dir = Path(out_dir)
     state_path = out_dir / f"{it.question_id}_state.json"
     t0 = time.time()
+    reset_extraction_stats()
     cm = make_cm()
     cm.ingest(it.sessions, budget_tokens=budget_tokens)
+    extraction = get_extraction_stats()
     ingest_secs = round(time.time() - t0, 1)
     assembled = cm.assemble()
     cm._state.save(state_path)
     rec = _meta(it, state_path)
-    rec.update(assembled_total_tokens=count_tokens(assembled),
-               ingest_secs=ingest_secs, captured_at=time.time())
+    rec.update(
+        assembled_total_tokens=count_tokens(assembled),
+        ingest_secs=ingest_secs,
+        captured_at=time.time(),
+        extraction=extraction,
+    )
     return rec
 
 

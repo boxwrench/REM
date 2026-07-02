@@ -9,6 +9,9 @@ class Session:
     """One chat session from the LongMemEval haystack."""
     session_id: str
     turns: list[dict]  # each: {"role": "user"|"assistant", "content": str}
+    # LongMemEval's session-level haystack_dates value. Optional because older
+    # fixtures and datasets without dates must remain loadable.
+    timestamp: str | None = None
 
 
 @dataclass
