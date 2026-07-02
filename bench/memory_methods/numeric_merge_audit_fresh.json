@@ -1,0 +1,1503 @@
+{
+  "model": "Qwen/Qwen3-Embedding-0.6B",
+  "threshold": 0.8,
+  "states": {
+    "ce6d2d27": {
+      "numeric_merges": 46,
+      "safe_dedup_and_numeric_total": 85,
+      "blocked_textual": 321,
+      "pairs": [
+        {
+          "sim": 0.9298,
+          "merged": "dates.start date=May 26th, 2023",
+          "kept": "dates.end date=May 28th, 2023"
+        },
+        {
+          "sim": 0.9194,
+          "merged": "pop art.development period=1950s and 1960s",
+          "kept": "pop art emergence year.decade=1950s"
+        },
+        {
+          "sim": 0.9094,
+          "merged": "storage temperature range.temperature in fahrenheit=68\u00b0F to 72\u00b0F",
+          "kept": "storage temperature range.temperature in celsius=20\u00b0C to 22\u00b0C"
+        },
+        {
+          "sim": 0.9088,
+          "merged": "price range.minimum=40",
+          "kept": "price range.maximum=50"
+        },
+        {
+          "sim": 0.9077,
+          "merged": "function.expression=f(x)=e^{-x*x/2.}",
+          "kept": "function.formula=f(x) = e^(-x^2/2)"
+        },
+        {
+          "sim": 0.8926,
+          "merged": "freezing duration.maximum storage time in freezer=up to 3 months",
+          "kept": "storage time freezer .duration=3 months"
+        },
+        {
+          "sim": 0.8862,
+          "merged": "capacity range.minimum capacity=200",
+          "kept": "capacity range.maximum capacity=1,500"
+        },
+        {
+          "sim": 0.8836,
+          "merged": "geonames.data count=more than 11 million place names",
+          "kept": "getty thesaurus of geographic names.data count=over 1 million places around the world"
+        },
+        {
+          "sim": 0.8807,
+          "merged": "monte carlo integration function call.function being integrated=f(x) = x^2",
+          "kept": "monte carlo integration.functionality=approximates the definite integral of f(x) = e^(-x^2/2) from -3 to 3 using 10000 random points"
+        },
+        {
+          "sim": 0.8797,
+          "merged": "storage time refrigerator .duration=5 days",
+          "kept": "storage time freezer .duration=3 months"
+        },
+        {
+          "sim": 0.8787,
+          "merged": "grilled chicken breast on whole wheat bread with avocado and veggies.protein=30g",
+          "kept": "grilled chicken and vegetable soup with quinoa and side of whole grain bread.protein=35g"
+        },
+        {
+          "sim": 0.8752,
+          "merged": "lenovo ideapad 330s.screen size=14-inch Full HD display",
+          "kept": "lenovo ideapad 330s price.price range=400"
+        },
+        {
+          "sim": 0.8745,
+          "merged": "daily grind.walk distance from oakwood park=10-minute walk",
+          "kept": "coffee club.walk distance from oakwood park=15-minute walk"
+        },
+        {
+          "sim": 0.8731,
+          "merged": "class duration range.duration=1-3 hours",
+          "kept": "game duration.time limit=30-60 minutes"
+        },
+        {
+          "sim": 0.8706,
+          "merged": "grilled chicken breast on whole wheat bread with avocado and veggies.protein=30g",
+          "kept": "grilled chicken breast on top of quinoa and mixed veggies with citrus vinaigrette dressing.protein=40g"
+        },
+        {
+          "sim": 0.8681,
+          "merged": "grilled chicken breast on whole wheat bread with avocado and veggies.protein=30g",
+          "kept": "grilled chicken and brown rice bowl with roasted vegetables and side of steamed broccoli.protein=35g"
+        },
+        {
+          "sim": 0.8675,
+          "merged": "kowloon walled city.peak population=50,000 residents",
+          "kept": "kowloon walled city.population density=3,250,000 people per square mile"
+        },
+        {
+          "sim": 0.8643,
+          "merged": "event dates.start date=May 26th, 2023",
+          "kept": "event dates.end date=May 28th, 2023"
+        },
+        {
+          "sim": 0.8577,
+          "merged": "grilled chicken breast on top of quinoa and mixed veggies with citrus vinaigrette dressing.protein=40g",
+          "kept": "grilled chicken and vegetable soup with quinoa and side of whole grain bread.protein=35g"
+        },
+        {
+          "sim": 0.8551,
+          "merged": "function.formula=f(x) = e^(-x^2/2)",
+          "kept": "function.form=f(x, y) = e^{-x*x/2. - y*y/2.}"
+        },
+        {
+          "sim": 0.8538,
+          "merged": "daily grind.walk distance from oakwood park=10-minute walk",
+          "kept": "brewed awakening.walk distance from oakwood park=12-minute walk"
+        },
+        {
+          "sim": 0.8527,
+          "merged": "youtube tutorials.examples=['Brackeys', 'Blackthornprod', 'Unity3D College']",
+          "kept": "unity tutorial videos.type=2d and 3d"
+        },
+        {
+          "sim": 0.8509,
+          "merged": "pet grooming kit.price range=$80",
+          "kept": "oster gentle paws grooming kit.price range=$75"
+        },
+        {
+          "sim": 0.8355,
+          "merged": "dates.start date=May 26th, 2023",
+          "kept": "event dates.end date=May 28th, 2023"
+        },
+        {
+          "sim": 0.8342,
+          "merged": "journaling tips.duration=5-10 minutes",
+          "kept": "journaling commitment.duration=two weeks"
+        },
+        {
+          "sim": 0.8314,
+          "merged": "cooking method.temperature range=225-250\u00b0F for 4-6 hours",
+          "kept": "cooking time.duration=40-45 minutes"
+        },
+        {
+          "sim": 0.8296,
+          "merged": "function.expression=f(x)=e^{-x*x/2.}",
+          "kept": "function.form=f(x, y) = e^{-x*x/2. - y*y/2.}"
+        },
+        {
+          "sim": 0.8293,
+          "merged": "journaling practice.frequency=5-10 minutes a day, 3-4 times a week for the next two weeks",
+          "kept": "journaling commitment.duration=two weeks"
+        },
+        {
+          "sim": 0.8277,
+          "merged": "leaderboard metric.measurement type=accuracy, F1 score, or mean squared error",
+          "kept": "evaluation metric.metric=F1 score"
+        },
+        {
+          "sim": 0.8253,
+          "merged": "target.product=C9 by Champion Leggings",
+          "kept": "c9 by champion leggings price range.price=$20-$30"
+        },
+        {
+          "sim": 0.8241,
+          "merged": "oster gentle paws grooming kit.pieces=7",
+          "kept": "oster gentle paws grooming kit.price range=$75"
+        },
+        {
+          "sim": 0.8241,
+          "merged": "journaling practice.frequency=5-10 minutes a day, 3-4 times a week for the next two weeks",
+          "kept": "journaling tips.duration=5-10 minutes"
+        },
+        {
+          "sim": 0.8241,
+          "merged": "job.duration=three months ago",
+          "kept": "time period.duration=3 months"
+        },
+        {
+          "sim": 0.8233,
+          "merged": "cubism.development period=early 1900s",
+          "kept": "surrealism.development period=1920s"
+        },
+        {
+          "sim": 0.8219,
+          "merged": "freezing duration.maximum storage time in freezer=up to 3 months",
+          "kept": "storage time refrigerator .duration=5 days"
+        },
+        {
+          "sim": 0.8215,
+          "merged": "brewed awakening.walk distance from oakwood park=12-minute walk",
+          "kept": "coffee club.walk distance from oakwood park=15-minute walk"
+        },
+        {
+          "sim": 0.8179,
+          "merged": "agreement level.rating=7",
+          "kept": "agreement scale.scale range=1-7"
+        },
+        {
+          "sim": 0.8165,
+          "merged": "mango salsa recipe ingredient count.ripe mangos diced=2",
+          "kept": "mango salsa recipe ingredient count.lime juice=2 tablespoons"
+        },
+        {
+          "sim": 0.8092,
+          "merged": "oster gentle paws grooming kit.pieces=7",
+          "kept": "andis pet grooming kit.pieces=10"
+        },
+        {
+          "sim": 0.8051,
+          "merged": "women in energy sector workforce in canada.percentage=27%",
+          "kept": "construction workers in canada who are women.percentage=12%"
+        },
+        {
+          "sim": 0.8046,
+          "merged": "grilled chicken breast on top of quinoa and mixed veggies with citrus vinaigrette dressing.protein=40g",
+          "kept": "grilled chicken and brown rice bowl with roasted vegetables and side of steamed broccoli.protein=35g"
+        },
+        {
+          "sim": 0.8019,
+          "merged": "watermelon puree.amount=1-2 ounces",
+          "kept": "mango puree.quantity=1-2 cups"
+        },
+        {
+          "sim": 0.8019,
+          "merged": "statement.agreement score=7",
+          "kept": "agreement scale.scale range=1-7"
+        },
+        {
+          "sim": 0.801,
+          "merged": "refrigeration time.time limit after cooking=within two hours after cooking",
+          "kept": "consumption window.maximum days after cooking=3-4 days of cooking"
+        },
+        {
+          "sim": 0.8006,
+          "merged": "youtube tutorials.examples=['Brackeys', 'Blackthornprod', 'Unity3D College']",
+          "kept": "tutorial video.year=2020"
+        },
+        {
+          "sim": 0.8006,
+          "merged": "chicken caesar wrap with whole wheat tortilla grilled chicken romaine lettuce and whole wheat croutons.protein=30g",
+          "kept": "turkey and black bean wrap with whole wheat tortilla sliced turkey breast black beans and avocado.protein=35g"
+        }
+      ]
+    },
+    "945e3d21": {
+      "numeric_merges": 45,
+      "safe_dedup_and_numeric_total": 94,
+      "blocked_textual": 273,
+      "pairs": [
+        {
+          "sim": 0.977,
+          "merged": "techxpo dates.start date=February 10",
+          "kept": "techxpo dates.end date=February 12"
+        },
+        {
+          "sim": 0.9397,
+          "merged": "eliza gardner and william mueller.marriage year=1843",
+          "kept": "eliza gardner s marriage.spouse=William Mueller in 1843"
+        },
+        {
+          "sim": 0.9369,
+          "merged": "pearl farmers market operating hours.start time=9:00 AM",
+          "kept": "pearl farmers market operating hours.end time=1:00 PM"
+        },
+        {
+          "sim": 0.9347,
+          "merged": "spartan training regimen.start age=7",
+          "kept": "spartan training regimen.end age=30"
+        },
+        {
+          "sim": 0.9328,
+          "merged": "pearl farmers market.schedule=Saturdays, 9:00 AM to 1:00 PM",
+          "kept": "pearl farmers market operating hours.start time=9:00 AM"
+        },
+        {
+          "sim": 0.9185,
+          "merged": "followers.count=200",
+          "kept": "likes.count=50"
+        },
+        {
+          "sim": 0.9132,
+          "merged": "stay duration.days=3-4",
+          "kept": "duration.days=4"
+        },
+        {
+          "sim": 0.9022,
+          "merged": "residents under age of 18 in saginaw.count=16,667",
+          "kept": "residents over age of 65 in saginaw.count=4,017"
+        },
+        {
+          "sim": 0.894,
+          "merged": "pearl farmers market.schedule=Saturdays, 9:00 AM to 1:00 PM",
+          "kept": "pearl farmers market operating hours.end time=1:00 PM"
+        },
+        {
+          "sim": 0.8929,
+          "merged": "engagement rate.average=2-3%",
+          "kept": "engagement rate.percentage=30%"
+        },
+        {
+          "sim": 0.8784,
+          "merged": "squirrels.leap distance=10 times their body length",
+          "kept": "squirrels.fall height=100 feet without injuring themselves"
+        },
+        {
+          "sim": 0.873,
+          "merged": "stay duration.duration=4 days",
+          "kept": "duration.days=4"
+        },
+        {
+          "sim": 0.8728,
+          "merged": "linux lab exercise.number of commands=30",
+          "kept": "linux lab excercise.description=asks students what does these commands do . more than 30 lab excersice"
+        },
+        {
+          "sim": 0.872,
+          "merged": "stay duration.days=3-4",
+          "kept": "stay duration.duration=4 days"
+        },
+        {
+          "sim": 0.8701,
+          "merged": "marie therese gardner.birth date=October 16, 1858",
+          "kept": "marie therese gardner.death date=January 20, 1932"
+        },
+        {
+          "sim": 0.8647,
+          "merged": "comments.count=10",
+          "kept": "likes.count=50"
+        },
+        {
+          "sim": 0.8597,
+          "merged": "linux lab exercise.number of questions=30",
+          "kept": "linux lab excercise.description=asks students what does these commands do . more than 30 lab excersice"
+        },
+        {
+          "sim": 0.859,
+          "merged": "linux lab excercise.content=what does these commands do . more than 30 commands",
+          "kept": "linux lab excercise.description=asks students what does these commands do . more than 30 lab excersice"
+        },
+        {
+          "sim": 0.8557,
+          "merged": "comments.count=10",
+          "kept": "followers.count=200"
+        },
+        {
+          "sim": 0.8549,
+          "merged": "linux lab excercise.number of questions=30",
+          "kept": "linux lab excercise.description=asks students what does these commands do . more than 30 lab excersice"
+        },
+        {
+          "sim": 0.8513,
+          "merged": "joseph samuels miller.birth date=August 17, 1848",
+          "kept": "joseph samuels miller.death date=February 22, 1921"
+        },
+        {
+          "sim": 0.8487,
+          "merged": "duration.timeframe=2 months",
+          "kept": "stay duration.duration=4 days"
+        },
+        {
+          "sim": 0.8467,
+          "merged": "user.count=5",
+          "kept": "likes.count=50"
+        },
+        {
+          "sim": 0.8431,
+          "merged": "apex legends.graphics card=NVIDIA GeForce RTX 3080",
+          "kept": "apex legends performance.fps capability=144 FPS at high graphics settings"
+        },
+        {
+          "sim": 0.8429,
+          "merged": "joseph miller.birth date=August 17, 1848",
+          "kept": "joseph miller.death date=February 22, 1921"
+        },
+        {
+          "sim": 0.842,
+          "merged": "pineapple express tour price.cost=$12.50 per person",
+          "kept": "pineapple express tour.duration=20-minute"
+        },
+        {
+          "sim": 0.841,
+          "merged": "lab exercise step 10.command to display file contents=cat file1.txt",
+          "kept": "lab exercise step 15.command to display file type=file file1.txt"
+        },
+        {
+          "sim": 0.8409,
+          "merged": "initial hiding.quantity=2-3 strips",
+          "kept": "gradual increase.quantity=4-6 strips"
+        },
+        {
+          "sim": 0.8377,
+          "merged": "timeframe for use.maximum duration after opening=2-3 months",
+          "kept": "duration.timeframe=2 months"
+        },
+        {
+          "sim": 0.8369,
+          "merged": "market analysis length.pages=5-7 pages",
+          "kept": "market analysis questions.count=10"
+        },
+        {
+          "sim": 0.8306,
+          "merged": "duration.timeframe=2 months",
+          "kept": "duration.days=4"
+        },
+        {
+          "sim": 0.8284,
+          "merged": "white racial group.percentage of population=34.3%",
+          "kept": "african american or black residents.percentage of population=57.4%"
+        },
+        {
+          "sim": 0.8257,
+          "merged": "linux lab excercise.number of questions=30",
+          "kept": "linux lab excercise.content=what does these commands do . more than 30 commands"
+        },
+        {
+          "sim": 0.8237,
+          "merged": "linux lab exercise.number of questions=30",
+          "kept": "linux lab excercise.content=what does these commands do . more than 30 commands"
+        },
+        {
+          "sim": 0.8229,
+          "merged": "hikingadventures followers.follower count=1.4M",
+          "kept": "outdoorlovers followers.follower count=2.5M"
+        },
+        {
+          "sim": 0.8222,
+          "merged": "followers.count=200",
+          "kept": "outdoorlovers followers.follower count=2.5M"
+        },
+        {
+          "sim": 0.8196,
+          "merged": "likes.average=50",
+          "kept": "comments.count=10"
+        },
+        {
+          "sim": 0.8059,
+          "merged": "stay duration.days=3-4",
+          "kept": "duration.timeframe=2 months"
+        },
+        {
+          "sim": 0.8039,
+          "merged": "market analysis length.pages=5-7 pages",
+          "kept": "products and services length.pages=3-5 pages"
+        },
+        {
+          "sim": 0.8032,
+          "merged": "user.count=5",
+          "kept": "followers.count=200"
+        },
+        {
+          "sim": 0.8019,
+          "merged": "price.original price=$25",
+          "kept": "cost.price=$50"
+        },
+        {
+          "sim": 0.8016,
+          "merged": "flight.booking date=April 1st",
+          "kept": "flight.departure date=August 15th"
+        },
+        {
+          "sim": 0.8013,
+          "merged": "median age in saginaw.value=31.9 years",
+          "kept": "residents over age of 65 in saginaw.count=4,017"
+        },
+        {
+          "sim": 0.8009,
+          "merged": "disneyland resort group events.guest capacity=10 to 10,000 guests",
+          "kept": "grand ballroom at disneyland hotel.capacity=1,200 guests"
+        },
+        {
+          "sim": 0.8008,
+          "merged": "user.count=5",
+          "kept": "comments.count=10"
+        }
+      ]
+    },
+    "6071bd76": {
+      "numeric_merges": 47,
+      "safe_dedup_and_numeric_total": 99,
+      "blocked_textual": 319,
+      "pairs": [
+        {
+          "sim": 0.9775,
+          "merged": "undergraduate students at uc berkeley.percentage of international students=17%",
+          "kept": "graduate students at uc berkeley.percentage of international students=36%"
+        },
+        {
+          "sim": 0.9722,
+          "merged": "probability definitions.unlikely=30% - 40% chance",
+          "kept": "probability definitions.very unlikely=30% chance or less"
+        },
+        {
+          "sim": 0.9584,
+          "merged": "chicken parmesan shelf life refrigerated .days=3 to 4",
+          "kept": "chicken parmesan shelf life frozen .months=3"
+        },
+        {
+          "sim": 0.9424,
+          "merged": "probability definitions.cery probable=80% or more chance",
+          "kept": "probability definitions.probable=60% - 80% chance"
+        },
+        {
+          "sim": 0.9376,
+          "merged": "credit card delivery time standard .delivery timeframe after approval=approximately 7 to 10 business days",
+          "kept": "credit card delivery time.timeframe=7 to 10 business days"
+        },
+        {
+          "sim": 0.937,
+          "merged": "running hits followers.followers=2M",
+          "kept": "running followers followers.followers=1M"
+        },
+        {
+          "sim": 0.9319,
+          "merged": "fitness beats followers.followers=1.5M",
+          "kept": "running followers followers.followers=1M"
+        },
+        {
+          "sim": 0.9311,
+          "merged": "running hits followers.followers=2M",
+          "kept": "fitness beats followers.followers=1.5M"
+        },
+        {
+          "sim": 0.9304,
+          "merged": "succulents.watering frequency spring summer=every 7-10 days",
+          "kept": "succulents.watering frequency fall winter=once every 4-6 weeks"
+        },
+        {
+          "sim": 0.9135,
+          "merged": "running followers followers.followers=1M",
+          "kept": "running jams followers.followers=200K"
+        },
+        {
+          "sim": 0.9099,
+          "merged": "fitness beats followers.followers=1.5M",
+          "kept": "workout faves followers.followers=500K"
+        },
+        {
+          "sim": 0.9036,
+          "merged": "fitness beats followers.followers=1.5M",
+          "kept": "running jams followers.followers=200K"
+        },
+        {
+          "sim": 0.8994,
+          "merged": "onesie design.potential options=\"Little Liam\" or \"Liam 3/12\"",
+          "kept": "onesie design.option2=Liam 3/12"
+        },
+        {
+          "sim": 0.8991,
+          "merged": "running hits followers.followers=2M",
+          "kept": "running jams followers.followers=200K"
+        },
+        {
+          "sim": 0.8959,
+          "merged": "federal investment tax credit itc .credit percentage=26%",
+          "kept": "federal investment tax credit itc .availability end date=end of 2022"
+        },
+        {
+          "sim": 0.895,
+          "merged": "coffee ratio.tablespoon of coffee per ounces of water=1 tablespoon for every 6 ounces of water",
+          "kept": "coffee brewing.ratio=1 tablespoon of coffee for every 5 ounces of water"
+        },
+        {
+          "sim": 0.8925,
+          "merged": "cnn model accuracy.initial=75%",
+          "kept": "cnn model accuracy.after tuning=93%"
+        },
+        {
+          "sim": 0.8867,
+          "merged": "k fold cross validation step 1.action=Split the dataset into k folds, where k is a small number like 5 or 10",
+          "kept": "k fold cross validation step 4.action=Repeat steps 2-3 k times, using a different fold each time as the validation set"
+        },
+        {
+          "sim": 0.8864,
+          "merged": "probability definitions.probable=60% - 80% chance",
+          "kept": "probability definitions.unlikely=30% - 40% chance"
+        },
+        {
+          "sim": 0.885,
+          "merged": "compost bin.age=6 weeks ago",
+          "kept": "compost bin milestone.duration=Six weeks"
+        },
+        {
+          "sim": 0.8838,
+          "merged": "olay.price starting at=$10",
+          "kept": "ordinary.price starting at=$5"
+        },
+        {
+          "sim": 0.8811,
+          "merged": "probability definitions.probable=60% - 80% chance",
+          "kept": "probability definitions.even=50% chance"
+        },
+        {
+          "sim": 0.8691,
+          "merged": "probability definitions.cery probable=80% or more chance",
+          "kept": "probability definitions.even=50% chance"
+        },
+        {
+          "sim": 0.8638,
+          "merged": "probability definitions.even=50% chance",
+          "kept": "probability definitions.unlikely=30% - 40% chance"
+        },
+        {
+          "sim": 0.8622,
+          "merged": "probability definitions.even=50% chance",
+          "kept": "probability definitions.very unlikely=30% chance or less"
+        },
+        {
+          "sim": 0.8613,
+          "merged": "probability definitions.probable=60% - 80% chance",
+          "kept": "probability definitions.very unlikely=30% chance or less"
+        },
+        {
+          "sim": 0.8609,
+          "merged": "beast mode followers.followers=4.5M",
+          "kept": "running hits followers.followers=2M"
+        },
+        {
+          "sim": 0.8598,
+          "merged": "probability definitions.cery probable=80% or more chance",
+          "kept": "probability definitions.unlikely=30% - 40% chance"
+        },
+        {
+          "sim": 0.8558,
+          "merged": "glute bridges reps.reps per set=12-15 reps",
+          "kept": "glute bridges rest time.rest duration=30 seconds"
+        },
+        {
+          "sim": 0.8551,
+          "merged": "beast mode followers.followers=4.5M",
+          "kept": "running jams followers.followers=200K"
+        },
+        {
+          "sim": 0.8545,
+          "merged": "probability definitions.cery probable=80% or more chance",
+          "kept": "probability definitions.very unlikely=30% chance or less"
+        },
+        {
+          "sim": 0.8529,
+          "merged": "application status response time.phone or online application response time=60 seconds",
+          "kept": "application decision notification time.written notification timeframe=7 to 10 days of application"
+        },
+        {
+          "sim": 0.8515,
+          "merged": "beast mode followers.followers=4.5M",
+          "kept": "running followers followers.followers=1M"
+        },
+        {
+          "sim": 0.844,
+          "merged": "beast mode followers.followers=4.5M",
+          "kept": "fitness beats followers.followers=1.5M"
+        },
+        {
+          "sim": 0.8284,
+          "merged": "garlic bread recipe.oven temperature=350\u00b0F (180\u00b0C)",
+          "kept": "garlic bread baking time.duration=10-12 minutes"
+        },
+        {
+          "sim": 0.8259,
+          "merged": "leg raises.reps=12-15 reps",
+          "kept": "leg raises.sets=3-5 sets"
+        },
+        {
+          "sim": 0.8219,
+          "merged": "baby s age.duration=three-week-old baby boy",
+          "kept": "baby.age=three weeks old"
+        },
+        {
+          "sim": 0.8178,
+          "merged": "adagio teas.new customer discount=10% off your first order with code WELCOME10",
+          "kept": "tea spot.new customer discount=15% off your first order with code TEA15"
+        },
+        {
+          "sim": 0.8166,
+          "merged": "running followers followers.followers=1M",
+          "kept": "workout faves followers.followers=500K"
+        },
+        {
+          "sim": 0.8141,
+          "merged": "chicken parmesan preparation.prep time for chicken breasts=a day or two in advance",
+          "kept": "chicken parmesan shelf life refrigerated .days=3 to 4"
+        },
+        {
+          "sim": 0.8133,
+          "merged": "cardio kickstart followers.followers=2.5M",
+          "kept": "fitness beats followers.followers=1.5M"
+        },
+        {
+          "sim": 0.8109,
+          "merged": "onesie design.potential options=\"Little Liam\" or \"Liam 3/12\"",
+          "kept": "design.name=Liam 3/12"
+        },
+        {
+          "sim": 0.8103,
+          "merged": "glute stretch.hold time=15-30 seconds",
+          "kept": "glute bridges rest time.rest duration=30 seconds"
+        },
+        {
+          "sim": 0.8092,
+          "merged": "french press steeping time.recommendation=3-4 minute steeping time",
+          "kept": "cleaning french press.step 3 soaking time=30 minutes"
+        },
+        {
+          "sim": 0.8082,
+          "merged": "running hits followers.followers=2M",
+          "kept": "workout faves followers.followers=500K"
+        },
+        {
+          "sim": 0.8065,
+          "merged": "workout faves followers.followers=500K",
+          "kept": "running jams followers.followers=200K"
+        },
+        {
+          "sim": 0.8018,
+          "merged": "salt.quantity=1/4 teaspoon",
+          "kept": "milk.quantity=1/4 cup"
+        }
+      ]
+    },
+    "22d2cb42": {
+      "numeric_merges": 78,
+      "safe_dedup_and_numeric_total": 124,
+      "blocked_textual": 336,
+      "pairs": [
+        {
+          "sim": 0.965,
+          "merged": "registration period for dv 2024.start time=12:00 pm EDT on Wednesday, October 5, 2022",
+          "kept": "registration period for dv 2024.end time=12:00 pm EST on Tuesday, November 8, 2022"
+        },
+        {
+          "sim": 0.9602,
+          "merged": "dv 2024 entry period start.start time=12:00 pm (noon), Eastern Daylight Time (EDT) (GMT4), Wednesday, October 5, 2022",
+          "kept": "dv 2024 entry period end.end time=12:00 pm (noon), Eastern Standard Time (EST) (GMT5), Tuesday, November 8, 2022"
+        },
+        {
+          "sim": 0.9493,
+          "merged": "iguaz\u00fa falls.minimum stay=2-3 days",
+          "kept": "iguaz\u00fa falls.recommended stay=4-5 days"
+        },
+        {
+          "sim": 0.943,
+          "merged": "exhibition.dates end=March 5, 2023",
+          "kept": "exhibition.end date=February 26, 2023"
+        },
+        {
+          "sim": 0.9366,
+          "merged": "exhibition.dates start=October 22, 2022",
+          "kept": "exhibition.start date=November 22, 2022"
+        },
+        {
+          "sim": 0.9366,
+          "merged": "calf raises.reps=12-15",
+          "kept": "calf raises reps per set.reps per set=12-15 reps"
+        },
+        {
+          "sim": 0.9335,
+          "merged": "data scientists salary.finance sector range=$120,000 to $160,000 annually",
+          "kept": "data scientists salary.government sector range=$80,000 and $120,000"
+        },
+        {
+          "sim": 0.932,
+          "merged": "score range.minimum value=1",
+          "kept": "score range.maximum value=5"
+        },
+        {
+          "sim": 0.9289,
+          "merged": "strength training routine.frequency=2-3 sessions per week",
+          "kept": "strength training exercises.frequency=3 times a week"
+        },
+        {
+          "sim": 0.9273,
+          "merged": "exhibition.works count=over 200 works",
+          "kept": "exhibition.works on display count=60"
+        },
+        {
+          "sim": 0.9269,
+          "merged": "google parental leave.weeks=24 weeks",
+          "kept": "facebook parental leave.weeks=26 weeks"
+        },
+        {
+          "sim": 0.9239,
+          "merged": "russian twists with medicine ball.sets=3",
+          "kept": "russian twists with medicine ball.reps=12-15"
+        },
+        {
+          "sim": 0.9195,
+          "merged": "data scientists salary.technology industry range=$100,000 and $150,000 per year",
+          "kept": "data scientists salary.finance sector range=$120,000 to $160,000 annually"
+        },
+        {
+          "sim": 0.9173,
+          "merged": "posting frequency.previous frequency=at least 3 times a week",
+          "kept": "posting frequency.example=3 times a week"
+        },
+        {
+          "sim": 0.9159,
+          "merged": "plank duration.seconds=30-60",
+          "kept": "plank duration.hold time range=30-60 seconds"
+        },
+        {
+          "sim": 0.9158,
+          "merged": "plank sets.sets=3",
+          "kept": "plank sets.sets per session=3-5 sets"
+        },
+        {
+          "sim": 0.9144,
+          "merged": "galapagos islands.minimum stay=5-7 days",
+          "kept": "galapagos islands.recommended stay=10-14 days"
+        },
+        {
+          "sim": 0.9108,
+          "merged": "iguaz\u00fa falls.minimum stay=2-3 days",
+          "kept": "iguaz\u00fa falls exploration time.duration=4-5 days"
+        },
+        {
+          "sim": 0.9087,
+          "merged": "posting frequency.example=3 times a week",
+          "kept": "posting frequency.starting schedule=once a week"
+        },
+        {
+          "sim": 0.9068,
+          "merged": "data scientists salary.finance sector range=$120,000 to $160,000 annually",
+          "kept": "data scientists salary.healthcare sector range=$110,000 and $140,000 per year"
+        },
+        {
+          "sim": 0.9036,
+          "merged": "squat reps per set.range=8-12",
+          "kept": "squats reps per set.reps per set=12-15 reps"
+        },
+        {
+          "sim": 0.9029,
+          "merged": "women in leadership positions in tech.percentage=21%",
+          "kept": "women in tech roles.percentage in 2020=38"
+        },
+        {
+          "sim": 0.8965,
+          "merged": "posting frequency.previous frequency=at least 3 times a week",
+          "kept": "posting frequency.starting schedule=once a week"
+        },
+        {
+          "sim": 0.8963,
+          "merged": "drain cleaner product method.ingredient1=1/2 cup of baking soda",
+          "kept": "drain cleaner product method.ingredient2=1 cup of white vinegar"
+        },
+        {
+          "sim": 0.8944,
+          "merged": "galapagos islands.minimum stay=5-7 days",
+          "kept": "galapagos islands trip duration.duration=7-10 day trip"
+        },
+        {
+          "sim": 0.8924,
+          "merged": "calf raises.sets=3",
+          "kept": "calf raises reps per set.reps per set=12-15 reps"
+        },
+        {
+          "sim": 0.8921,
+          "merged": "itinerary.option 1 duration=2 weeks",
+          "kept": "trip.duration=two-week"
+        },
+        {
+          "sim": 0.8878,
+          "merged": "data scientists salary.healthcare sector range=$110,000 and $140,000 per year",
+          "kept": "data scientists salary.government sector range=$80,000 and $120,000"
+        },
+        {
+          "sim": 0.8866,
+          "merged": "women in tech roles.increase percentage points since 2016=12",
+          "kept": "women in tech roles.percentage in 2020=38"
+        },
+        {
+          "sim": 0.8853,
+          "merged": "posting frequency.example=3 times a week",
+          "kept": "posting frequency.experimentation options=2-3 times a week"
+        },
+        {
+          "sim": 0.8785,
+          "merged": "posting frequency.previous frequency=at least 3 times a week",
+          "kept": "posting frequency.experimentation options=2-3 times a week"
+        },
+        {
+          "sim": 0.8727,
+          "merged": "data scientists salary.technology industry range=$100,000 and $150,000 per year",
+          "kept": "data scientists salary.government sector range=$80,000 and $120,000"
+        },
+        {
+          "sim": 0.8725,
+          "merged": "vacation duration.duration=4-day",
+          "kept": "vacation.duration=5-day"
+        },
+        {
+          "sim": 0.8697,
+          "merged": "vacation.start date=June 15th",
+          "kept": "vacation.end date=June 20th"
+        },
+        {
+          "sim": 0.8688,
+          "merged": "donkey kicks.sets=3",
+          "kept": "donkey kicks.reps=12-15"
+        },
+        {
+          "sim": 0.865,
+          "merged": "data scientists salary.technology industry range=$100,000 and $150,000 per year",
+          "kept": "data scientists salary.healthcare sector range=$110,000 and $140,000 per year"
+        },
+        {
+          "sim": 0.8621,
+          "merged": "women in leadership positions in tech.percentage=21%",
+          "kept": "women in tech roles.increase percentage points since 2016=12"
+        },
+        {
+          "sim": 0.8573,
+          "merged": "stowe mountain resort.lifts=39 lifts",
+          "kept": "stowe mountain resort.elevation at summit=3,625 ft (1,105 m)"
+        },
+        {
+          "sim": 0.8563,
+          "merged": "hip thrusts.sets=3",
+          "kept": "hip thrusts.reps=12-15"
+        },
+        {
+          "sim": 0.8541,
+          "merged": "cooking temperature heat .temperature=400\u00b0F/200\u00b0C",
+          "kept": "oven temperature.temperature=400\u00b0F (200\u00b0C)"
+        },
+        {
+          "sim": 0.8539,
+          "merged": "trip.duration=two-week",
+          "kept": "vacation duration.duration=4-day"
+        },
+        {
+          "sim": 0.8537,
+          "merged": "calf raises.sets=3",
+          "kept": "calf raises.reps=12-15"
+        },
+        {
+          "sim": 0.8498,
+          "merged": "itinerary.option 1 duration=2 weeks",
+          "kept": "vacation duration.duration=4-day"
+        },
+        {
+          "sim": 0.8484,
+          "merged": "galapagos islands.recommended stay=10-14 days",
+          "kept": "galapagos islands trip duration.duration=7-10 day trip"
+        },
+        {
+          "sim": 0.8468,
+          "merged": "posting frequency.starting schedule=once a week",
+          "kept": "posting frequency.experimentation options=2-3 times a week"
+        },
+        {
+          "sim": 0.8453,
+          "merged": "zealand guided hike.duration=1-2 day",
+          "kept": "australia guided hike.duration=6-day"
+        },
+        {
+          "sim": 0.8428,
+          "merged": "exhibition.start date=November 22, 2022",
+          "kept": "exhibition.end date=February 26, 2023"
+        },
+        {
+          "sim": 0.8426,
+          "merged": "stowe mountain resort.terrain size=over 1,500 acres of skiable terrain",
+          "kept": "sunday river resort.terrain size=over 2,300 acres of skiable terrain"
+        },
+        {
+          "sim": 0.8423,
+          "merged": "climate control temperature range.temperature=65-70\u00b0F/18-21\u00b0C",
+          "kept": "climate control humidity level.humidity=50-60%"
+        },
+        {
+          "sim": 0.8378,
+          "merged": "stretching routine.frequency=2-3 times a week",
+          "kept": "strength training routine.frequency=2-3 sessions per week"
+        },
+        {
+          "sim": 0.8367,
+          "merged": "sunday river resort.terrain size=over 2,300 acres of skiable terrain",
+          "kept": "stowe mountain resort.terrain=Over 1,500 acres of skiable terrain"
+        },
+        {
+          "sim": 0.8335,
+          "merged": "killington resort.terrain size=over 3,000 acres of skiable terrain",
+          "kept": "sunday river resort.terrain size=over 2,300 acres of skiable terrain"
+        },
+        {
+          "sim": 0.8329,
+          "merged": "dv 2024 entry period end.end time=12:00 pm (noon), Eastern Standard Time (EST) (GMT5), Tuesday, November 8, 2022",
+          "kept": "registration period for dv 2024.end time=12:00 pm EST on Tuesday, November 8, 2022"
+        },
+        {
+          "sim": 0.8328,
+          "merged": "step ups.reps per leg=12-15",
+          "kept": "lunges reps per leg set.reps per set=12-15 reps on each leg"
+        },
+        {
+          "sim": 0.8321,
+          "merged": "plank duration.seconds=30-60",
+          "kept": "side plank.duration=30-60 seconds"
+        },
+        {
+          "sim": 0.8317,
+          "merged": "user.posting frequency before break=at least 3 times a week",
+          "kept": "posting frequency.example=3 times a week"
+        },
+        {
+          "sim": 0.8313,
+          "merged": "glute bridges.sets=3",
+          "kept": "glute bridges.reps=12-15"
+        },
+        {
+          "sim": 0.8311,
+          "merged": "lateral band walks.sets=3",
+          "kept": "lateral band walks.reps per leg=12-15"
+        },
+        {
+          "sim": 0.8304,
+          "merged": "leg raises reps per set.reps per set=12-15 reps",
+          "kept": "lunges reps per leg set.reps per set=12-15 reps on each leg"
+        },
+        {
+          "sim": 0.828,
+          "merged": "dv 2024 entry period start.start time=12:00 pm (noon), Eastern Daylight Time (EDT) (GMT4), Wednesday, October 5, 2022",
+          "kept": "registration period for dv 2024.start time=12:00 pm EDT on Wednesday, October 5, 2022"
+        },
+        {
+          "sim": 0.8274,
+          "merged": "exhibition.dates start=October 22, 2022",
+          "kept": "exhibition.dates end=March 5, 2023"
+        },
+        {
+          "sim": 0.8269,
+          "merged": "jump squats.sets=3",
+          "kept": "jump squats.reps=12-15"
+        },
+        {
+          "sim": 0.8255,
+          "merged": "exhibition.dates end=March 5, 2023",
+          "kept": "exhibition.start date=November 22, 2022"
+        },
+        {
+          "sim": 0.823,
+          "merged": "killington resort.terrain size=over 3,000 acres of skiable terrain",
+          "kept": "stowe mountain resort.terrain=Over 1,500 acres of skiable terrain"
+        },
+        {
+          "sim": 0.8217,
+          "merged": "stowe mountain resort.terrain size=over 1,500 acres of skiable terrain",
+          "kept": "killington resort.terrain size=over 3,000 acres of skiable terrain"
+        },
+        {
+          "sim": 0.8214,
+          "merged": "jump squats.reps=12-15",
+          "kept": "squats reps per set.reps per set=12-15 reps"
+        },
+        {
+          "sim": 0.8173,
+          "merged": "box jumps.sets=3",
+          "kept": "box jumps.reps=12-15"
+        },
+        {
+          "sim": 0.8163,
+          "merged": "data scientists salary.technology industry range=$100,000 and $150,000 per year",
+          "kept": "data scientists salary.retail industry range=$90,000 to $130,000"
+        },
+        {
+          "sim": 0.8145,
+          "merged": "dv 2024 entry period end.end time=12:00 pm (noon), Eastern Standard Time (EST) (GMT5), Tuesday, November 8, 2022",
+          "kept": "registration period for dv 2024.start time=12:00 pm EDT on Wednesday, October 5, 2022"
+        },
+        {
+          "sim": 0.8142,
+          "merged": "step ups.reps per leg=12-15",
+          "kept": "leg raises reps per set.reps per set=12-15 reps"
+        },
+        {
+          "sim": 0.8136,
+          "merged": "data scientists salary.finance sector range=$120,000 to $160,000 annually",
+          "kept": "data scientists salary.retail industry range=$90,000 to $130,000"
+        },
+        {
+          "sim": 0.8134,
+          "merged": "igtv content.length=10-15 minute videos, max",
+          "kept": "video length.maximum duration=10-15 minutes max"
+        },
+        {
+          "sim": 0.8121,
+          "merged": "trip.duration=two-week",
+          "kept": "vacation.duration=5-day"
+        },
+        {
+          "sim": 0.8071,
+          "merged": "iguaz\u00fa falls.length=1.5 miles",
+          "kept": "iguaz\u00fa falls exploration time.duration=4-5 days"
+        },
+        {
+          "sim": 0.8069,
+          "merged": "exhibition.dates start=October 22, 2022",
+          "kept": "exhibition.end date=February 26, 2023"
+        },
+        {
+          "sim": 0.8035,
+          "merged": "user.posting frequency before break=at least 3 times a week",
+          "kept": "posting frequency.experimentation options=2-3 times a week"
+        },
+        {
+          "sim": 0.8004,
+          "merged": "user.posting frequency before break=at least 3 times a week",
+          "kept": "posting frequency.starting schedule=once a week"
+        },
+        {
+          "sim": 0.8003,
+          "merged": "rayden.level=1st level",
+          "kept": "rayden.spell slots=2 1st level and 1 2nd level"
+        }
+      ]
+    },
+    "dfde3500": {
+      "numeric_merges": 45,
+      "safe_dedup_and_numeric_total": 65,
+      "blocked_textual": 230,
+      "pairs": [
+        {
+          "sim": 0.9904,
+          "merged": "file sharing limit.size=100 MB",
+          "kept": "file sharing limit.size limit=100 MB in size"
+        },
+        {
+          "sim": 0.9679,
+          "merged": "calvin and hobbes publication period.start year=1985",
+          "kept": "calvin and hobbes publication period.end year=1995"
+        },
+        {
+          "sim": 0.9569,
+          "merged": "evaluation metrics.metrics=accuracy, precision, recall, and F1-score",
+          "kept": "evaluation metrics.metrics used=['accuracy', 'precision', 'recall', 'f1-score']"
+        },
+        {
+          "sim": 0.9551,
+          "merged": "water changes.frequency=10-15% every week",
+          "kept": "water changes frequency.percentage per week=10-15%"
+        },
+        {
+          "sim": 0.9514,
+          "merged": "session duration weeks 1 4 .minutes per session=20-30",
+          "kept": "session duration weeks 9 10 11 12 .minutes per session=25-35"
+        },
+        {
+          "sim": 0.9389,
+          "merged": "small fish feeding limit.amount per fish per day=1-2 pellets or flakes per fish per day",
+          "kept": "medium sized fish feeding limit.amount per fish per day=2-3 pellets or flakes per fish per day"
+        },
+        {
+          "sim": 0.9307,
+          "merged": "medium sized fish feeding limit.amount per fish per day=2-3 pellets or flakes per fish per day",
+          "kept": "larger fish feeding limit.amount per fish per day=3-4 pellets or flakes per fish per day"
+        },
+        {
+          "sim": 0.9288,
+          "merged": "small fish feeding limit.amount per fish per day=1-2 pellets or flakes per fish per day",
+          "kept": "larger fish feeding limit.amount per fish per day=3-4 pellets or flakes per fish per day"
+        },
+        {
+          "sim": 0.9178,
+          "merged": "meditation frequency recommendation.daily duration=5-10 minutes per day",
+          "kept": "meditation frequency recommendation.weekly frequency=2-3 times a week"
+        },
+        {
+          "sim": 0.9166,
+          "merged": "verizon international plan.monthly plans=$70-$130 per month",
+          "kept": "verizon international plan.pay as you go rates=2.05"
+        },
+        {
+          "sim": 0.9163,
+          "merged": "group chats limit.maximum participants=256 people",
+          "kept": "whatsapp group.member limit=256"
+        },
+        {
+          "sim": 0.9156,
+          "merged": "whatsapp group.member limit=256",
+          "kept": "whatsapp group name.limit=25 characters long"
+        },
+        {
+          "sim": 0.9017,
+          "merged": "rush hour morning .time window=7:00 AM and 9:00 AM (Central Time Zone)",
+          "kept": "rush hour evening .time window=4:00 PM to 6:00 PM (Central Time Zone)"
+        },
+        {
+          "sim": 0.9008,
+          "merged": "whatsapp group name.limit=25 characters long",
+          "kept": "whatsapp group description.limit=512 characters long"
+        },
+        {
+          "sim": 0.8989,
+          "merged": "white rice.quantity=3 cups cooked",
+          "kept": "cooked white rice.quantity=3 cups"
+        },
+        {
+          "sim": 0.8979,
+          "merged": "whatsapp group.member limit=256",
+          "kept": "whatsapp group description.limit=512 characters long"
+        },
+        {
+          "sim": 0.879,
+          "merged": "strength training routine.frequency=2-3 sessions per week",
+          "kept": "training plan.frequency=2 strength training sessions per week"
+        },
+        {
+          "sim": 0.877,
+          "merged": "group chats limit.maximum participants=256 people",
+          "kept": "group calls.maximum participants for calls=8 people at a time"
+        },
+        {
+          "sim": 0.8766,
+          "merged": "margo s teaching.feedback=Good job teaching from C1 (camera position) and helping your student.",
+          "kept": "margo s teaching technique.camera position used=C1"
+        },
+        {
+          "sim": 0.8713,
+          "merged": "group chats limit.maximum participants=256 people",
+          "kept": "whatsapp group description.limit=512 characters long"
+        },
+        {
+          "sim": 0.8699,
+          "merged": "route.type=I-80 W route",
+          "kept": "route.direction=I-80 W"
+        },
+        {
+          "sim": 0.868,
+          "merged": "option 1 total cost.total price=$5,372",
+          "kept": "option 5.total cost=$5,188"
+        },
+        {
+          "sim": 0.8489,
+          "merged": "group chats limit.maximum participants=256 people",
+          "kept": "whatsapp group name.limit=25 characters long"
+        },
+        {
+          "sim": 0.8423,
+          "merged": "option 1 total cost.total price=$5,372",
+          "kept": "option 6.total cost=$5,188"
+        },
+        {
+          "sim": 0.8389,
+          "merged": "distance.approximate distance=1,100-1,200 miles",
+          "kept": "distance.miles=70"
+        },
+        {
+          "sim": 0.8382,
+          "merged": "group chats limit.maximum participants=256 people",
+          "kept": "group chat.message count=over 50 messages"
+        },
+        {
+          "sim": 0.8349,
+          "merged": "option 4.total cost=$4,984",
+          "kept": "option 6.total cost=$5,188"
+        },
+        {
+          "sim": 0.834,
+          "merged": "option 4.total cost=$4,984",
+          "kept": "option 5.total cost=$5,188"
+        },
+        {
+          "sim": 0.8335,
+          "merged": "rest stop.name=Iowa 80 Truckstop",
+          "kept": "iowa 80 truckstop.amenity=Food options (e.g., Iowa 80 Kitchen, Wendy's, Dairy Queen)"
+        },
+        {
+          "sim": 0.831,
+          "merged": "break location.location=Iowa 80 Truckstop",
+          "kept": "iowa 80 truckstop.amenity=Food options (e.g., Iowa 80 Kitchen, Wendy's, Dairy Queen)"
+        },
+        {
+          "sim": 0.83,
+          "merged": "let s go surfing lessons.cost=$95 for a two-hour group lesson",
+          "kept": "let s go surfing package cost.price=$395"
+        },
+        {
+          "sim": 0.8271,
+          "merged": "walk duration.initial session length=10-15 minutes",
+          "kept": "session duration weeks 1 4 .minutes per session=20-30"
+        },
+        {
+          "sim": 0.8259,
+          "merged": "rest stop.name=Iowa 80 Truckstop",
+          "kept": "iowa 80 truckstop.type=legendary stop along I-80"
+        },
+        {
+          "sim": 0.8241,
+          "merged": "option 1 total cost.total price=$5,372",
+          "kept": "option 4.total cost=$4,984"
+        },
+        {
+          "sim": 0.822,
+          "merged": "whatsapp group.member limit=256",
+          "kept": "group calls.maximum participants for calls=8 people at a time"
+        },
+        {
+          "sim": 0.8186,
+          "merged": "feeding guideline.frequency=within 1-2 minutes",
+          "kept": "feeding guideline.meal size=small, frequent meals 2-3 times a day"
+        },
+        {
+          "sim": 0.8143,
+          "merged": "distance.approximate distance=1,100-1,200 miles",
+          "kept": "drive time.approximate drive time=16-18 hours"
+        },
+        {
+          "sim": 0.811,
+          "merged": "feeding guideline.frequency=within 1-2 minutes",
+          "kept": "feeding frequency.frequency=1-2 times a week"
+        },
+        {
+          "sim": 0.811,
+          "merged": "petcube bites 2.features=1080p HD video, night vision, two-way audio, built-in laser toy",
+          "kept": "toy.type=Petcube Bites 2 laser toy"
+        },
+        {
+          "sim": 0.8106,
+          "merged": "workout frequency weeks 1 4 .times per week=3",
+          "kept": "training plan.frequency=2 strength training sessions per week"
+        },
+        {
+          "sim": 0.8079,
+          "merged": "whatsapp group description.limit=512 characters long",
+          "kept": "group chat.message count=over 50 messages"
+        },
+        {
+          "sim": 0.8037,
+          "merged": "walk duration.initial session length=10-15 minutes",
+          "kept": "session duration weeks 9 10 11 12 .minutes per session=25-35"
+        },
+        {
+          "sim": 0.8036,
+          "merged": "at t international day pass.functionality=Use domestic plan's data, voice, and text allowances in over 100 countries",
+          "kept": "at t international day pass.cost=10"
+        },
+        {
+          "sim": 0.8023,
+          "merged": "model hyperparameter.n estimators=100",
+          "kept": "model hyperparameter.max depth=10"
+        },
+        {
+          "sim": 0.8004,
+          "merged": "distance covered.miles=1,100",
+          "kept": "distance.approximate distance=1,100-1,200 miles"
+        }
+      ]
+    },
+    "affe2881": {
+      "numeric_merges": 30,
+      "safe_dedup_and_numeric_total": 60,
+      "blocked_textual": 278,
+      "pairs": [
+        {
+          "sim": 0.9589,
+          "merged": "gyro tacos.price=$8",
+          "kept": "gyro tacos.cost=$2.50"
+        },
+        {
+          "sim": 0.9194,
+          "merged": "success rate under 35.chance of live birth per egg=40-50%",
+          "kept": "success rate 38 40.chance of live birth per egg=20-30%"
+        },
+        {
+          "sim": 0.918,
+          "merged": "guide.title=Counting from 1 to 10 in Spanish and French: A Helpful Guide for Globetrotters and Polyglots",
+          "kept": "blog post.topic=counting from 1 to 10 in Spanish and French"
+        },
+        {
+          "sim": 0.9169,
+          "merged": "refrigerated broth shelf life.duration=5-7 days",
+          "kept": "frozen broth shelf life.duration=3-4 months"
+        },
+        {
+          "sim": 0.9114,
+          "merged": "hd high definition .resolution=1080p (1920x1080 pixels)",
+          "kept": "4k ultra high definition .resolution=2160p (3840x2160 pixels)"
+        },
+        {
+          "sim": 0.9069,
+          "merged": "total cost range.minimum=$10,000",
+          "kept": "total cost range.maximum=$20,000 or more"
+        },
+        {
+          "sim": 0.9048,
+          "merged": "pricing strategy.strategy type=discounted rate for first few clients",
+          "kept": "pricing strategy.recommendation=Offer a discounted rate for your first few clients"
+        },
+        {
+          "sim": 0.9003,
+          "merged": "freshness duration at room temperature.days=3 to 5 days",
+          "kept": "freshness duration when refrigerated.days=up to 7 days"
+        },
+        {
+          "sim": 0.8977,
+          "merged": "fitbit charge 3.battery life=up to 7 days",
+          "kept": "fitbit inspire hr.battery life=up to 5 days"
+        },
+        {
+          "sim": 0.8975,
+          "merged": "refrigeration temperature limit.maximum temperature=40\u00b0F (4\u00b0C) or below",
+          "kept": "freezer temperature limit.maximum temperature=0\u00b0F (-18\u00b0C) or below"
+        },
+        {
+          "sim": 0.8963,
+          "merged": "fitbit inspire hr.water resistance=50 meters",
+          "kept": "fitbit inspire hr.battery life=up to 5 days"
+        },
+        {
+          "sim": 0.8953,
+          "merged": "fitbit charge 3.water resistance=50 meters",
+          "kept": "fitbit charge 3.battery life=up to 7 days"
+        },
+        {
+          "sim": 0.8923,
+          "merged": "average temperature in nyc.spring high=58\u00b0F (14\u00b0C)",
+          "kept": "average temperature in nyc.summer high=84\u00b0F (29\u00b0C)"
+        },
+        {
+          "sim": 0.8642,
+          "merged": "device compatibility.iphone and ipad os requirement=iOS 12.2 or later",
+          "kept": "device compatibility.mac os requirement=macOS 10.15 or later"
+        },
+        {
+          "sim": 0.854,
+          "merged": "fitbit charge 3.water resistance=50 meters",
+          "kept": "fitbit inspire hr.battery life=up to 5 days"
+        },
+        {
+          "sim": 0.8344,
+          "merged": "amazon kindle direct publishing kdp .royalty rate=70% for eBooks priced between $2.99 and $9.99, 35% for eBooks priced outside this range",
+          "kept": "kdp royalty rates.ebook sales=35% and 70%"
+        },
+        {
+          "sim": 0.8307,
+          "merged": "apple watch series 3.water resistance=50 meters",
+          "kept": "apple watch series 3.battery life=36 hours"
+        },
+        {
+          "sim": 0.8281,
+          "merged": "montage yountville.distance to opus one=5 miles",
+          "kept": "montage yountville.proximity=close to Opus One and Domaine Carneros"
+        },
+        {
+          "sim": 0.8243,
+          "merged": "travel distance.maximum time=30 minutes",
+          "kept": "flight time.duration range=1 hour and 10 minutes to 1 hour and 25 minutes"
+        },
+        {
+          "sim": 0.8231,
+          "merged": "travel time flying .duration=2-3 hours from departure city to DEN",
+          "kept": "flying.travel time=Approximately 4.5 hours from JFK/LGA to DEN"
+        },
+        {
+          "sim": 0.8207,
+          "merged": "kindle unlimited ku exclusivity.duration=90 days",
+          "kept": "kdp select.exclusivity period=90-day"
+        },
+        {
+          "sim": 0.8189,
+          "merged": "refrigerated broth shelf life.duration=5-7 days",
+          "kept": "freshness duration when refrigerated.days=up to 7 days"
+        },
+        {
+          "sim": 0.8172,
+          "merged": "one way economy flights cost.range=$250-$400",
+          "kept": "round trip economy flights cost.range=$400-$600"
+        },
+        {
+          "sim": 0.8145,
+          "merged": "samsung galaxy fit.battery life=up to 7 days",
+          "kept": "fitbit inspire hr.battery life=up to 5 days"
+        },
+        {
+          "sim": 0.8107,
+          "merged": "assistant.number of wives=twice",
+          "kept": "assistant.number of children=three"
+        },
+        {
+          "sim": 0.8084,
+          "merged": "polar m430.water resistance=30 meters",
+          "kept": "polar m430.battery life=30 hours"
+        },
+        {
+          "sim": 0.8083,
+          "merged": "samsung galaxy fit.water resistance=50 meters",
+          "kept": "samsung galaxy fit.battery life=up to 7 days"
+        },
+        {
+          "sim": 0.8058,
+          "merged": "gucci.followers=43.6M",
+          "kept": "gucci.engagement rate=1.5%"
+        },
+        {
+          "sim": 0.8042,
+          "merged": "ku enrollment requirement.duration=at least 90 days exclusivity with Amazon",
+          "kept": "kindle unlimited ku exclusivity.duration=90 days"
+        },
+        {
+          "sim": 0.8017,
+          "merged": "average temperature in nyc.spring high=58\u00b0F (14\u00b0C)",
+          "kept": "average temperature in nyc.winter low=29\u00b0F (-2\u00b0C)"
+        }
+      ]
+    }
+  }
+}

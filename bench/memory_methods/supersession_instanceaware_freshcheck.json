@@ -1,0 +1,234 @@
+{
+  "model": "Qwen/Qwen3-Embedding-0.6B",
+  "threshold": 0.8,
+  "states": {
+    "ce6d2d27": {
+      "plain": {
+        "active_after": 677,
+        "active_reduction_pct": 25.69,
+        "merges": 388,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 38,
+          "numeric_update": 46,
+          "textual_distinct": 304
+        },
+        "textual_samples": [
+          "vitamin d supplements.consensus='best time' -> vitamin d supplements.best time to take='with a meal that contains fat' (sim 0.8903)",
+          "main course.protein='chicken breasts' -> meal.main protein='grilled jerk chicken' (sim 0.8566)",
+          "meal.main course='grilled jerk chicken with mango salsa' -> meal.main protein='grilled jerk chicken' (sim 0.8437)",
+          "side dish.type='roasted sweet potatoes' -> sweet potatoes.preparation method='roasting' (sim 0.8207)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 873,
+        "active_reduction_pct": 4.17,
+        "merges": 85,
+        "blocked": 321,
+        "taxonomy": {
+          "safe_dedup": 39,
+          "numeric_update": 46,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    },
+    "945e3d21": {
+      "plain": {
+        "active_after": 722,
+        "active_reduction_pct": 21.26,
+        "merges": 367,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 49,
+          "numeric_update": 45,
+          "textual_distinct": 273
+        },
+        "textual_samples": [
+          "1password.security feature='two-factor authentication (2FA)' -> 1password.feature='Watchtower' (sim 0.832)",
+          "1password.security feature='two-factor authentication (2FA)' -> 1password.features='ease of use, fantastic design language and robust security features' (sim 0.9027)",
+          "1password.feature='Watchtower' -> 1password.features='ease of use, fantastic design language and robust security features' (sim 0.8304)",
+          "eliza gardner.father='Joseph Gardner' -> eliza gardner.mother s ancestry='mixed-race descent, with African and European ancestry' (sim 0.8356)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 879,
+        "active_reduction_pct": 4.14,
+        "merges": 94,
+        "blocked": 273,
+        "taxonomy": {
+          "safe_dedup": 49,
+          "numeric_update": 45,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    },
+    "6071bd76": {
+      "plain": {
+        "active_after": 682,
+        "active_reduction_pct": 24.97,
+        "merges": 417,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 52,
+          "numeric_update": 47,
+          "textual_distinct": 318
+        },
+        "textual_samples": [
+          "intelligentsia coffee.subscription type='Coffee Subscription, Black Cat subscription' -> la colombe coffee.subscription type='Coffee Subscription, Coffee of the Month option' (sim 0.9455)",
+          "side dish.recommendation='Quick-Pickled Carrots' -> food choice.selection='Cilantro Lime Rice and Quick-Pickled Carrots' (sim 0.8042)",
+          "coffee.type='citrus-infused' -> tea.type='Earl Grey' (sim 0.8204)",
+          "intelligentsia coffee.subscription type='Coffee Subscription, Black Cat subscription' -> coffee subscription service.status='signed up last month' (sim 0.8333)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 875,
+        "active_reduction_pct": 3.74,
+        "merges": 99,
+        "blocked": 319,
+        "taxonomy": {
+          "safe_dedup": 52,
+          "numeric_update": 47,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    },
+    "22d2cb42": {
+      "plain": {
+        "active_after": 690,
+        "active_reduction_pct": 25.89,
+        "merges": 449,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 42,
+          "numeric_update": 78,
+          "textual_distinct": 329
+        },
+        "textual_samples": [
+          "exhibition.venue='Whitney Museum of American Art' -> exhibition.location='Frick Collection' (sim 0.8184)",
+          "file format.type='MIDI and mp3' -> midi.type='file format that represents music in a digital form' (sim 0.8543)",
+          "file format.type='MIDI and mp3' -> mp3.type='audio file format that stores actual audio data as a series of digital audio samples' (sim 0.8286)",
+          "midi.type='file format that represents music in a digital form' -> mp3.type='audio file format that stores actual audio data as a series of digital audio samples' (sim 0.803)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 875,
+        "active_reduction_pct": 6.02,
+        "merges": 124,
+        "blocked": 336,
+        "taxonomy": {
+          "safe_dedup": 46,
+          "numeric_update": 78,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    },
+    "dfde3500": {
+      "plain": {
+        "active_after": 698,
+        "active_reduction_pct": 19.86,
+        "merges": 295,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 20,
+          "numeric_update": 45,
+          "textual_distinct": 230
+        },
+        "textual_samples": [
+          "packing list.clothing='outfits and specific items for US climate' -> outfit quantity goal.number of outfits='7-10' (sim 0.8232)",
+          "verizon international plan.type='International Phone Plan' -> at t international day pass.functionality=\"Use domestic plan's data, voice, and text allowances in over 100 countries\" (sim 0.8023)",
+          "verizon international plan.type='International Phone Plan' -> t mobile international plan.features='unlimited data and texting in over 200 countries with voice calls at a flat rate' (sim 0.8252)",
+          "verizon international plan.type='International Phone Plan' -> phone plans.topic='cost and hidden fees' (sim 0.8414)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 840,
+        "active_reduction_pct": 3.56,
+        "merges": 65,
+        "blocked": 230,
+        "taxonomy": {
+          "safe_dedup": 20,
+          "numeric_update": 45,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    },
+    "affe2881": {
+      "plain": {
+        "active_after": 644,
+        "active_reduction_pct": 23.97,
+        "merges": 335,
+        "blocked": 0,
+        "taxonomy": {
+          "safe_dedup": 29,
+          "numeric_update": 30,
+          "textual_distinct": 276
+        },
+        "textual_samples": [
+          "buying pre owned luxury goods.strategy='Identify your needs' -> buying options.type='pre-owned luxury goods' (sim 0.8223)",
+          "buying pre owned luxury goods.strategy='Identify your needs' -> buying luxury goods.strategy='consider factors before making a decision' (sim 0.9192)",
+          "previous year s models or discontinued styles.con='Outdated design' -> previous year s models or discontinued styles.pro='Less depreciation' (sim 0.8539)",
+          "watch.strap material='leather strap' -> high quality leather strap.benefit='Durability, Comfort, Aesthetics, Craftsmanship' (sim 0.806)"
+        ]
+      },
+      "instance_aware": {
+        "active_after": 817,
+        "active_reduction_pct": 3.54,
+        "merges": 60,
+        "blocked": 278,
+        "taxonomy": {
+          "safe_dedup": 30,
+          "numeric_update": 30,
+          "textual_distinct": 0
+        },
+        "textual_samples": []
+      },
+      "team_size_after": {
+        "active": [],
+        "stale": []
+      },
+      "apex_goal_after": null
+    }
+  },
+  "totals": {
+    "plain": {
+      "safe_dedup": 230,
+      "numeric_update": 291,
+      "textual_distinct": 1730
+    },
+    "instance_aware": {
+      "safe_dedup": 236,
+      "numeric_update": 291,
+      "textual_distinct": 0
+    }
+  }
+}
