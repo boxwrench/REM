@@ -9,12 +9,13 @@ how it is rendered, reusing quarantine/stale handling).
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import math
 import re
 from typing import Protocol
 
 from rem.memory.facts_ledger import FactEntry, FactsLedger
+from rem.memory.query import classify_question
 from rem.memory.tiers import MemoryState, SpanSummary, count_tokens
 
 # Reserve inside the budget for section headers + the answer the model must still
@@ -31,12 +32,28 @@ class MemorySelector(Protocol):
 
 def _summary_cost(s: SpanSummary) -> int:
     rendered = s.rendered_text if s.rendered_text is not None else s.text
-    return count_tokens(f"- {rendered}")
+    provenance = []
+    if s.session_ids:
+        provenance.append(f"Sessions {', '.join(s.session_ids)}")
+    if s.start_timestamp:
+        if s.end_timestamp and s.end_timestamp != s.start_timestamp:
+            provenance.append(f"Timestamps {s.start_timestamp} to {s.end_timestamp}")
+        else:
+            provenance.append(f"Timestamp {s.start_timestamp}")
+    prefix = f"[{'; '.join(provenance)}] " if provenance else ""
+    return count_tokens(f"- {prefix}{rendered}")
 
 
 def _entry_cost(e: FactEntry) -> int:
     status = "" if e.status == "active" else " stale"
-    return count_tokens(f"- [{e.kind}{status}] {e.text} (Turn {e.source_turn_id})")
+    provenance = [f"Turn {e.source_turn_id}"]
+    if e.session_id:
+        provenance.append(f"Session {e.session_id}")
+    if e.timestamp:
+        provenance.append(f"Timestamp {e.timestamp}")
+    return count_tokens(
+        f"- [{e.kind}{status}] {e.text} ({'; '.join(provenance)})"
+    )
 
 
 class RecencySelector:
@@ -124,6 +141,7 @@ _TEMPORAL_TERMS = {
     "historical", "history", "increase", "increased", "initial", "original",
     "previous", "previously", "prior", "started", "then", "updated", "was",
 }
+_INVARIANT_NOUNS = {"series", "species"}
 
 
 def _retrieval_tokens(text: str) -> set[str]:
@@ -133,7 +151,7 @@ def _retrieval_tokens(text: str) -> set[str]:
     for token in tokens:
         if token in _QUERY_STOPWORDS:
             continue
-        if len(token) > 4 and token.endswith("ies"):
+        if token not in _INVARIANT_NOUNS and len(token) > 4 and token.endswith("ies"):
             token = token[:-3] + "y"
         elif len(token) > 4 and token.endswith("s") and not token.endswith("ss"):
             token = token[:-1]
@@ -212,13 +230,309 @@ def _scored_candidates(
 
 
 def _available_budget(state: MemoryState, query: str, budget_tokens: int) -> tuple[int, list]:
+    # Verbatim turns contain the live request and are therefore a protected floor:
+    # silently dropping an oversized user message would change the request. Normal
+    # compaction keeps this tier small; the assembler raises if the floor alone is
+    # larger than the model window.
     turns = list(state.turns)
     turn_cost = count_tokens("\n".join(
         f"{turn.role.upper()}: {turn.content}" for turn in turns
     )) if turns else 0
     return max(
-        0, budget_tokens - count_tokens(query) - SELECTOR_RESERVE_TOKENS - turn_cost
+        0,
+        budget_tokens
+        - count_tokens(query)
+        - SELECTOR_RESERVE_TOKENS
+        - turn_cost,
     ), turns
+
+
+_SLOT_TOKEN_ALIASES = {
+    "begin": "start",
+    "beginning": "start",
+    "ending": "end",
+    "finish": "end",
+    "lower": "minimum",
+    "min": "minimum",
+    "max": "maximum",
+    "upper": "maximum",
+    "refrigerated": "refrigerator",
+    "fridge": "refrigerator",
+    "frozen": "freezer",
+    "reps": "repetition",
+    "rep": "repetition",
+    "repetitions": "repetition",
+    "sets": "set",
+}
+_ROLE_DIMENSIONS = (
+    frozenset({"start", "end"}),
+    frozenset({"minimum", "maximum"}),
+    frozenset({"refrigerator", "freezer"}),
+    frozenset({"set", "repetition"}),
+    frozenset({"under", "below", "over", "above"}),
+    frozenset({"morning", "afternoon", "evening", "night"}),
+    frozenset({"left", "right"}),
+    frozenset({"front", "rear", "back"}),
+    frozenset({"first", "second", "third", "fourth", "fifth"}),
+    frozenset({
+        "monday", "tuesday", "wednesday", "thursday", "friday",
+        "saturday", "sunday",
+    }),
+)
+_SLOT_ROLE_ALIASES = {
+    "amount": "count",
+    "frequency": "frequency",
+    "count": "count",
+    "number": "count",
+    "total": "count",
+    "ratio": "ratio",
+    "day": "day",
+    "date": "day",
+    "time": "time",
+    "timing": "time",
+    "location": "location",
+    "place": "location",
+    "status": "status",
+    "state": "status",
+    "action": "action",
+    "result": "result",
+    "symptom": "symptom",
+    "type": "type",
+    "model": "model",
+    "capacity": "capacity",
+}
+_GENERIC_SUBJECT_TOKENS = {
+    "change", "detail", "information", "service", "servicing", "update"
+}
+
+
+def _slot_tokens(slot_key: str) -> set[str]:
+    tokens = re.findall(r"[a-z0-9]+", slot_key.lower())
+    normalized = set()
+    for token in tokens:
+        token = _SLOT_TOKEN_ALIASES.get(token, token)
+        if token not in _INVARIANT_NOUNS and len(token) > 4 and token.endswith("ies"):
+            token = token[:-3] + "y"
+        elif len(token) > 4 and token.endswith("s") and not token.endswith("ss"):
+            token = token[:-1]
+        normalized.add(token)
+    return normalized
+
+
+def _role_conflict(left: set[str], right: set[str]) -> bool:
+    left_instances = {token for token in left if token.isdigit()}
+    right_instances = {token for token in right if token.isdigit()}
+    if left_instances and right_instances and left_instances != right_instances:
+        return True
+    for dimension in _ROLE_DIMENSIONS:
+        left_roles = left & dimension
+        right_roles = right & dimension
+        if left_roles and right_roles and left_roles != right_roles:
+            return True
+    return False
+
+
+def _near_duplicate_slot_keys(left: str | None, right: str | None) -> bool:
+    """Conservative, role-aware slot-family test used only at read time."""
+    if not left or not right:
+        return False
+    if left == right:
+        return True
+    left_tokens, right_tokens = _slot_tokens(left), _slot_tokens(right)
+    if _role_conflict(left_tokens, right_tokens):
+        return False
+    shared = left_tokens & right_tokens
+    return (
+        len(shared) >= 2
+        and len(shared) / min(len(left_tokens), len(right_tokens)) >= (2 / 3)
+    )
+
+
+def _value_shape(value: str | None) -> str:
+    if not value:
+        return "missing"
+    if re.search(r"\d", value):
+        return "numeric"
+    if any(marker in value for marker in ("[", "]", "{", "}")):
+        return "collection"
+    return "scalar" if len(value.split()) <= 8 else "prose"
+
+
+def _slot_roles(tokens: set[str]) -> set[str]:
+    return {
+        _SLOT_ROLE_ALIASES[token]
+        for token in tokens
+        if token in _SLOT_ROLE_ALIASES
+    }
+
+
+def _subject_anchors(slot_key: str) -> set[str]:
+    subject = slot_key.split(".", 1)[0]
+    return _slot_tokens(subject) - _GENERIC_SUBJECT_TOKENS
+
+
+def _near_duplicate_entries(left: FactEntry, right: FactEntry) -> bool:
+    if not _near_duplicate_slot_keys(left.slot_key, right.slot_key):
+        return False
+    if left.slot_key == right.slot_key:
+        return True
+    left_tokens = _slot_tokens(left.slot_key or "")
+    right_tokens = _slot_tokens(right.slot_key or "")
+    left_roles, right_roles = _slot_roles(left_tokens), _slot_roles(right_tokens)
+    if bool(left_roles) != bool(right_roles):
+        return False
+    if left_roles and left_roles.isdisjoint(right_roles):
+        return False
+    if not (_subject_anchors(left.slot_key or "") & _subject_anchors(right.slot_key or "")):
+        return False
+    left_shape = _value_shape(left.slot_value)
+    right_shape = _value_shape(right.slot_value)
+    return left_shape == right_shape and left_shape in {"numeric", "scalar"}
+
+
+def _slot_family_groups(
+    candidates: list[_Candidate], query: str, *, active_only: bool
+) -> list[list[int]]:
+    entry_indexes = [
+        index for index, candidate in enumerate(candidates)
+        if candidate.kind == "entry"
+        and isinstance(candidate.value, FactEntry)
+        and (not active_only or candidate.value.status == "active")
+    ]
+    ordered_indexes = sorted(
+        entry_indexes,
+        key=lambda index: (-candidates[index].score, -candidates[index].turn_id),
+    )
+    unassigned = set(entry_indexes)
+    groups: list[list[int]] = []
+    for seed in ordered_indexes:
+        if seed not in unassigned:
+            continue
+        group = [seed]
+        unassigned.remove(seed)
+        for other in ordered_indexes:
+            if other not in unassigned:
+                continue
+            other_entry = candidates[other].value
+            if all(
+                _near_duplicate_entries(other_entry, candidates[index].value)
+                for index in group
+            ):
+                group.append(other)
+                unassigned.remove(other)
+        groups.append(group)
+
+    query_tokens = _slot_tokens(query)
+    anchored = []
+    for indexes in groups:
+        if len(indexes) < 2:
+            continue
+        shared_subject = set.intersection(*(
+            _subject_anchors(candidates[index].value.slot_key or "")
+            for index in indexes
+        ))
+        if shared_subject & query_tokens:
+            anchored.append(indexes)
+    return anchored
+
+
+def _text_contains_value(text: str, value: str | None) -> bool:
+    if not value:
+        return False
+    normalized_text = " ".join(text.lower().split())
+    normalized_value = " ".join(value.lower().split())
+    if normalized_value.isdigit():
+        return bool(re.search(rf"\b{re.escape(normalized_value)}\b", normalized_text))
+    return len(normalized_value) >= 3 and normalized_value in normalized_text
+
+
+def _candidate_with_text(candidate: _Candidate, text: str) -> _Candidate:
+    entry = candidate.value.model_copy(update={"text": text})
+    return replace(candidate, value=entry, text=text, cost=_entry_cost(entry))
+
+
+def _prefer_newest_slot_families(
+    candidates: list[_Candidate], query: str
+) -> list[_Candidate]:
+    """Keep the newest active fact and suppress summaries of displaced values.
+
+    The operation filters only the selected read view. The persisted ledger is
+    untouched. The newest member inherits the family's best lexical score so a
+    key-fragmented update cannot fall below the sparse top-k solely because its
+    newer key shares fewer literal words with the question.
+    """
+    groups = _slot_family_groups(candidates, query, active_only=True)
+    discarded: set[int] = set()
+    replacements: dict[int, _Candidate] = {}
+    obsolete: list[tuple[str, set[str]]] = []
+    for indexes in groups:
+        newest = max(
+            indexes,
+            key=lambda index: (
+                candidates[index].turn_id,
+                candidates[index].text,
+            ),
+        )
+        best_score = max(candidates[index].score for index in indexes)
+        newest_entry = candidates[newest].value
+        replacements[newest] = replace(
+            _candidate_with_text(
+                candidates[newest],
+                f"LATEST CURRENT OBSERVATION: {newest_entry.text}",
+            ),
+            score=best_score,
+        )
+        newest_value = " ".join((newest_entry.slot_value or "").lower().split())
+        shared_subject = set.intersection(*(
+            _subject_anchors(candidates[index].value.slot_key or "")
+            for index in indexes
+        ))
+        for index in indexes:
+            if index == newest:
+                continue
+            old_value = candidates[index].value.slot_value
+            normalized_old = " ".join((old_value or "").lower().split())
+            if old_value and normalized_old != newest_value:
+                obsolete.append((old_value, shared_subject))
+        discarded.update(index for index in indexes if index != newest)
+
+    return [
+        replacements.get(index, candidate)
+        for index, candidate in enumerate(candidates)
+        if index not in discarded
+        and not (
+            candidate.kind == "summary"
+            and any(
+                _text_contains_value(candidate.text, value)
+                and bool(_slot_tokens(candidate.text) & anchors)
+                for value, anchors in obsolete
+            )
+        )
+    ]
+
+
+def _annotate_temporal_slot_families(
+    candidates: list[_Candidate], query: str, question_mode: str
+) -> list[_Candidate]:
+    """Make fragmented earlier/latest sequences explicit without dropping history."""
+    replacements: dict[int, _Candidate] = {}
+    for indexes in _slot_family_groups(candidates, query, active_only=False):
+        ordered = sorted(indexes, key=lambda index: candidates[index].turn_id)
+        earlier = ordered[-2] if question_mode == "previous" else ordered[0]
+        latest = ordered[-1]
+        earlier_entry = candidates[earlier].value
+        latest_entry = candidates[latest].value
+        if earlier_entry.slot_value == latest_entry.slot_value:
+            continue
+        label = "PREVIOUS SEQUENCE" if question_mode == "previous" else "UPDATE SEQUENCE"
+        sequence = (
+            f"{label}: earlier value was "
+            f"{earlier_entry.slot_value} (Turn {earlier_entry.source_turn_id}); "
+            f"latest value is {latest_entry.slot_value} "
+            f"(Turn {latest_entry.source_turn_id}). {latest_entry.text}"
+        )
+        replacements[latest] = _candidate_with_text(candidates[latest], sequence)
+    return [replacements.get(index, candidate) for index, candidate in enumerate(candidates)]
 
 
 def _build_selected_state(
@@ -327,23 +641,31 @@ class SparseChronologicalSelector:
     """
 
     def __init__(self, top_k: int = SPARSE_TOP_K,
-                 relevance_floor: float = SPARSE_RELEVANCE_FLOOR) -> None:
+                 relevance_floor: float = SPARSE_RELEVANCE_FLOOR,
+                 prefer_newest: bool = False,
+                 mode_aware_history: bool = True) -> None:
         self.top_k = top_k
         self.relevance_floor = relevance_floor
+        self.prefer_newest = prefer_newest
+        self.mode_aware_history = mode_aware_history
 
     def select(self, state: MemoryState, query: str, budget_tokens: int) -> MemoryState:
-        include_history = _is_temporal_query(query)
+        question_mode = classify_question(query)
+        include_history = _is_temporal_query(query) or (
+            self.mode_aware_history
+            and question_mode in {"previous", "change", "point-in-time"}
+        )
         remaining, turns = _available_budget(state, query, budget_tokens)
         candidates = _scored_candidates(
             state, query, deduplicate=True, include_history=include_history
         )
+        if self.prefer_newest and question_mode == "current":
+            candidates = _prefer_newest_slot_families(candidates, query)
+        elif self.prefer_newest and question_mode in {"previous", "change"}:
+            candidates = _annotate_temporal_slot_families(
+                candidates, query, question_mode
+            )
         relevant = [c for c in candidates if c.score > self.relevance_floor]
-        if not relevant:
-            # No query-term match at all: fall back to the most recent candidates so
-            # the evidence set is not empty, but STILL bounded by top_k (never the
-            # whole budget). This keeps the arm honest on questions our tokenizer
-            # can't lexically anchor.
-            relevant = sorted(candidates, key=lambda c: -c.turn_id)
         relevant.sort(key=lambda c: (-c.score, -c.turn_id, c.kind, c.text))
         top = relevant[: self.top_k]
 

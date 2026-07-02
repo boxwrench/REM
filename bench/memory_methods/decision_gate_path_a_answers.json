@@ -1,0 +1,387 @@
+{
+  "mode": "ANSWERS",
+  "items": [
+    "ce6d2d27",
+    "945e3d21",
+    "6071bd76",
+    "22d2cb42",
+    "dfde3500",
+    "affe2881"
+  ],
+  "pre_registered_rule": {
+    "minimum_candidate_pass": 5,
+    "maximum_items": 6,
+    "require_no_regression_vs_sparse": true,
+    "confirmation_set": "new Path-C captures or fresh LongMemEval-S KU; not these dev items"
+  },
+  "reused_answer_arms": [
+    "current",
+    "sparse",
+    "oracle"
+  ],
+  "results": {
+    "candidate": [
+      {
+        "qid": "ce6d2d27",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week do I take a cocktail-making class?",
+        "gold": "Friday",
+        "answer_taxonomy": true,
+        "ctx_tokens": 5640,
+        "rep_answers": [
+          "Friday",
+          "Friday",
+          "Friday"
+        ]
+      },
+      {
+        "qid": "945e3d21",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How often do I attend yoga classes to help with my anxiety?",
+        "gold": "Three times a week.",
+        "answer_taxonomy": true,
+        "ctx_tokens": 3468,
+        "rep_answers": [
+          "three times a week",
+          "three times a week",
+          "three times a week"
+        ]
+      },
+      {
+        "qid": "6071bd76",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+        "gold": "You switched to less water (5 ounces) per tablespoon of coffee.",
+        "answer_taxonomy": true,
+        "ctx_tokens": 2094,
+        "rep_answers": [
+          "The user's preferred coffee ratio for the French press is 1 tablespoon of coffee per 6 ounces of water.",
+          "The user's preferred coffee ratio for the French press is 1 tablespoon of coffee per 6 ounces of water.",
+          "The user's preferred coffee ratio for the French press is 1 tablespoon of coffee per 6 ounces of water."
+        ]
+      },
+      {
+        "qid": "22d2cb42",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "Where did I get my guitar serviced?",
+        "gold": "The music shop on Main St.",
+        "answer_taxonomy": true,
+        "ctx_tokens": 3092,
+        "rep_answers": [
+          "music shop on Main St",
+          "music shop on Main St",
+          "music shop on Main St"
+        ]
+      },
+      {
+        "qid": "dfde3500",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week did I meet with my previous language exchange tutor Juan?",
+        "gold": "Wednesday",
+        "answer_taxonomy": true,
+        "ctx_tokens": 2827,
+        "rep_answers": [
+          "Wednesday evening",
+          "Wednesday evening",
+          "Wednesday evening"
+        ]
+      },
+      {
+        "qid": "affe2881",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How many different species of birds have I seen in my local park?",
+        "gold": "32",
+        "answer_taxonomy": true,
+        "ctx_tokens": 3919,
+        "rep_answers": [
+          "27",
+          "27",
+          "27"
+        ]
+      }
+    ],
+    "current": [
+      {
+        "qid": "ce6d2d27",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week do I take a cocktail-making class?",
+        "gold": "Friday",
+        "ctx_tokens": 27631,
+        "rep_answers": [
+          "The fact ledger indicates the class day is Friday.",
+          "The fact ledger indicates the class day is Friday.",
+          "The fact ledger indicates the class day is Friday."
+        ]
+      },
+      {
+        "qid": "945e3d21",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How often do I attend yoga classes to help with my anxiety?",
+        "gold": "Three times a week.",
+        "ctx_tokens": 27686,
+        "rep_answers": [
+          "The user reported engaging in yoga twice a week for self-care.",
+          "The user reported engaging in yoga twice a week for self-care.",
+          "The user reported engaging in yoga twice a week for self-care."
+        ]
+      },
+      {
+        "qid": "6071bd76",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+        "gold": "You switched to less water (5 ounces) per tablespoon of coffee.",
+        "ctx_tokens": 27715,
+        "rep_answers": [
+          "The user's French press ratio of 1:5 was confirmed as appropriate.",
+          "The user's French press ratio of 1:5 was confirmed as appropriate.",
+          "The user's French press ratio of 1:5 was confirmed as appropriate."
+        ]
+      },
+      {
+        "qid": "22d2cb42",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "Where did I get my guitar serviced?",
+        "gold": "The music shop on Main St.",
+        "ctx_tokens": 27638,
+        "rep_answers": [
+          "The guitar was serviced at a music shop on Main St.",
+          "The guitar was serviced at a music shop on Main St.",
+          "The guitar was serviced at a music shop on Main St."
+        ]
+      },
+      {
+        "qid": "dfde3500",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week did I meet with my previous language exchange tutor Juan?",
+        "gold": "Wednesday",
+        "ctx_tokens": 27655,
+        "rep_answers": [
+          "The meeting day with Juan is uncertain; it could be Tuesday or not, as the assistant lacks information about your schedule.",
+          "The meeting day with Juan is uncertain; it could be Tuesday or not, as the assistant lacks information about your schedule.",
+          "The meeting day with Juan is uncertain; it could be Tuesday or not, as the assistant lacks information about your schedule."
+        ]
+      },
+      {
+        "qid": "affe2881",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How many different species of birds have I seen in my local park?",
+        "gold": "32",
+        "ctx_tokens": 27647,
+        "rep_answers": [
+          "You have seen 27 different bird species in your local park.",
+          "You have seen 27 different bird species in your local park.",
+          "You have seen 27 different bird species in your local park."
+        ]
+      }
+    ],
+    "sparse": [
+      {
+        "qid": "ce6d2d27",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week do I take a cocktail-making class?",
+        "gold": "Friday",
+        "ctx_tokens": 5635,
+        "rep_answers": [
+          "The planned drink for Friday's class is the Paloma and the Tequila Sour.",
+          "The planned drink for Friday's class is the Paloma and the Tequila Sour.",
+          "The planned drink for Friday's class is the Paloma and the Tequila Sour."
+        ]
+      },
+      {
+        "qid": "945e3d21",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How often do I attend yoga classes to help with my anxiety?",
+        "gold": "Three times a week.",
+        "ctx_tokens": 3468,
+        "rep_answers": [
+          "The user attends yoga classes three times a week.",
+          "The user attends yoga classes three times a week.",
+          "The user attends yoga classes three times a week."
+        ]
+      },
+      {
+        "qid": "6071bd76",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+        "gold": "You switched to less water (5 ounces) per tablespoon of coffee.",
+        "ctx_tokens": 2094,
+        "rep_answers": [
+          "The user's preferred coffee ratio for the French press is 1 tablespoon of coffee per 6 ounces of water.",
+          "The user's preferred coffee ratio for the French press is 1 tablespoon of coffee per 6 ounces of water.",
+          "The user's preferred coffee ratio for the French press is 1 tablespoon of coffee per 6 ounces of water."
+        ]
+      },
+      {
+        "qid": "22d2cb42",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "Where did I get my guitar serviced?",
+        "gold": "The music shop on Main St.",
+        "ctx_tokens": 3129,
+        "rep_answers": [
+          "The guitar service location was on Main St, at a music shop.",
+          "The guitar service location was on Main St, at a music shop.",
+          "The guitar service location was on Main St, at a music shop."
+        ]
+      },
+      {
+        "qid": "dfde3500",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week did I meet with my previous language exchange tutor Juan?",
+        "gold": "Wednesday",
+        "ctx_tokens": 2827,
+        "rep_answers": [
+          "The day of the week for your language exchange class with Juan is Wednesday evening.",
+          "The day of the week for your language exchange class with Juan is Wednesday evening.",
+          "The day of the week for your language exchange class with Juan is Wednesday evening."
+        ]
+      },
+      {
+        "qid": "affe2881",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How many different species of birds have I seen in my local park?",
+        "gold": "32",
+        "ctx_tokens": 3915,
+        "rep_answers": [
+          "27",
+          "27",
+          "27"
+        ]
+      }
+    ],
+    "oracle": [
+      {
+        "qid": "ce6d2d27",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week do I take a cocktail-making class?",
+        "gold": "Friday",
+        "ctx_tokens": 6070,
+        "rep_answers": [
+          "Friday",
+          "Friday",
+          "Friday"
+        ]
+      },
+      {
+        "qid": "945e3d21",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How often do I attend yoga classes to help with my anxiety?",
+        "gold": "Three times a week.",
+        "ctx_tokens": 7104,
+        "rep_answers": [
+          "You attend yoga classes three times a week.",
+          "You attend yoga classes three times a week.",
+          "You attend yoga classes three times a week."
+        ]
+      },
+      {
+        "qid": "6071bd76",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "For the coffee-to-water ratio in my French press, did I switch to more water per tablespoon of coffee, or less?",
+        "gold": "You switched to less water (5 ounces) per tablespoon of coffee.",
+        "ctx_tokens": 5477,
+        "rep_answers": [
+          "You switched to less water per tablespoon of coffee, as your current ratio is 1 tablespoon of coffee for every 5 ounces of water.",
+          "You switched to less water per tablespoon of coffee, as your current ratio is 1 tablespoon of coffee for every 5 ounces of water.",
+          "You switched to less water per tablespoon of coffee, as your current ratio is 1 tablespoon of coffee for every 5 ounces of water."
+        ]
+      },
+      {
+        "qid": "22d2cb42",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "Where did I get my guitar serviced?",
+        "gold": "The music shop on Main St.",
+        "ctx_tokens": 6020,
+        "rep_answers": [
+          "You got your guitar serviced at Rhythm Central on Main St.",
+          "You got your guitar serviced at Rhythm Central on Main St.",
+          "You got your guitar serviced at Rhythm Central on Main St."
+        ]
+      },
+      {
+        "qid": "dfde3500",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "What day of the week did I meet with my previous language exchange tutor Juan?",
+        "gold": "Wednesday",
+        "ctx_tokens": 5115,
+        "rep_answers": [
+          "Wednesday evening.",
+          "Wednesday evening.",
+          "Wednesday evening."
+        ]
+      },
+      {
+        "qid": "affe2881",
+        "qtype": "knowledge-update",
+        "diagnostic": false,
+        "question": "How many different species of birds have I seen in my local park?",
+        "gold": "32",
+        "ctx_tokens": 7095,
+        "rep_answers": [
+          "32",
+          "32",
+          "32"
+        ]
+      }
+    ]
+  },
+  "serving_path_overflow": {
+    "ce6d2d27": {
+      "overflows": true,
+      "tokens": null,
+      "cap": 32000,
+      "detail": "Assembled context tokens (56919) exceeds maximum limit (32000)."
+    },
+    "945e3d21": {
+      "overflows": true,
+      "tokens": null,
+      "cap": 32000,
+      "detail": "Assembled context tokens (52283) exceeds maximum limit (32000)."
+    },
+    "6071bd76": {
+      "overflows": true,
+      "tokens": null,
+      "cap": 32000,
+      "detail": "Assembled context tokens (38941) exceeds maximum limit (32000)."
+    },
+    "22d2cb42": {
+      "overflows": false,
+      "tokens": 31817,
+      "cap": 32000
+    },
+    "dfde3500": {
+      "overflows": true,
+      "tokens": null,
+      "cap": 32000,
+      "detail": "Assembled context tokens (52306) exceeds maximum limit (32000)."
+    },
+    "affe2881": {
+      "overflows": true,
+      "tokens": null,
+      "cap": 32000,
+      "detail": "Assembled context tokens (52040) exceeds maximum limit (32000)."
+    }
+  }
+}

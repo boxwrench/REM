@@ -1,23 +1,13 @@
 """Unit tests for the memory sidecar service (Task S1)."""
 
-import json
-import socket
 import threading
-import time
-import pytest
 import respx
 import httpx
 
 from rem.config import Settings
 from rem.memory.sidecar import MemorySidecar, MemorySidecarServer
 from rem.memory.tiers import MemoryState
-
-
-def _find_free_port() -> int:
-    """Finds a free port on localhost."""
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
+from rem.memory.facts_ledger import FactEntry, FactsLedger
 
 
 def test_sidecar_request_processing(tmp_path, mock_npu):
@@ -52,6 +42,7 @@ def test_sidecar_request_processing(tmp_path, mock_npu):
     assert len(modified_payload["messages"]) == 2  # system prompt + recent turn
     assert modified_payload["messages"][0]["role"] == "system"
     assert "=== SYSTEM ===" in modified_payload["messages"][0]["content"]
+    assert "Question mode: current" in modified_payload["messages"][0]["content"]
     assert "Hello sidecar!" in modified_payload["messages"][1]["content"]
 
     # Record the assistant reply
@@ -103,12 +94,81 @@ def test_sidecar_turn_deduplication(tmp_path):
     assert [t.content for t in state.turns] == ["Turn A", "Reply B", "Turn C"]
 
 
+def test_sidecar_experimental_read_uses_newest_preference_when_enabled(tmp_path):
+    settings = Settings(
+        vault_dir=str(tmp_path),
+        read_fit_tokens=2000,
+        read_newest_preference=True,
+    )
+    state_path = tmp_path / "shipping_memory_state.json"
+    state = MemoryState(ledger=FactsLedger(entries=[
+        FactEntry(
+            kind="number", text="bird species count: 27", source_turn_id=178,
+            slot_key="bird species.count", slot_value="27",
+        ),
+        FactEntry(
+            kind="number", text="species count total species count: 32",
+            source_turn_id=275, slot_key="species count.total species count",
+            slot_value="32",
+        ),
+        *[
+            FactEntry(
+                kind="entity", text=f"unrelated gardening note {index}",
+                source_turn_id=300 + index,
+            )
+            for index in range(40)
+        ],
+    ]))
+    state.save(str(state_path))
+    sidecar = MemorySidecar(settings=settings)
+
+    modified, _ = sidecar.process_chat_request({
+        "model": "qwen",
+        "user": "shipping",
+        "messages": [{
+            "role": "user",
+            "content": "How many different species of birds have I seen?",
+        }],
+    })
+
+    rendered = "\n".join(message["content"] for message in modified["messages"])
+    assert "species count total species count: 32" in rendered
+    assert "bird species count: 27" not in rendered
+    assert "unrelated gardening note" not in rendered
+
+
+def test_sidecar_default_keeps_uncertain_cross_key_values(tmp_path):
+    settings = Settings(vault_dir=str(tmp_path), read_fit_tokens=2000)
+    state = MemoryState(ledger=FactsLedger(entries=[
+        FactEntry(
+            kind="number", text="bird species count: 27", source_turn_id=178,
+            slot_key="bird species.count", slot_value="27",
+        ),
+        FactEntry(
+            kind="number", text="species count total species count: 32",
+            source_turn_id=275, slot_key="species count.total species count",
+            slot_value="32",
+        ),
+    ]))
+    state.save(str(tmp_path / "safe_memory_state.json"))
+
+    modified, _ = MemorySidecar(settings=settings).process_chat_request({
+        "model": "qwen",
+        "user": "safe",
+        "messages": [{
+            "role": "user",
+            "content": "How many different species of birds have I seen?",
+        }],
+    })
+
+    rendered = "\n".join(message["content"] for message in modified["messages"])
+    assert "bird species count: 27" in rendered
+    assert "species count total species count: 32" in rendered
+
+
 @respx.mock
 def test_sidecar_server_routing(tmp_path, mock_npu):
     """Integration test verifying that the Sidecar HTTP server receives, forwards, and records requests."""
-    # Find free port for testing
-    test_port = _find_free_port()
-    
     # Mock the downstream LiteLLM/completions endpoint
     downstream_port = 4000
     respx.post(f"http://localhost:{downstream_port}/v1/chat/completions").mock(
@@ -126,23 +186,22 @@ def test_sidecar_server_routing(tmp_path, mock_npu):
             },
         )
     )
-    # Allow the client requests to actually hit the running test sidecar server
-    respx.post(f"http://127.0.0.1:{test_port}/v1/chat/completions").pass_through()
-
     settings = Settings(
         vault_dir=str(tmp_path),
-        sidecar_port=test_port,
+        # Let the OS bind an available port atomically. Finding and releasing a
+        # free port first leaves a race where another process can claim it.
+        sidecar_port=0,
         litellm_port=downstream_port,
     )
     sidecar = MemorySidecar(settings=settings)
     server = MemorySidecarServer(sidecar=sidecar)
+    test_port = server.server.server_address[1]
+    # Allow the client request to actually hit the running test sidecar server.
+    respx.post(f"http://127.0.0.1:{test_port}/v1/chat/completions").pass_through()
 
     # Start server in daemon thread
     server_thread = threading.Thread(target=server.serve_forever, daemon=True)
     server_thread.start()
-
-    # Wait briefly for server startup
-    time.sleep(0.2)
 
     # Send client request to sidecar
     client_payload = {
@@ -172,5 +231,13 @@ def test_sidecar_server_routing(tmp_path, mock_npu):
         assert state.turns[0].content == "Hello Server!"
         assert state.turns[1].content == "Server Response"
     finally:
-        server.shutdown()
-        server_thread.join(timeout=1.0)
+        # BaseServer.shutdown() waits for serve_forever's lifecycle event and can
+        # block forever if the serve thread failed before entering its loop. Keep
+        # cleanup bounded so a routing failure reports as a failure, not a hung
+        # suite, then verify both lifecycle threads actually stopped.
+        shutdown_thread = threading.Thread(target=server.shutdown, daemon=True)
+        shutdown_thread.start()
+        shutdown_thread.join(timeout=2.0)
+        assert not shutdown_thread.is_alive(), "sidecar shutdown did not complete"
+        server_thread.join(timeout=2.0)
+        assert not server_thread.is_alive(), "sidecar serve thread did not stop"

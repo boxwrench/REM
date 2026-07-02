@@ -9,19 +9,20 @@ from typing import Callable, Any
 import http.server
 import httpx
 from filelock import FileLock
-
-
-def _now_iso() -> str:
-    """UTC wall-clock as an ISO-8601 string for turn provenance."""
-    return datetime.now(timezone.utc).isoformat()
-
 from rem.config import Settings
 from rem.npu_client import NpuClient
 from rem.memory.tiers import MemoryState, Turn, count_tokens
 from rem.memory.assembler import assemble_messages
 from rem.memory.compactor import should_compact, run_background, state_lock_path
+from rem.memory.query import question_mode_instruction
+from rem.memory.selector import SparseChronologicalSelector
 
 logger = logging.getLogger("rem.memory.sidecar")
+
+
+def _now_iso() -> str:
+    """UTC wall-clock as an ISO-8601 string for turn provenance."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class MemorySidecar:
@@ -108,11 +109,28 @@ class MemorySidecar:
 
             state.save(state_path)
 
-        # Assemble stability-first prompt messages
+        # The latest user turn is the retrieval query. The selector returns a
+        # non-destructive, bounded read view; the full state was already persisted.
+        query = next(
+            (turn.content for turn in reversed(state.turns) if turn.role == "user"),
+            "",
+        )
+        read_state = SparseChronologicalSelector(
+            prefer_newest=self.settings.read_newest_preference,
+        ).select(
+            state,
+            query,
+            min(self.settings.read_fit_tokens, self.settings.max_context_tokens),
+        )
+
+        # Assemble the selected stability-first prompt messages.
         assembled_messages = assemble_messages(
-            state=state,
+            state=read_state,
             system=system_content,
-            task="",
+            task=(
+                f"{question_mode_instruction(query)} "
+                "Answer concisely with just the requested fact."
+            ),
             settings=self.settings,
         )
 
