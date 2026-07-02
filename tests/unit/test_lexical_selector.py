@@ -137,3 +137,139 @@ def test_distinct_similar_slots_are_both_preserved():
     assert {entry.slot_key for entry in selected.ledger.entries} == {
         "camera.model", "camera.capacity"
     }
+
+
+def test_sparse_current_query_promotes_newest_fragmented_slot_family():
+    state = MemoryState(
+        summaries=[
+            SpanSummary(
+                covers_turn_ids=[179],
+                text="The user celebrated seeing 27 bird species.",
+                tokens=10,
+            ),
+        ],
+        ledger=FactsLedger(entries=[
+            _fact("bird species count: 27", 178, key="bird species.count", value="27"),
+            _fact(
+                "species count total species count: 32", 275,
+                key="species count.total species count", value="32",
+            ),
+        ]),
+    )
+    selected = SparseChronologicalSelector(top_k=1, prefer_newest=True).select(
+        state, "How many different species of birds have I seen?", 1200
+    )
+    values = [entry.slot_value for entry in selected.ledger.entries]
+    assert values == ["32"]
+    assert selected.summaries == []
+    assert selected.ledger.entries[0].text.startswith("LATEST CURRENT OBSERVATION:")
+
+
+def test_sparse_change_query_preserves_ordered_fragmented_values():
+    state = MemoryState(ledger=FactsLedger(entries=[
+        _fact(
+            "coffee ratio is 1 tablespoon per 6 ounces of water", 13,
+            key="coffee ratio.tablespoon per ounces water", value="6 ounces",
+        ),
+        _fact(
+            "coffee brewing ratio is 1 tablespoon per 5 ounces of water", 209,
+            key="coffee brewing.ratio", value="5 ounces",
+        ),
+    ]))
+    selected = SparseChronologicalSelector(prefer_newest=True).select(
+        state, "For my coffee, did I switch to more water per tablespoon, or less?",
+        1200,
+    )
+    assert [entry.slot_value for entry in selected.ledger.entries] == [
+        "6 ounces", "5 ounces"
+    ]
+    assert selected.ledger.entries[-1].text.startswith("UPDATE SEQUENCE:")
+    assert "earlier value was 6 ounces" in selected.ledger.entries[-1].text
+    assert "latest value is 5 ounces" in selected.ledger.entries[-1].text
+
+
+def test_sparse_newest_preference_keeps_distinct_role_slots():
+    state = MemoryState(ledger=FactsLedger(entries=[
+        _fact("conference start date is May 1", 10,
+              key="conference.start date", value="May 1"),
+        _fact("conference end date is May 3", 11,
+              key="conference.end date", value="May 3"),
+        _fact("refrigerated broth lasts 4 days", 12,
+              key="broth.refrigerator shelf life", value="4 days"),
+        _fact("frozen broth lasts 3 months", 13,
+              key="broth.freezer shelf life", value="3 months"),
+    ]))
+    selected = SparseChronologicalSelector(prefer_newest=True).select(
+        state, "What are the conference dates and broth shelf life?", 1600
+    )
+    assert {entry.slot_value for entry in selected.ledger.entries} == {
+        "May 1", "May 3", "4 days", "3 months"
+    }
+
+
+def test_sparse_newest_preference_does_not_merge_generic_or_distinct_attributes():
+    state = MemoryState(ledger=FactsLedger(entries=[
+        _fact("emotional symptom is anxiety", 10,
+              key="emotional changes.symptom", value="anxiety"),
+        _fact("physical symptom is tenderness", 11,
+              key="physical changes.symptom", value="tenderness"),
+        _fact("guitar service timing is Tuesday", 12,
+              key="acoustic guitar service.timing", value="Tuesday"),
+        _fact("guitar service location is Main St", 13,
+              key="acoustic guitar service.location", value="Main St"),
+    ]))
+    selected = SparseChronologicalSelector(prefer_newest=True).select(
+        state, "What are the emotional and physical symptoms and guitar service details?",
+        1600,
+    )
+    assert {entry.slot_value for entry in selected.ledger.entries} == {
+        "anxiety", "tenderness", "Tuesday", "Main St"
+    }
+
+
+def test_experimental_newest_keeps_instance_side_time_and_camera_roles_distinct():
+    entries = [
+        _fact("morning dosage is 5 mg", 1, key="medication.morning dosage", value="5 mg"),
+        _fact("evening dosage is 10 mg", 2, key="medication.evening dosage", value="10 mg"),
+        _fact("exercise 1 repetitions is 8", 3, key="exercise 1.repetitions", value="8"),
+        _fact("exercise 2 repetitions is 12", 4, key="exercise 2.repetitions", value="12"),
+        _fact("left arm pressure is 120", 5, key="blood pressure.left arm", value="120"),
+        _fact("right arm pressure is 125", 6, key="blood pressure.right arm", value="125"),
+        _fact("front camera resolution is 12 MP", 7,
+              key="phone camera.front resolution", value="12 MP"),
+        _fact("rear camera resolution is 48 MP", 8,
+              key="phone camera.rear resolution", value="48 MP"),
+    ]
+    state = MemoryState(ledger=FactsLedger(entries=entries))
+    selected = SparseChronologicalSelector(prefer_newest=True).select(
+        state,
+        "What are the medication dosages, exercise repetitions, arm blood pressure, "
+        "and phone camera resolutions?",
+        2400,
+    )
+    assert {entry.slot_value for entry in selected.ledger.entries} == {
+        "5 mg", "10 mg", "8", "12", "120", "125", "12 MP", "48 MP"
+    }
+
+
+def test_previous_mode_annotates_penultimate_not_first_value():
+    state = MemoryState(ledger=FactsLedger(entries=[
+        _fact("project target was 10", 1, key="project.target", value="10"),
+        _fact("project target was 20", 2, key="project.target", value="20"),
+        _fact("project target is 30", 3, key="project.target", value="30"),
+    ]))
+    selected = SparseChronologicalSelector(prefer_newest=True).select(
+        state, "What was the previous project target?", 1200
+    )
+    rendered = assemble(selected, system="", task="previous project target")
+    assert "PREVIOUS SEQUENCE: earlier value was 20" in rendered
+    assert "latest value is 30" in rendered
+
+
+def test_sparse_zero_overlap_returns_no_compacted_distractors():
+    state = _retrieval_state()
+    selected = SparseChronologicalSelector().select(
+        state, "What is the zephyr warranty?", 1200
+    )
+    assert selected.ledger.entries == []
+    assert selected.summaries == []

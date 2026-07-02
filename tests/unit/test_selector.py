@@ -98,3 +98,4 @@ def test_recency_selector_caps_oversized_current_slot_tier():
 
 def test_read_fit_tokens_default():
     assert Settings().read_fit_tokens == 28000
+    assert Settings().read_newest_preference is False

@@ -1,8 +1,7 @@
 """One-day decision gate: does memory QUALITY remain the binding constraint?
 
-Three read arms over the frozen-suite knowledge-update items, same answerer
-(gemma4-it:e2b) and same judge (Claude haiku) held constant, so the ONLY thing
-that varies is how evidence is selected and serialized:
+Four read arms over the frozen-suite knowledge-update items, with the first three
+preserved as the recorded baseline and a fourth pre-registered Path-A stack:
 
   * current  — LexicalSelector @ read_fit_tokens. The existing "packed context":
                every candidate gets a positive recency score and the budget is
@@ -18,6 +17,8 @@ that varies is how evidence is selected and serialized:
                session dates + speaker roles, rendered chronologically. Built from
                raw because our ingestion drops dates/roles/session_id, so this is a
                genuine lossless CEILING, not another lossy path.
+  * candidate — sparse + read-time newest preference for fragmented active slots +
+                answer-prompt taxonomy. This is the Path-A shipping candidate.
 
 Pre-registered decision rule (fixed BEFORE any run, so results can't be
 reinterpreted after the fact):
@@ -47,8 +48,8 @@ while the NPU is busy.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
-import math
 import statistics
 import sys
 from collections import defaultdict
@@ -58,11 +59,14 @@ _project_root = Path(__file__).resolve().parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from rem.config import Settings
-from rem.memory.assembler import assemble, ContextLimitExceeded
-from rem.memory.selector import LexicalSelector, SparseChronologicalSelector
-from rem.memory.tiers import MemoryState, count_tokens
-from evals.battery.mix_report_selector import fit_render_aware
+from rem.config import Settings  # noqa: E402
+from rem.memory.assembler import assemble, ContextLimitExceeded  # noqa: E402
+from rem.memory.selector import (  # noqa: E402
+    LexicalSelector,
+    SparseChronologicalSelector,
+)
+from rem.memory.tiers import MemoryState, count_tokens  # noqa: E402
+from evals.battery.mix_report_selector import fit_render_aware  # noqa: E402
 
 GEMMA = "gemma4-it:e2b"
 
@@ -70,6 +74,18 @@ GEMMA = "gemma4-it:e2b"
 # (PRE-FIX extraction; diagnostic only — degraded facts would confound a read result).
 FRESH_KU = {"ce6d2d27", "945e3d21", "6071bd76", "22d2cb42", "dfde3500", "affe2881"}
 PREFIX_DIAGNOSTIC = {"3ba21379", "c6853660", "cc5ded98", "9bbe84a2"}
+PATH_A_PROMOTION_RULE = {
+    "minimum_candidate_pass": 5,
+    "exact_items": 6,
+    "require_no_regression_vs_sparse": True,
+    "confirmation_set": "new Path-C captures or fresh LongMemEval-S KU; not these dev items",
+}
+RUN_CONTEXT_FILES = (
+    "evals/battery/answerer.py",
+    "evals/battery/decision_gate.py",
+    "src/rem/memory/query.py",
+    "src/rem/memory/selector.py",
+)
 
 
 # --------------------------------------------------------------------------- #
@@ -131,7 +147,22 @@ def arm_context(arm: str, state: MemoryState | None, question: str,
     if arm == "current":
         return selector_context(LexicalSelector(), state, question, settings)
     if arm == "sparse":
-        return selector_context(SparseChronologicalSelector(), state, question, settings)
+        return selector_context(
+            SparseChronologicalSelector(
+                prefer_newest=False,
+                mode_aware_history=False,
+            ),
+            state,
+            question,
+            settings,
+        )
+    if arm == "candidate":
+        return selector_context(
+            SparseChronologicalSelector(prefer_newest=True),
+            state,
+            question,
+            settings,
+        )
     if arm == "oracle":
         return build_oracle_context(raw_entry)
     raise ValueError(f"unknown arm {arm}")
@@ -140,7 +171,7 @@ def arm_context(arm: str, state: MemoryState | None, question: str,
 # --------------------------------------------------------------------------- #
 # Run + aggregation.
 # --------------------------------------------------------------------------- #
-ARMS = ("current", "sparse", "oracle")
+ARMS = ("current", "sparse", "oracle", "candidate")
 
 
 def generate_answers(items, states_dir, raw_index, *, arms, reps, answerer, settings):
@@ -167,10 +198,12 @@ def generate_answers(items, states_dir, raw_index, *, arms, reps, answerer, sett
             overflow[qid] = full_assemble_overflow(state, question, settings)
 
         for arm in arms:
-            if arm in ("current", "sparse") and state is None:
+            if arm in ("current", "sparse", "candidate") and state is None:
                 continue
+            use_taxonomy = arm == "candidate"
             rec = {"qid": qid, "qtype": qtype, "diagnostic": diagnostic,
-                   "question": question, "gold": gold}
+                   "question": question, "gold": gold,
+                   "answer_taxonomy": use_taxonomy}
             try:
                 ctx = arm_context(arm, state, question, raw_entry, settings)
             except Exception as exc:  # noqa: BLE001 - record, don't crash the sweep
@@ -178,7 +211,9 @@ def generate_answers(items, states_dir, raw_index, *, arms, reps, answerer, sett
                 results[arm].append(rec)
                 continue
             rec["ctx_tokens"] = count_tokens(ctx)
-            rec["rep_answers"] = [(answerer(ctx, question) or "").strip()
+            rec["rep_answers"] = [(
+                answerer(ctx, question, use_taxonomy=use_taxonomy) or ""
+            ).strip()
                                   for _ in range(reps)]
             results[arm].append(rec)
             print(f"  [answers][{arm}][{qid}] reps={len(rec['rep_answers'])} "
@@ -187,17 +222,85 @@ def generate_answers(items, states_dir, raw_index, *, arms, reps, answerer, sett
     return results, overflow
 
 
+def build_run_context(items, states_dir, reps):
+    state_hashes = {}
+    for item in items:
+        path = Path(states_dir) / f"{item['question_id']}_state.json"
+        state_hashes[item["question_id"]] = hashlib.sha256(path.read_bytes()).hexdigest()
+    implementation = hashlib.sha256()
+    for path in RUN_CONTEXT_FILES:
+        implementation.update(Path(path).read_bytes())
+    return {
+        "answer_model": GEMMA,
+        "reps": reps,
+        "state_sha256": state_hashes,
+        "implementation_sha256": implementation.hexdigest(),
+    }
+
+
+def merge_base_answers(
+    results, overflow, base_path, *, expected_items, expected_reps,
+    expected_run_context,
+):
+    """Reuse persisted baseline arms so only the new candidate consumes NPU time."""
+    saved = json.loads(Path(base_path).read_text(encoding="utf-8"))
+    if saved.get("items") != expected_items:
+        raise ValueError(
+            f"base answer items do not match: {saved.get('items')} != {expected_items}"
+        )
+    if saved.get("run_context") != expected_run_context:
+        raise ValueError("base answer run_context is missing or incompatible")
+    candidate_rows = {
+        row["qid"]: row for rows in results.values() for row in rows
+    }
+    expected_ids = set(expected_items)
+    reused = []
+    for arm, rows in saved.get("results", {}).items():
+        if arm not in results:
+            if {row.get("qid") for row in rows} != expected_ids:
+                raise ValueError(f"base arm {arm} does not contain the expected item set")
+            for row in rows:
+                if len(row.get("rep_answers", [])) != expected_reps:
+                    raise ValueError(f"base arm {arm} has incompatible rep count")
+                candidate = candidate_rows.get(row["qid"])
+                if candidate and (
+                    row.get("question") != candidate.get("question")
+                    or row.get("gold") != candidate.get("gold")
+                ):
+                    raise ValueError(f"base arm {arm} question/gold mismatch")
+            results[arm] = rows
+            reused.append(arm)
+    merged_overflow = dict(saved.get("serving_path_overflow", {}))
+    merged_overflow.update(overflow)
+    return results, merged_overflow, reused
+
+
 def attach_judgments(results, *, arms, reps, judge, include_diagnostic):
     """STAGE 2 (Claude): grade persisted answers, compute majority + summary."""
     for arm in arms:
         for rec in results.get(arm, []):
             if "error" in rec or "rep_answers" not in rec:
                 continue
-            rec["rep_correct"] = [
-                bool(judge(question=rec["question"], gold=rec["gold"],
-                           model_answer=a))
-                for a in rec["rep_answers"]
-            ]
+            judgments = []
+            for answer in rec["rep_answers"]:
+                verdict = judge(
+                    question=rec["question"], gold=rec["gold"], model_answer=answer
+                )
+                if isinstance(verdict, dict):
+                    judgment = {
+                        "correct": bool(verdict.get("correct")),
+                        "reason": str(verdict.get("reason", "")),
+                    }
+                elif hasattr(verdict, "correct"):
+                    judgment = {
+                        "correct": bool(verdict.correct),
+                        "reason": str(getattr(verdict, "reason", "")),
+                    }
+                else:
+                    judgment = {"correct": bool(verdict), "reason": ""}
+                judgments.append(judgment)
+            rec["rep_judgments"] = judgments
+            rec["rep_correct"] = [item["correct"] for item in judgments]
             rec["majority_correct"] = sum(rec["rep_correct"]) > (reps / 2)
     return summarize(results, arms, reps, include_diagnostic)
 
@@ -205,7 +308,7 @@ def attach_judgments(results, *, arms, reps, judge, include_diagnostic):
 def summarize(results, arms, reps, include_diagnostic):
     summary = {"reps": reps, "arms": {}, "by_qtype": {}}
     for arm in arms:
-        rows = [r for r in results[arm]
+        rows = [r for r in results.get(arm, [])
                 if include_diagnostic or not r.get("diagnostic")]
         scored = [r for r in rows if "error" not in r and "rep_correct" in r]
         n = len(scored)
@@ -226,7 +329,54 @@ def summarize(results, arms, reps, include_diagnostic):
         summary["by_qtype"][arm] = {
             qt: {"n": len(v), "pass": sum(v)} for qt, v in bytype.items()
         }
+    summary["path_a_promotion"] = _path_a_promotion(
+        results, include_diagnostic=include_diagnostic
+    )
     return summary
+
+
+def _path_a_promotion(results, *, include_diagnostic: bool) -> dict:
+    """Apply the criterion registered before the Path-A answer run.
+
+    Diagnostic rows never participate, even when they are printed in the wider
+    ``--items all`` summary; the registered denominator is the six dev items.
+    """
+    sparse = {
+        row["qid"]: row
+        for row in results.get("sparse", [])
+        if not row.get("diagnostic")
+    }
+    candidate = {
+        row["qid"]: row
+        for row in results.get("candidate", [])
+        if not row.get("diagnostic")
+    }
+    expected = set(FRESH_KU)
+    if set(sparse) != expected or set(candidate) != expected:
+        return {
+            "evaluated": False,
+            "reason": "candidate and sparse must contain exactly the six registered items",
+            "rule": PATH_A_PROMOTION_RULE,
+        }
+    candidate_pass = sum(
+        bool(row.get("majority_correct")) for row in candidate.values()
+    )
+    regressions = sorted(
+        qid for qid, sparse_row in sparse.items()
+        if sparse_row.get("majority_correct")
+        and not candidate.get(qid, {}).get("majority_correct")
+    )
+    return {
+        "evaluated": True,
+        "ship_on_dev": (
+            candidate_pass >= PATH_A_PROMOTION_RULE["minimum_candidate_pass"]
+            and not regressions
+        ),
+        "candidate_pass": candidate_pass,
+        "n_items": len(candidate),
+        "regressions_vs_sparse": regressions,
+        "rule": PATH_A_PROMOTION_RULE,
+    }
 
 
 # --------------------------------------------------------------------------- #
@@ -234,14 +384,15 @@ def summarize(results, arms, reps, include_diagnostic):
 # --------------------------------------------------------------------------- #
 def stub_answerer(item_gold_by_q):
     """Offline 'perfect reader' for plumbing validation."""
-    def answerer(ctx, question):
+    def answerer(ctx, question, *, use_taxonomy=True):
         return item_gold_by_q.get(question, "")
     return answerer
 
 
 def stub_judge():
     def judge(*, question, gold, model_answer):
-        return gold.lower() in (model_answer or "").lower()
+        correct = gold.lower() in (model_answer or "").lower()
+        return {"correct": correct, "reason": "offline substring stub"}
     return judge
 
 
@@ -249,7 +400,14 @@ def real_answerer(settings):
     from rem.npu_client import NpuClient
     from evals.battery.answerer import answer_question
     npu = NpuClient(settings)
-    return lambda ctx, question: answer_question(npu, context=ctx, question=question)
+    def answerer(ctx, question, *, use_taxonomy=True):
+        return answer_question(
+            npu,
+            context=ctx,
+            question=question,
+            use_taxonomy=use_taxonomy,
+        )
+    return answerer
 
 
 def real_judge():
@@ -257,9 +415,9 @@ def real_judge():
     jclient = judge_mod.make_client()
 
     def judge(*, question, gold, model_answer):
-        v = judge_mod.judge_answer(jclient, question=question, gold=gold,
-                                   model_answer=model_answer)
-        return v.correct
+        return judge_mod.judge_answer(
+            jclient, question=question, gold=gold, model_answer=model_answer
+        )
     return judge
 
 
@@ -276,6 +434,15 @@ def _print_matrix(summary, overflow, arms):
         print(f"  serving-path overflow (full no-selector assemble): "
               f"{n_overflow}/{len(overflow)} states exceed max_context_tokens",
               flush=True)
+    promotion = summary.get("path_a_promotion", {})
+    if promotion.get("evaluated"):
+        print(
+            "  Path-A pre-registered decision: "
+            f"ship_on_dev={promotion['ship_on_dev']} "
+            f"candidate={promotion['candidate_pass']}/{promotion['n_items']} "
+            f"regressions={promotion['regressions_vs_sparse']}",
+            flush=True,
+        )
 
 
 def main() -> int:
@@ -284,9 +451,14 @@ def main() -> int:
     ap.add_argument("--manifest", default="bench/memory_methods/development_manifest.json")
     ap.add_argument("--states-dir", default="bench/memory_methods/states")
     ap.add_argument("--raw", default="/home/keith/datasets/longmemeval/longmemeval_s")
-    ap.add_argument("--out", default="bench/memory_methods/decision_gate.json")
-    ap.add_argument("--answers-file", default="bench/memory_methods/decision_gate_answers.json",
+    ap.add_argument("--out", default="bench/memory_methods/decision_gate_path_a.json")
+    ap.add_argument("--answers-file", default="bench/memory_methods/decision_gate_path_a_answers.json",
                     help="Where stage 'answers' writes, and stage 'judge' reads.")
+    ap.add_argument(
+        "--base-answers",
+        help="Optional prior answer artifact whose missing arms are reused. Use with "
+             "--arms candidate to avoid regenerating the recorded three-arm baseline.",
+    )
     ap.add_argument("--arms", nargs="+", choices=ARMS, default=list(ARMS))
     ap.add_argument("--reps", type=int, default=3)
     ap.add_argument("--items", choices=["fresh", "all"], default="fresh",
@@ -311,15 +483,24 @@ def main() -> int:
     raw_index = load_raw_index(args.raw)
     settings = Settings(summarizer_model=GEMMA)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
+    run_context = build_run_context(items, args.states_dir, args.reps)
 
     # --- STAGE: judge (read saved answers, grade with Claude) ---------------- #
     if args.stage == "judge":
         saved = json.loads(Path(args.answers_file).read_text(encoding="utf-8"))
+        if saved.get("pre_registered_rule") != PATH_A_PROMOTION_RULE:
+            raise ValueError("saved pre-registered rule is missing or incompatible")
+        if saved.get("run_context") != run_context:
+            raise ValueError("saved answer run_context is missing or incompatible")
+        saved_reps = int(saved["run_context"]["reps"])
         results, overflow = saved["results"], saved.get("serving_path_overflow", {})
         judge = real_judge() if args.run else stub_judge()
-        summary = attach_judgments(results, arms=args.arms, reps=args.reps,
+        summary = attach_judgments(results, arms=args.arms, reps=saved_reps,
                                    judge=judge, include_diagnostic=include_diagnostic)
         payload = {"mode": "JUDGE", "items": saved.get("items"),
+                   "pre_registered_rule": saved["pre_registered_rule"],
+                   "run_context": saved["run_context"],
+                   "reused_answer_arms": saved.get("reused_answer_arms", []),
                    "summary": summary, "results": results,
                    "serving_path_overflow": overflow}
         Path(args.out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -337,9 +518,22 @@ def main() -> int:
         items, args.states_dir, raw_index, arms=args.arms, reps=args.reps,
         answerer=answerer, settings=settings,
     )
+    reused_arms = []
+    if args.base_answers:
+        results, overflow, reused_arms = merge_base_answers(
+            results,
+            overflow,
+            args.base_answers,
+            expected_items=[it["question_id"] for it in items],
+            expected_reps=args.reps,
+            expected_run_context=run_context,
+        )
 
     if args.stage == "answers":
         payload = {"mode": "ANSWERS", "items": [it["question_id"] for it in items],
+                   "pre_registered_rule": PATH_A_PROMOTION_RULE,
+                   "run_context": run_context,
+                   "reused_answer_arms": reused_arms,
                    "results": results, "serving_path_overflow": overflow}
         Path(args.answers_file).write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(f"  answers persisted -> {args.answers_file} "
@@ -350,13 +544,17 @@ def main() -> int:
 
     # both
     judge = real_judge() if args.run else stub_judge()
-    summary = attach_judgments(results, arms=args.arms, reps=args.reps,
+    result_arms = [arm for arm in ARMS if arm in results]
+    summary = attach_judgments(results, arms=result_arms, reps=args.reps,
                                judge=judge, include_diagnostic=include_diagnostic)
     payload = {"mode": "BOTH", "items": [it["question_id"] for it in items],
+               "pre_registered_rule": PATH_A_PROMOTION_RULE,
+               "run_context": run_context,
+               "reused_answer_arms": reused_arms,
                "summary": summary, "results": results,
                "serving_path_overflow": overflow}
     Path(args.out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    _print_matrix(summary, overflow, args.arms)
+    _print_matrix(summary, overflow, result_arms)
     print(f"Written to {args.out}")
     return 0
 
