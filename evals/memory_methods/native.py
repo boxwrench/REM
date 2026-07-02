@@ -49,23 +49,42 @@ class NativeSelectorArm:
     def _references(state: MemoryState) -> tuple[SourceReference, ...]:
         refs = []
         for entry in state.ledger.entries:
+            metadata = {"slot_key": entry.slot_key or "", "status": entry.status}
+            if entry.session_id:
+                metadata["session_id"] = entry.session_id
+            if entry.timestamp:
+                metadata["timestamp"] = entry.timestamp
             refs.append(SourceReference(
                 source_id=f"turn:{entry.source_turn_id}",
                 kind="fact",
                 turn_ids=(entry.source_turn_id,),
-                metadata={"slot_key": entry.slot_key or "", "status": entry.status},
+                metadata=metadata,
             ))
         for summary in state.summaries:
             turn_ids = tuple(summary.covers_turn_ids)
+            metadata = {}
+            if summary.session_ids:
+                metadata["session_ids"] = ",".join(summary.session_ids)
+            if summary.start_timestamp:
+                metadata["start_timestamp"] = summary.start_timestamp
+            if summary.end_timestamp:
+                metadata["end_timestamp"] = summary.end_timestamp
             refs.append(SourceReference(
                 source_id="summary:" + ",".join(map(str, turn_ids)),
                 kind="summary",
                 turn_ids=turn_ids,
+                metadata=metadata,
             ))
         for turn in state.turns:
+            metadata = {}
+            if turn.session_id:
+                metadata["session_id"] = turn.session_id
+            if turn.timestamp:
+                metadata["timestamp"] = turn.timestamp
             refs.append(SourceReference(
                 source_id=f"turn:{turn.turn_id}", kind="verbatim",
                 turn_ids=(turn.turn_id,),
+                metadata=metadata,
             ))
         return tuple(refs)
 

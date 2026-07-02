@@ -15,7 +15,12 @@ from evals.memory_methods.artifacts import (
 )
 from evals.memory_methods.native import NativeSelectorArm
 from rem.config import Settings
-from rem.memory.selector import LexicalSelector, PackedLexicalSelector, RecencySelector
+from rem.memory.selector import (
+    LexicalSelector,
+    PackedLexicalSelector,
+    RecencySelector,
+    SparseChronologicalSelector,
+)
 from rem.memory.tiers import MemoryState
 from rem.npu_client import NpuClient
 
@@ -23,6 +28,9 @@ SELECTORS = {
     "recency": RecencySelector,
     "lexical": LexicalSelector,
     "lexical-packed": PackedLexicalSelector,
+    "sparse": lambda: SparseChronologicalSelector(prefer_newest=False),
+    "safe-sparse": lambda: SparseChronologicalSelector(prefer_newest=False),
+    "path-a-candidate": lambda: SparseChronologicalSelector(prefer_newest=True),
 }
 
 
@@ -53,16 +61,31 @@ def run(
     budgets: list[int],
     *,
     score: bool = False,
+    score_budgets: list[int] | None = None,
+    answer_repetitions: int = 1,
+    configuration_extra: dict | None = None,
 ) -> int:
+    if answer_repetitions < 1:
+        raise ValueError("answer_repetitions must be at least one")
     manifest_bytes = Path(manifest_path).read_bytes()
     manifest = json.loads(manifest_bytes)
+    missing_states = [
+        item["state_file"] for item in manifest["items"]
+        if not Path(item["state_file"]).is_file()
+    ]
+    if missing_states:
+        raise ValueError(
+            "capture incomplete; missing state files: " + ", ".join(missing_states)
+        )
     states = {
         item["question_id"]: MemoryState.load(item["state_file"])
         for item in manifest["items"]
     }
     arms = {
         name: NativeSelectorArm(
-            name, SELECTORS[name](), lambda namespace, sessions: states[namespace]
+            name,
+            SELECTORS[name](),
+            lambda namespace, sessions: states[namespace].model_copy(deep=True),
         )
         for name in arm_names
     }
@@ -83,18 +106,35 @@ def run(
                 result = arm.recall(namespace, item["question"], budget)
                 answer = None
                 verdict = None
-                if score:
+                model_answers = []
+                judge_reasons = []
+                should_score = score and (
+                    score_budgets is None or budget in score_budgets
+                )
+                if should_score:
                     try:
-                        answer = answer_question(
-                            npu, context=result.rendered_context,
-                            question=item["question"],
-                        )
-                        verdict = judge_answer(
-                            judge, question=item["question"], gold=item["answer"],
-                            model_answer=answer,
+                        verdicts = []
+                        for _ in range(answer_repetitions):
+                            answer = answer_question(
+                                npu, context=result.rendered_context,
+                                question=item["question"],
+                                use_taxonomy=True,
+                            )
+                            verdict = judge_answer(
+                                judge, question=item["question"],
+                                gold=item["answer"], model_answer=answer,
+                            )
+                            model_answers.append(answer)
+                            judge_reasons.append(verdict.reason)
+                            verdicts.append(verdict.correct)
+                        judged_correct = (
+                            sum(verdicts) > answer_repetitions / 2
                         )
                     except Exception as exc:  # keep the paired artifact intact
                         error = f"{type(exc).__name__}: {exc}"
+                        judged_correct = None
+                else:
+                    judged_correct = None
                 runs.append(ItemRun(
                     question_id=namespace,
                     category=item["category"],
@@ -110,7 +150,9 @@ def run(
                         result.source_references,
                         item.get("gold_source_turn_groups", []),
                     ),
-                    judged_correct=verdict.correct if verdict else None,
+                    judged_correct=judged_correct,
+                    model_answers=model_answers,
+                    judge_reasons=judge_reasons,
                     context_overflow=result.token_count > budget,
                     provenance_lost=(
                         result.candidate_count > 0 and not result.source_references
@@ -132,17 +174,21 @@ def run(
                 category_accuracy[f"{arm_name}:{category}"] = round(
                     sum(bool(run.judged_correct) for run in judged) / len(judged), 4
                 )
+    configuration = {
+        "arms": arm_names,
+        "budgets": budgets,
+        "scored": score,
+        "scored_budgets": score_budgets if score else [],
+        "answer_repetitions": answer_repetitions if score else 0,
+        "generated_at": time.time(),
+    }
+    configuration.update(configuration_extra or {})
     artifact = MemoryMethodArtifact(
         repository_revision=_revision(),
         source_manifest=manifest_path,
         source_dataset_sha256=manifest["source_sha256"],
         models=ModelVersions(),
-        configuration={
-            "arms": arm_names,
-            "budgets": budgets,
-            "scored": score,
-            "generated_at": time.time(),
-        },
+        configuration=configuration,
         runs=runs,
         category_accuracy=category_accuracy,
         read_latency_p95_ms=_p95([run.read_latency_ms for run in runs]),
@@ -169,8 +215,17 @@ def main() -> int:
         "--score", action="store_true",
         help="Run the fixed Gemma answerer and Claude judge (otherwise recall-only).",
     )
+    parser.add_argument(
+        "--score-budgets", nargs="+", type=int,
+        help="Only answer/judge these budgets; recall still runs at every budget.",
+    )
+    parser.add_argument("--answer-repetitions", type=int, default=1)
     args = parser.parse_args()
-    return run(args.manifest, args.out, args.arms, args.budgets, score=args.score)
+    return run(
+        args.manifest, args.out, args.arms, args.budgets, score=args.score,
+        score_budgets=args.score_budgets,
+        answer_repetitions=args.answer_repetitions,
+    )
 
 
 if __name__ == "__main__":
