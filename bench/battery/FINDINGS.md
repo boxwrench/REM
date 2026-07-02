@@ -741,6 +741,34 @@ held-out justification for attribute-/instance-aware (typed) identity. The candi
 pre-filter (`share_key_token`) and the typed judge are the path; n=1 fresh state so
 far — confirm as the remaining clean states land.
 
+### Held-out check (ALL SIX fresh states, 06-30 → 07-02) — confirmed; genuine ≈ 0–3, NOT ~33
+The n=1 ce6d2d27 result generalizes. All six fresh fixed-extractor KU states were audited
+across three independent NPU-free runs (06-30, 07-01, 07-02); the numbers reproduced exactly.
+- `textual_distinct` **1730 → 0** across the six (the value-gate's instance-aware reassignment
+  works on that class — real but not the interesting class).
+- `numeric_update` = **291** total (per state 46/45/47/78/45/30). Reading the dumped pairs:
+  **~258 FALSE (~88%)** — start↔end dates, min↔max of one range, fridge↔freezer duration,
+  sets↔reps, per-instance collisions (different shops/accounts/companies/salary bands), unrelated
+  percentages; **~30 harmless SAME-VALUE dedups** (unit/format restatements of one value);
+  and **~0–3 genuine then→now updates**.
+- **Number correction (cite THIS, not the freshcheck report):** the "~33 genuine" column in
+  `bench/memory_methods/freshcheck_supersession_audit_report.md` is the **non-false** count with
+  dedups and genuine conflated. Split by the careful 07-01/07-02 reads it is ~30 same-value dedup
+  **plus ~0–3 genuine**. Citing "~33 genuine" overstates the mechanism's ceiling by roughly 10×.
+- **Both-directions failure (the diagnostic point):** the similarity candidate stream has ~11%
+  precision AND **near-zero recall on genuine updates** — the real updates from the decision gate
+  (`6 oz → 5 oz`, `27 → 32 birds`) never even became merge candidates, because fragmented keys keep
+  them from ever looking similar. When precision and recall fail together the fault is **upstream of
+  the matcher**: the representation being matched (free-text fragmented slot keys) is wrong, so no
+  downstream separator — embedding threshold OR a perfect typed judge — can rescue it. A free judge
+  bolted onto this stream would mostly emit DIFFERENT and still miss the real updates.
+- **Implication:** the durable supersession fix is **canonical keying at extraction** (so genuine
+  updates collide under cheap exact match), not similarity repair after the fact. The typed judge
+  stays parked-but-not-deleted, justified only for the residual role cases if a deterministic
+  role-aware keyer cannot keep start≠end / min≠max / per-instance distinct.
+- Sources: `rem_supersession_heldout_audit_2026-07-01.md`, `..._2026-07-02.md`,
+  `numeric_merge_audit_fresh.json`, `supersession_instanceaware_freshcheck.json`.
+
 ### Methodology — overfitting / benchmaxing risk (read before promoting anything)
 
 Every Gate 4 result above was developed AND measured on the **same five captured states**
