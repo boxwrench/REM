@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "mode": "NPU_FREE",
+  "checks": {
+    "restart_persistence": {
+      "status": "pass",
+      "evidence": {
+        "turn_contents": [
+          "Remember cobalt.",
+          "I will remember cobalt.",
+          "What should you remember?"
+        ],
+        "turn_ids": [
+          1,
+          2,
+          3
+        ],
+        "session_ids": [
+          "restart-session",
+          "restart-session",
+          "restart-session"
+        ],
+        "fresh_sidecar_instance": true
+      }
+    },
+    "duplicate_ingest_idempotency": {
+      "status": "pass",
+      "evidence": {
+        "turn_count_after_first_ingest": 1,
+        "turn_count_after_duplicate_ingest": 1,
+        "state_unchanged": true
+      }
+    },
+    "partial_failure_atomicity": {
+      "status": "pass",
+      "evidence": {
+        "failure_propagated": true,
+        "original_state_preserved": true,
+        "temporary_file_removed": true
+      }
+    },
+    "compaction_failure_rollback": {
+      "status": "pass",
+      "evidence": {
+        "failed_call_count": 1,
+        "reported_compacted": false,
+        "in_memory_model_preserved": true,
+        "in_memory_bytes_preserved": true,
+        "persisted_model_preserved": true,
+        "persisted_bytes_preserved": true
+      }
+    },
+    "delayed_indexing": {
+      "status": "not_applicable",
+      "reason": "REM persists MemoryState synchronously and reads it directly; the API under test has no asynchronous indexing queue.",
+      "async_indexing_detected": false
+    }
+  },
+  "applicable_checks_pass": true,
+  "gate_status": "pass"
+}
