@@ -86,6 +86,20 @@
           "default": null,
           "title": "Judged Correct"
         },
+        "model_answers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Model Answers",
+          "type": "array"
+        },
+        "judge_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Judge Reasons",
+          "type": "array"
+        },
         "extraction_failures": {
           "default": 0,
           "title": "Extraction Failures",

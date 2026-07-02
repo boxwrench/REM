@@ -27,6 +27,8 @@ class ItemRun(BaseModel):
     write_recall: bool | None = None
     read_recall: bool | None = None
     judged_correct: bool | None = None
+    model_answers: list[str] = Field(default_factory=list)
+    judge_reasons: list[str] = Field(default_factory=list)
     extraction_failures: int = 0
     context_overflow: bool = False
     provenance_lost: bool = False

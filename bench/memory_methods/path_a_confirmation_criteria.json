@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "criteria_id": "path-a-confirmation-30-v1",
+  "frozen_on": "2026-07-02",
+  "source_manifest": "bench/memory_methods/development_manifest.json",
+  "source_dataset_sha256": "08d8dad4be43ee2049a22ff5674eb86725d0ce5ff434cde2627e5e8e7e117894",
+  "suite": {
+    "item_count": 30,
+    "categories": {
+      "knowledge-update": 10,
+      "temporal-reasoning": 10,
+      "multi-session": 10
+    },
+    "question_ids": [
+      "3ba21379",
+      "cc5ded98",
+      "c6853660",
+      "9bbe84a2",
+      "ce6d2d27",
+      "945e3d21",
+      "6071bd76",
+      "22d2cb42",
+      "dfde3500",
+      "affe2881",
+      "gpt4_45189cb4",
+      "gpt4_fe651585_abs",
+      "gpt4_7a0daae1",
+      "9a707b82",
+      "gpt4_98f46fc6",
+      "gpt4_1916e0ea",
+      "gpt4_213fd887",
+      "gpt4_8c8961ae",
+      "gpt4_2f584639",
+      "gpt4_d6585ce9",
+      "60159905",
+      "a96c20ee",
+      "1f2b8d4f",
+      "gpt4_f2262a51",
+      "bc149d6b",
+      "1192316e",
+      "9aaed6a3",
+      "3a704032",
+      "60bf93ed",
+      "e3038f8c"
+    ]
+  },
+  "implementation_files_sha256": {
+    "src/rem/memory/selector.py": "71ea0ac4206dfaf953306515e5ace000ae18c3e586dee771db5b23dbce76a058",
+    "src/rem/memory/query.py": "ebd6d0609c8333101111f31fe9a556e64d2f4e77aa29268cf7662fe103006f89",
+    "src/rem/memory/assembler.py": "702ef5a9a4b64da6667f78d5c69239ffb23c030515e7ad7da59e8352004450a4",
+    "src/rem/memory/tiers.py": "763d304120e679cbdb97e4043d0a52de1c9a01ed7b8559657e7050951ea5a4c8",
+    "src/rem/memory/facts_ledger.py": "d1ad380c68456bf52145ab5fc7d00e9a7f674abc6b6be9e99324b5734adcb281",
+    "evals/battery/answerer.py": "a232116d6c4a1744316b83a4cd923009ce6e8f3ec76692f106ba982d466b5ed6",
+    "evals/memory_methods/native.py": "5fb49fce613f274f87659ecc7ea827f83f879ca6ba0464b661b3c88459899bb8",
+    "evals/memory_methods/artifacts.py": "27c8e523221f868dd3130615be824ffb7b03a288d5ad21c535a968a89343ad0f",
+    "evals/memory_methods/run_development.py": "0180d5fb0a886f0c490438d3eadb41354e490eaf9a26034c415d6763849ffea0",
+    "evals/memory_methods/confirmation.py": "6d35ba2071f5b3222723cee958b23e6196d3538be1948cf1b27f06344690cc5f",
+    "evals/memory_methods/run_path_a_confirmation.py": "6eec199a6ec7cef80643278c8cdfbc64894c17b4d204af9a94aab7b61c430494"
+  },
+  "arms": {
+    "safe": "safe-sparse",
+    "candidate": "path-a-candidate",
+    "only_difference": "SparseChronologicalSelector.prefer_newest is false for safe and true for candidate; both use the shared question taxonomy"
+  },
+  "budgets_tokens": [
+    8000,
+    28000
+  ],
+  "scored_budget_tokens": 8000,
+  "answer_repetitions": 3,
+  "models": {
+    "answer": "gemma4-it:e2b",
+    "judge": "claude-haiku-4-5"
+  },
+  "comparison": {
+    "minimum_wins": 3,
+    "maximum_item_regressions": 0,
+    "maximum_category_regressions": 0,
+    "note": "The minimum-win bar is the existing 30-item Gate-2 bar; it was not derived from the six Path-A development answers. The 28k arm is recall/context robustness only."
+  },
+  "safety": {
+    "maximum_new_abstentions": 0,
+    "maximum_new_stale_failures": 0,
+    "maximum_gold_source_losses": 0,
+    "maximum_empty_retrieval_regressions": 0,
+    "allow_context_overflow": false,
+    "allow_provenance_loss": false,
+    "provenance_categories": [
+      "temporal-reasoning",
+      "multi-session"
+    ],
+    "read_latency_p95_ms": 1000
+  },
+  "incomplete_capture_behavior": {
+    "exit_code": 2,
+    "run_models": false,
+    "write_partial_run_artifact": false,
+    "write_preflight_report": true,
+    "requirement": "All 30 valid state files must exist before either recall or scored execution starts."
+  },
+  "freeze_guards": [
+    "Do not alter thresholds after looking at confirmation answers.",
+    "Do not use the six Path-A development answers as confirmation evidence.",
+    "Do not tune selectors on these 30 items before the frozen decision is recorded.",
+    "The experimental candidate remains default-off unless every check passes."
+  ]
+}
