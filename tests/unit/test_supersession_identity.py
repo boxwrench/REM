@@ -1,4 +1,3 @@
-import pytest
 from rem.memory.facts_ledger import FactEntry, FactsLedger
 from rem.memory.tiers import SpanSummary
 

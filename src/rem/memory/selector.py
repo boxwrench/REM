@@ -16,6 +16,7 @@ from typing import Protocol
 
 from rem.memory.facts_ledger import FactEntry, FactsLedger
 from rem.memory.query import classify_question
+from rem.memory.role_keys import group_same_role
 from rem.memory.tiers import MemoryState, SpanSummary, count_tokens
 
 # Reserve inside the budget for section headers + the answer the model must still
@@ -610,6 +611,54 @@ class PackedLexicalSelector:
         )
 
 
+def _prefer_newest_role_scoped(
+    candidates: list[_Candidate],
+) -> list[_Candidate]:
+    """Safe newest-preference: prefer the newest value ONLY within a role-slot.
+
+    Unlike ``_prefer_newest_slot_families`` (cross-key grouping, found to risk
+    role/instance false merges in adversarial review), this groups active entry
+    candidates with ``role_keys.same_role`` — the Path B rule that provably keeps
+    all five negative-sentinel families (start/end, min/max, fridge/freezer,
+    sets/reps, per-instance) distinct while collapsing genuine updates. Within each
+    group the newest source-turn wins and inherits the group's best lexical score;
+    displaced entries are dropped from the read view only (the ledger is untouched).
+    """
+    entry_indexes = [
+        index for index, candidate in enumerate(candidates)
+        if candidate.kind == "entry"
+        and isinstance(candidate.value, FactEntry)
+        and candidate.value.status == "active"
+        and candidate.value.slot_key
+    ]
+    if len(entry_indexes) < 2:
+        return candidates
+    slot_keys = [candidates[index].value.slot_key or "" for index in entry_indexes]
+    replacements: dict[int, _Candidate] = {}
+    discarded: set[int] = set()
+    for group in group_same_role(slot_keys):
+        member_indexes = [entry_indexes[g] for g in group]
+        newest = max(
+            member_indexes,
+            key=lambda index: (candidates[index].turn_id, candidates[index].text),
+        )
+        best_score = max(candidates[index].score for index in member_indexes)
+        newest_entry = candidates[newest].value
+        replacements[newest] = replace(
+            _candidate_with_text(
+                candidates[newest],
+                f"LATEST CURRENT OBSERVATION: {newest_entry.text}",
+            ),
+            score=best_score,
+        )
+        discarded.update(index for index in member_indexes if index != newest)
+    return [
+        replacements.get(index, candidate)
+        for index, candidate in enumerate(candidates)
+        if index not in discarded
+    ]
+
+
 # A pure-recency candidate scores at most this (recency term = turn_id/max_turn * 0.001,
 # so <= 0.001). One actual query-term match contributes >= log(2) ~= 0.69, far above it.
 # A floor here therefore admits only candidates that share at least one query term —
@@ -643,10 +692,15 @@ class SparseChronologicalSelector:
     def __init__(self, top_k: int = SPARSE_TOP_K,
                  relevance_floor: float = SPARSE_RELEVANCE_FLOOR,
                  prefer_newest: bool = False,
+                 newest_scope: str = "cross_key",
                  mode_aware_history: bool = True) -> None:
         self.top_k = top_k
         self.relevance_floor = relevance_floor
         self.prefer_newest = prefer_newest
+        # "cross_key" = the existing (unsafe, default-off) family grouping;
+        # "role" = role-scoped newest-preference (safe: role_keys.same_role keeps
+        # the negative sentinels distinct). Only consulted when prefer_newest is on.
+        self.newest_scope = newest_scope
         self.mode_aware_history = mode_aware_history
 
     def select(self, state: MemoryState, query: str, budget_tokens: int) -> MemoryState:
@@ -660,7 +714,10 @@ class SparseChronologicalSelector:
             state, query, deduplicate=True, include_history=include_history
         )
         if self.prefer_newest and question_mode == "current":
-            candidates = _prefer_newest_slot_families(candidates, query)
+            if self.newest_scope == "role":
+                candidates = _prefer_newest_role_scoped(candidates)
+            else:
+                candidates = _prefer_newest_slot_families(candidates, query)
         elif self.prefer_newest and question_mode in {"previous", "change"}:
             candidates = _annotate_temporal_slot_families(
                 candidates, query, question_mode

@@ -1,7 +1,7 @@
 """Shim for importing gauge from xdna_top.gauge to avoid breaking existing imports."""
 
 try:
-    from xdna_top.gauge import (
+    from xdna_top.gauge import (  # noqa: F401  # re-export shim: names are the public API
         GpuState,
         GaugeReading,
         classify_state as _classify_state,
@@ -76,5 +76,5 @@ def main() -> None:
         run_daemon(settings)
     except KeyboardInterrupt:
         pass
-    except Exception as e:
+    except Exception:
         sys.exit(1)

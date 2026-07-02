@@ -17,7 +17,6 @@ diagnostics dict is what the battery artifact will later surface (roadmap item 2
 """
 
 import httpx
-import pytest
 
 from rem.memory.robust_extract import robust_extract_json
 from rem.memory.tiers import Turn

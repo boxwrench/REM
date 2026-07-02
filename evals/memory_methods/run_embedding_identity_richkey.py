@@ -178,7 +178,7 @@ def run(fixtures, out):
         "created_at": time.time(),
         "canonical_fixtures": canon,
         "real_entries": {"pairs_def": [
-            {"left": E[l], "right": E[r], "same_slot": s} for l, r, s in REAL_PAIRS
+            {"left": E[li], "right": E[ri], "same_slot": s} for li, ri, s in REAL_PAIRS
         ], "results": real},
     }
     Path(out).parent.mkdir(parents=True, exist_ok=True)

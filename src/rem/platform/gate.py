@@ -1,7 +1,6 @@
 """Reachability probe to check NPU, driver, XRT, and IOMMU state."""
 
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -40,7 +39,7 @@ def run_checks() -> dict:
     driver_passed = driver_code == 0
     checks["driver_loaded"] = {
         "verdict": "pass" if driver_passed else "fail",
-        "detail": driver_out if driver_passed else f"amdxdna driver module not found in lsmod",
+        "detail": driver_out if driver_passed else "amdxdna driver module not found in lsmod",
     }
 
     # Check 3: kernel version

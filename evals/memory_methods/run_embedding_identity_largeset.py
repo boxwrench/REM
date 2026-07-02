@@ -159,7 +159,8 @@ def build_dataset():
 def transform(pairs, fn):
     out = []
     for p in pairs:
-        lk, lv = p["left"]; rk, rv = p["right"]
+        lk, lv = p["left"]
+        rk, rv = p["right"]
         out.append({"id": p["id"], "same_slot": p["same_slot"],
                     "left": fn(lk, lv), "right": fn(rk, rv)})
     return out
@@ -194,9 +195,10 @@ def run(out):
 
     from sentence_transformers import SentenceTransformer
     model = SentenceTransformer(MODEL)
-    embed = lambda texts: [v.tolist() for v in model.encode(
-        list(texts), normalize_embeddings=True, convert_to_numpy=True,
-        show_progress_bar=False)]
+    def embed(texts):
+        return [v.tolist() for v in model.encode(
+            list(texts), normalize_embeddings=True, convert_to_numpy=True,
+            show_progress_bar=False)]
 
     strategies = {**KEY_ONLY, **VALUE_TOO}
     results = {}

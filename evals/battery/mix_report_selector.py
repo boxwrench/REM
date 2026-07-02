@@ -108,8 +108,8 @@ def engineer_view(fitted) -> dict:
     return {
         "include_stale_on_render": fitted.ledger.include_stale_on_render,
         "n_engineer_lines": len(lines),
-        "any_stale": any(l["status"] == "stale" for l in lines),
-        "distinct_slot_keys": sorted({l["slot_key"] or "" for l in lines}),
+        "any_stale": any(ln["status"] == "stale" for ln in lines),
+        "distinct_slot_keys": sorted({ln["slot_key"] or "" for ln in lines}),
         "lines_in_render_order": lines,
     }
 

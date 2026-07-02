@@ -71,9 +71,10 @@ def run(out, states_dir="bench/battery/states", manifest=None, ids=None):
         return 0
     from sentence_transformers import SentenceTransformer
     model = SentenceTransformer(MODEL)
-    embed = lambda t: [v.tolist() for v in model.encode(
-        list(t), normalize_embeddings=True, convert_to_numpy=True,
-        show_progress_bar=False)]
+    def embed(t):
+        return [v.tolist() for v in model.encode(
+            list(t), normalize_embeddings=True, convert_to_numpy=True,
+            show_progress_bar=False)]
 
     report = {"model": MODEL, "threshold": 0.80, "states": {}}
     totals = {"plain": {"safe_dedup": 0, "numeric_update": 0, "textual_distinct": 0},

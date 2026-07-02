@@ -1,7 +1,6 @@
 """Unit tests for the episodic summary export component."""
 
 import time
-from pathlib import Path
 from rem.memory.tiers import MemoryState, SpanSummary
 from rem.memory.export import export_episodes
 

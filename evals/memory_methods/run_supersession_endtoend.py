@@ -27,10 +27,10 @@ from rem.config import Settings
 from rem.memory.selector import LexicalSelector
 from rem.memory.tiers import MemoryState
 from rem.memory.semantic_identity import (
-    FullFactEmbeddingMatcher, resupersede_state, full_fact_text,
+    FullFactEmbeddingMatcher, resupersede_state,
 )
 from evals.battery.diagnose_memory import gold_in_fitted
-from evals.battery.mix_report import GOLD_NEEDLES, STRUCTURE_NEEDLES
+from evals.battery.mix_report import GOLD_NEEDLES
 from evals.battery.mix_report_selector import fit_render_aware, needle_tier
 from evals.battery.needles import all_present
 from evals.memory_methods.state_selection import select_state_records
@@ -87,7 +87,6 @@ def run(states_dir, out, threshold, answer, manifest=None, ids=None):
         new_state, stats = resupersede_state(state, matcher)
 
         needles = GOLD_NEEDLES.get(qid, [])
-        structure = STRUCTURE_NEEDLES.get(qid, [])
         fitted, text, n = fit_render_aware(selector, new_state, r["question"],
                                            settings.read_fit_tokens)
         hits = gold_in_fitted(text, needles)

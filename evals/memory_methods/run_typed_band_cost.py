@@ -28,7 +28,7 @@ if str(_root) not in sys.path:
 
 from rem.memory.tiers import MemoryState
 from rem.memory.semantic_identity import (
-    TypedIdentityMatcher, resupersede_state, full_fact_text, share_key_token,
+    TypedIdentityMatcher, resupersede_state, share_key_token,
 )
 from evals.memory_methods.state_selection import select_state_records
 

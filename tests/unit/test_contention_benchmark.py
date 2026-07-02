@@ -1,8 +1,6 @@
 """Unit tests for the contention benchmark harness (Task S2)."""
 
 import json
-from pathlib import Path
-import pytest
 from evals.contention.run_contention_benchmark import (
     generate_markdown_table,
     calculate_stats

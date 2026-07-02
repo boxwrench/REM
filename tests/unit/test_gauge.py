@@ -1,12 +1,9 @@
 """Unit tests for the C1 telemetry gauge."""
 
-import json
-from unittest.mock import patch, MagicMock
-import pytest
+from unittest.mock import patch
 from rem.config import Settings
 from rem.scheduler.gauge import (
     GpuState,
-    GaugeReading,
     classify_state,
     get_stable_state,
     parse_xrt_smi,
