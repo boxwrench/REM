@@ -1,5 +1,10 @@
 # REM Implementation Roadmap
 
+> NOTE (2026-07-02): the memory-quality work has reached a deliberate stopping point.
+> See **[docs/rem-closeout-and-revisit.md](rem-closeout-and-revisit.md)** for what
+> shipped, why each remaining avenue stopped (the *walls*), and the concrete condition
+> that would make each worth revisiting.
+
 Status: active, evidence-gated roadmap (updated 2026-07-02).
 
 This document is the authoritative forward plan. Historical measurements remain
