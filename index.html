@@ -10,76 +10,442 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <style>
-:root{--bg:#fff;--bg2:#f5f8fc;--panel:#fff;--panel2:#f7fafd;--line:#dce6f1;--text:#16263d;--muted:#5a6b82;--dim:#8a98ab;--navy:#10355f;--npu:#1f74c4;--npu-d:#155a9e;--npu-l:#5aa9e6;--diagram:#07111f}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(1100px 560px at 82% -12%,rgba(90,169,230,.16),transparent 60%),radial-gradient(900px 520px at -5% 0%,rgba(31,116,196,.07),transparent 55%),var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:var(--npu);text-decoration:none}a:hover{text-decoration:underline}.wrap{max-width:1080px;margin:0 auto;padding:0 22px}.mono,code{font-family:"SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-header{padding:64px 0 40px;border-bottom:1px solid var(--line)}.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}.badge{font-size:12px;letter-spacing:.3px;padding:4px 10px;border-radius:20px;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}.badge b{color:var(--npu);font-weight:600}
-h1{font-size:clamp(34px,6vw,56px);line-height:1.05;margin:0 0 8px;letter-spacing:-1.2px;color:var(--navy)}h1 .sub{display:block;font-size:clamp(15px,2.4vw,21px);color:var(--muted);font-weight:400;letter-spacing:0;margin-top:14px;max-width:790px}.tagline{font-size:clamp(17px,2.6vw,22px);margin:22px 0 0;max-width:800px}.tagline em{color:var(--npu);font-style:normal;font-weight:600}
-.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.btn{display:inline-flex;padding:11px 18px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid var(--line)}.btn.primary{background:linear-gradient(180deg,#2a86d4,#1f74c4);border-color:var(--npu-d);color:#fff;box-shadow:0 2px 10px rgba(31,116,196,.25)}.btn.ghost{background:#fff;color:var(--navy)}.btn:hover{text-decoration:none;border-color:var(--npu)}
-.ribbon{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:30px}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 4px 14px rgba(16,53,95,.05)}.stat .v{font-size:clamp(21px,3.2vw,29px);font-weight:700;line-height:1;color:var(--npu)}.stat .k{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.35}
-section{padding:56px 0;border-bottom:1px solid var(--line)}section:nth-of-type(even){background:var(--bg2)}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--npu);font-weight:600;margin:0 0 10px}h2{font-size:clamp(24px,3.6vw,34px);margin:0 0 8px;letter-spacing:-.6px;color:var(--navy)}h3{color:var(--navy)}.lead{color:var(--muted);max-width:800px;margin:0 0 26px}.panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 6px 22px rgba(16,53,95,.06)}
-.concept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:24px 0}.concept-card{border-top:3px solid var(--npu)}.role{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--npu);font-weight:700}.concept-card h3{margin:6px 0 5px;font-size:20px}.concept-card p,.evidence-grid p,.tier p{margin:0;color:var(--muted);font-size:14px}
-.diagram-panel{background:var(--diagram);border:1px solid #20344d;border-radius:16px;padding:18px;box-shadow:0 12px 32px rgba(7,17,31,.2)}.diagram-panel img{display:block;width:100%;height:auto}figure{margin:0}figcaption{font-size:12px;color:var(--dim);margin-top:10px;text-align:center}.evidence-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.evidence-grid h3{margin:0 0 6px;font-size:16px}
-.flow{display:flex;align-items:stretch;flex-wrap:wrap}.tier{flex:1;min-width:180px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:18px}.tier h3{margin:0 0 6px;font-size:15px}.arrow{display:flex;align-items:center;justify-content:center;color:var(--npu);font-size:22px;padding:0 6px}.status-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.status-grid ul{margin:8px 0 0;padding-left:20px;color:var(--muted)}
-.callout{border-left:3px solid var(--npu);background:rgba(31,116,196,.06);padding:14px 18px;border-radius:0 10px 10px 0;margin-top:24px;font-size:14px;color:var(--muted)}.callout b{color:var(--text)}footer{padding:40px 0 70px;color:var(--dim);font-size:13px}.footgrid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;align-items:center}
-@media(max-width:880px){.ribbon{grid-template-columns:repeat(2,1fr)}.concept-grid,.evidence-grid,.status-grid{grid-template-columns:1fr}}@media(max-width:760px){.arrow{transform:rotate(90deg);padding:6px 0}}
+  :root{
+    --bg:#ffffff; --bg2:#f5f8fc; --panel:#ffffff; --panel2:#f7fafd;
+    --line:#dce6f1; --line2:#eaf0f7; --text:#16263d; --muted:#5a6b82; --dim:#8a98ab;
+    --navy:#10355f;
+    --npu:#1f74c4; --npu-d:#155a9e; --npu-l:#5aa9e6;
+    --cpu:#9aa7b8; --cpu-d:#6b7a8d;
+    --good:#1f9d57; --warn:#c47a13; --bad:#d64545;
+    --accent:#1f74c4; --diagram:#07111f;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:
+      radial-gradient(1100px 560px at 82% -12%, rgba(90,169,230,.16), transparent 60%),
+      radial-gradient(900px 520px at -5% 0%, rgba(31,116,196,.07), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--npu); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 22px}
+  code,.mono{font-family:"SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  /* ---- header ---- */
+  header{padding:64px 0 34px; border-bottom:1px solid var(--line)}
+  .badges{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px}
+  .badge{font-size:12px; letter-spacing:.3px; padding:4px 10px; border-radius:20px;
+    border:1px solid var(--line); background:var(--panel2); color:var(--muted)}
+  .badge b{color:var(--npu); font-weight:600}
+  h1{font-size:clamp(34px,6vw,56px); line-height:1.05; margin:0 0 8px; letter-spacing:-1.2px; color:var(--navy)}
+  h1 .sub{display:block; font-size:clamp(15px,2.4vw,21px); color:var(--muted); font-weight:400; letter-spacing:0; margin-top:14px; max-width:760px}
+  .tagline{font-size:clamp(17px,2.6vw,22px); color:var(--text); margin:22px 0 0; max-width:780px}
+  .tagline em{color:var(--npu); font-style:normal; font-weight:600}
+  .cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:30px}
+  .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:10px;
+    font-weight:600; font-size:14px; border:1px solid var(--line)}
+  .btn.primary{background:linear-gradient(180deg,#2a86d4,#1f74c4); border-color:var(--npu-d); color:#fff; box-shadow:0 2px 10px rgba(31,116,196,.25)}
+  .btn.ghost{background:#fff; color:var(--navy); box-shadow:0 1px 3px rgba(16,53,95,.06)}
+  .btn:hover{text-decoration:none; border-color:var(--npu)}
+
+  /* ---- layout primitives ---- */
+  section{padding:54px 0; border-bottom:1px solid var(--line)}
+  section:nth-of-type(even){background:var(--bg2)}
+  .eyebrow{font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--npu); font-weight:600; margin:0 0 10px}
+  h2{font-size:clamp(24px,3.6vw,34px); margin:0 0 8px; letter-spacing:-.6px; color:var(--navy)}
+  .lead{color:var(--muted); max-width:760px; margin:0 0 26px}
+  .panel{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--line);
+    border-radius:14px; padding:22px; box-shadow:0 6px 22px rgba(16,53,95,.06)}
+  .grid{display:grid; gap:18px}
+
+  /* ---- bounded-context concept ---- */
+  .concept-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:24px 0}
+  .concept-card{border-top:3px solid var(--npu)}
+  .concept-card .role{font-size:12px; letter-spacing:1.4px; text-transform:uppercase;
+    color:var(--npu); font-weight:700}
+  .concept-card h3{margin:6px 0 5px; font-size:20px}
+  .concept-card p{margin:0; color:var(--muted); font-size:14px}
+  .diagram-panel{background:var(--diagram); border:1px solid #20344d; border-radius:16px;
+    padding:18px; box-shadow:0 12px 32px rgba(7,17,31,.2)}
+  .diagram-panel img{display:block; width:100%; height:auto}
+  @media(max-width:880px){.concept-grid{grid-template-columns:1fr}}
+
+  /* ---- stat ribbon ---- */
+  .ribbon{display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:30px}
+  .stat{background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:16px 16px 14px; box-shadow:0 4px 14px rgba(16,53,95,.05)}
+  .stat .v{color:var(--navy)}
+  .stat .v{font-size:clamp(22px,3.2vw,30px); font-weight:700; letter-spacing:-.5px; line-height:1}
+  .stat .v.npu{color:var(--npu)}
+  .stat .k{font-size:12px; color:var(--muted); margin-top:8px; line-height:1.35}
+  @media(max-width:880px){.ribbon{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---- comparison bars ---- */
+  .cmp{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+  @media(max-width:880px){.cmp{grid-template-columns:1fr}}
+  .cmp h3{margin:0 0 4px; font-size:15px}
+  .cmp .note{font-size:12px; color:var(--dim); margin:0 0 16px}
+  .bar-row{margin:10px 0}
+  .bar-row .lbl{display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px}
+  .bar-row .lbl .who{color:var(--muted)}
+  .bar-row .lbl .val{font-weight:700}
+  .track{height:14px; background:#eef3f9; border:1px solid var(--line); border-radius:8px; overflow:hidden}
+  .fill{height:100%; border-radius:7px}
+  .fill.npu{background:linear-gradient(90deg,var(--npu),var(--npu-l))}
+  .fill.cpu{background:linear-gradient(90deg,var(--cpu-d),var(--cpu))}
+  .winner{font-size:12px; color:var(--good); margin-top:10px; font-weight:600}
+  .winner.npu-loss{color:var(--npu)}
+
+  /* legend */
+  .legend{display:flex; gap:20px; align-items:center; font-size:13px; color:var(--muted); margin:0 0 22px}
+  .legend span{display:inline-flex; align-items:center; gap:7px}
+  .dot{width:11px; height:11px; border-radius:3px; display:inline-block}
+  .dot.npu{background:var(--npu)} .dot.cpu{background:var(--cpu)}
+
+  /* table */
+  table{width:100%; border-collapse:collapse; margin-top:18px; font-size:14px}
+  th,td{padding:11px 12px; text-align:right; border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--muted); font-weight:600; font-size:12px; letter-spacing:.4px; text-transform:uppercase}
+  tbody tr:hover{background:rgba(31,116,196,.05)}
+  td .hl{color:var(--npu); font-weight:700}
+  .baseline td{color:var(--dim)}
+
+  /* gauges */
+  .gauges{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:8px}
+  @media(max-width:760px){.gauges{grid-template-columns:1fr}}
+  .gauge{background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:18px; text-align:center}
+  .gauge .scn{font-size:13px; color:var(--muted)}
+  .gauge .hx{font-size:34px; font-weight:800; letter-spacing:-1px; margin:6px 0 2px}
+  .gauge .hx.ok{color:var(--good)} .gauge .hx.tight{color:var(--warn)}
+  .gauge .det{font-size:12px; color:var(--dim)}
+  .gauge .meter{height:8px; background:#eef3f9; border:1px solid var(--line); border-radius:6px; margin-top:12px; overflow:hidden}
+  .gauge .meter i{display:block; height:100%; background:linear-gradient(90deg,var(--npu),var(--npu-l))}
+
+  figure{margin:0}
+  figcaption{font-size:12px; color:var(--dim); margin-top:10px; text-align:center}
+  svg{display:block; width:100%; height:auto}
+
+  /* how it works */
+  .flow{display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin-top:10px}
+  .tier{flex:1; min-width:180px; background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:18px; position:relative}
+  .tier h4{margin:0 0 6px; font-size:14px}
+  .tier h4 .tag{font-size:11px; color:var(--bg); background:var(--npu); padding:2px 7px; border-radius:5px; margin-left:6px; font-weight:700}
+  .tier p{margin:0; font-size:13px; color:var(--muted)}
+  .arrow{display:flex; align-items:center; justify-content:center; color:var(--npu); font-size:22px; padding:0 6px}
+  @media(max-width:760px){.arrow{transform:rotate(90deg); padding:6px 0}}
+
+  /* two-col demonstrated/open */
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}}
+  .cols ul{margin:8px 0 0; padding-left:0; list-style:none}
+  .cols li{padding:9px 0 9px 26px; position:relative; font-size:14px; border-bottom:1px solid var(--line)}
+  .cols li:last-child{border-bottom:0}
+  .cols li b{color:var(--text)}
+  .cols .done li::before{content:"\2713"; position:absolute; left:0; color:var(--good); font-weight:700}
+  .cols .open li::before{content:"\25B8"; position:absolute; left:2px; color:var(--warn)}
+  .cols .open{border-color:var(--cpu-d)}
+
+  .metaphor{margin-top:8px}
+  .metaphor td:first-child{color:var(--muted)}
+
+  .callout{border-left:3px solid var(--npu); background:rgba(31,116,196,.06); padding:14px 18px; border-radius:0 10px 10px 0; margin-top:24px; font-size:14px; color:var(--muted)}
+  .callout b{color:var(--text)}
+
+  footer{padding:40px 0 70px; color:var(--dim); font-size:13px}
+  footer a{color:var(--muted)}
+  .footgrid{display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; align-items:center}
 </style>
 </head>
 <body>
-<header><div class="wrap">
-<div class="badges"><span class="badge">status: <b>research · horizon harness next</b></span><span class="badge">hardware: <b>AMD Strix Halo · XDNA2 NPU</b></span><span class="badge">license: <b>MIT</b></span><span class="badge">evidence: <b>committed artifacts</b></span></div>
-<h1>REM<span class="sub">Resident Externalized Memory — a bounded working context for local agents, maintained on a background co-processor.</span></h1>
-<p class="tagline">The <em>model is the brain</em>, <em>REM is the notebook</em>, and the <em>environment is the world</em>. REM keeps the notes on the brain's desk useful and bounded as the job gets longer.</p>
-<div class="cta"><a class="btn primary" href="#concept">See the core idea</a><a class="btn ghost" href="https://github.com/boxwrench/REM">View the repo</a><a class="btn ghost" href="docs/agent-horizon-harness-charter.md">Next milestone</a></div>
-<div class="ribbon">
-<div class="stat"><div class="v">~73 <span style="font-size:14px">tok/s</span></div><div class="k">committed compaction drain rate</div></div>
-<div class="stat"><div class="v">~2.5×</div><div class="k">keep-up margin at ~30 tok/s growth</div></div>
-<div class="stat"><div class="v">47.6%</div><div class="k">RSB-3 prompt reduction</div></div>
-<div class="stat"><div class="v">~3.8%</div><div class="k">iGPU decode loss vs ~4.8% CPU control</div></div>
-<div class="stat"><div class="v">37k–58k</div><div class="k">observed naive overflow range</div></div>
-</div></div></header>
 
-<section id="concept"><div class="wrap">
-<p class="eyebrow">The core idea</p><h2>Let the task grow. Keep injected context flat.</h2>
-<p class="lead">A naive loop appends every observation and answer to the next prompt, so context compounds until the model's window blows. REM files bulky history outside the model and returns a bounded slice of relevant state each step.</p>
-<div class="concept-grid">
-<article class="panel concept-card"><div class="role">Brain</div><h3>The model chooses</h3><p>It reads what is on its desk and decides the next action. It does not need every raw page it has ever seen.</p></article>
-<article class="panel concept-card"><div class="role">Notebook</div><h3>REM remembers</h3><p>It compacts bulky history, keeps load-bearing facts, and selects a fit-to-budget view for the next step.</p></article>
-<article class="panel concept-card"><div class="role">World</div><h3>The environment responds</h3><p>It returns files or tool results, accepts actions, tracks state, and knows how to score the task.</p></article>
-</div>
-<figure><div class="diagram-panel"><img src="docs/assets/compounding-context-vs-rem-loop.svg" alt="Illustrative schematic comparing compounding context in a naive loop with bounded injected context in the REM loop."></div><figcaption>Illustrative schematic, not a benchmark run. The labels show the shape of compounding versus bounded injected context.</figcaption></figure>
-<div class="callout"><b>Canonical example:</b> a long water-quality audit must retain an early limit while opening report after report. Read the full <a href="TEACHING.md#6-one-task-end-to-end">Lesson 4 worked example</a>.</div>
-</div></section>
+<!-- ============ HERO ============ -->
+<header>
+  <div class="wrap">
+    <div class="badges">
+      <span class="badge">status: <b>read-side shipped · horizon harness next</b></span>
+      <span class="badge">hardware: <b>AMD Strix Halo · XDNA2 NPU</b></span>
+      <span class="badge">license: <b>MIT</b></span>
+      <span class="badge">evidence: <b>committed artifacts</b></span>
+    </div>
+    <h1>REM
+      <span class="sub">Resident Externalized Memory — a local agent's working memory, consolidated on a background co-processor instead of stealing cycles from the model.</span>
+    </h1>
+    <p class="tagline">The <em>model is the brain</em>, <em>REM is the notebook</em>, and the <em>environment is the world</em>. REM keeps the notes on the brain's desk useful and bounded as the job gets longer.</p>
+    <div class="cta">
+      <a class="btn primary" href="#concept">▸ See the core idea</a>
+      <a class="btn ghost" href="https://github.com/boxwrench/REM">View the repo</a>
+      <a class="btn ghost" href="docs/npu-placement-benchmark.md">Methodology &amp; caveats</a>
+    </div>
 
-<section id="concurrency"><div class="wrap">
-<p class="eyebrow">The placement question</p><h2>Does NPU memory work leave the foreground model room?</h2>
-<p class="lead">Concurrent NPU compaction cost <b>~3.8%</b> iGPU decode versus <b>~4.8%</b> for the CPU control, across <b>3 runs × N=20</b>. This is a measured contention budget, not a contention-free claim.</p>
-<div class="evidence-grid"><article class="panel"><h3>NPU concurrent</h3><p><b>~3.8%</b> iGPU decode loss.</p></article><article class="panel"><h3>CPU control</h3><p><b>~4.8%</b> iGPU decode loss.</p></article></div>
-</div></section>
+    <div class="ribbon">
+      <div class="stat"><div class="v npu">~73<span style="font-size:14px"> tok/s</span></div><div class="k">committed compaction drain rate</div></div>
+      <div class="stat"><div class="v npu">~2.5×</div><div class="k">keep-up margin at ~30 tok/s growth</div></div>
+      <div class="stat"><div class="v npu">47.6%</div><div class="k">RSB-3 prompt reduction</div></div>
+      <div class="stat"><div class="v npu">~3.8%</div><div class="k">iGPU decode loss vs ~4.8% CPU control</div></div>
+      <div class="stat"><div class="v npu">37k–58k</div><div class="k">observed naive overflow range</div></div>
+    </div>
+  </div>
+</header>
 
-<section id="keepup"><div class="wrap">
-<p class="eyebrow">The keep-up question</p><h2>Can compaction drain context faster than the run creates it?</h2>
-<p class="lead">The committed probe drains at <b>~73 tok/s</b> while the example transcript grows at <b>~30 tok/s</b>: a <b>~2.5× keep-up margin</b>.</p>
-<div class="evidence-grid"><article class="panel"><h3>Prompt work falls</h3><p>RSB-3 prompt size fell <b>47.6%</b>, from <b>27,386</b> to <b>14,341 tokens</b>. Prefill moved from <b>34.16 s</b> to <b>0.12 s</b>; after a <b>30.27 s</b> re-prefill tax, net savings were <b>+3.77 s</b>.</p></article><article class="panel"><h3>The context wall is observed</h3><p>Naive assembly overflowed at <b>37k–58k tokens</b> against a <b>~32–40k window</b>, producing <span class="mono">context_overflow</span> <b>0/5</b>.</p></article></div>
-</div></section>
+<!-- ============ CORE CONCEPT ============ -->
+<section id="concept">
+  <div class="wrap">
+    <p class="eyebrow">The core idea</p>
+    <h2>Let the task grow. Keep injected context flat.</h2>
+    <p class="lead">A naive loop appends every observation and answer to the next prompt, so context compounds until the model's window blows. REM files bulky history outside the model and returns a bounded slice of relevant state each step.</p>
 
-<section id="thermal"><div class="wrap">
-<p class="eyebrow">The sustained-load question</p><h2>Does background maintenance stay operational over time?</h2>
-<p class="lead">The repository retains its committed sustained-load artifacts and methodology. This concept refresh does not restate figures outside the dispatch brief's sanctioned set.</p>
-<a class="btn ghost" href="docs/npu-placement-benchmark.md">Inspect methodology &amp; artifacts</a>
-</div></section>
+    <div class="concept-grid">
+      <article class="panel concept-card">
+        <div class="role">Brain</div>
+        <h3>The model chooses</h3>
+        <p>It reads what is on its desk and decides the next action. It does not need every raw page it has ever seen.</p>
+      </article>
+      <article class="panel concept-card">
+        <div class="role">Notebook</div>
+        <h3>REM remembers</h3>
+        <p>It compacts bulky history, keeps load-bearing facts, and selects a fit-to-budget view for the next step.</p>
+      </article>
+      <article class="panel concept-card">
+        <div class="role">World</div>
+        <h3>The environment responds</h3>
+        <p>It returns files or tool results, accepts actions, tracks state, and knows how to score the task.</p>
+      </article>
+    </div>
 
-<section id="how"><div class="wrap">
-<p class="eyebrow">How it works</p><h2>A tiered notebook in front of the model</h2><p class="lead">The sidecar preserves recent text, compacts older material, and assembles only what fits the next request's context budget.</p>
-<div class="flow"><div class="tier"><h3>Verbatim</h3><p>Recent turns stay word-for-word.</p></div><div class="arrow">→</div><div class="tier"><h3>Summaries + facts</h3><p>Older spans become compact prose and a load-bearing facts ledger.</p></div><div class="arrow">→</div><div class="tier"><h3>Bounded selection</h3><p>The next prompt receives a small, useful view rather than the whole store.</p></div></div>
-</div></section>
+    <figure>
+      <div class="diagram-panel">
+        <img src="docs/assets/compounding-context-vs-rem-loop.svg" alt="Illustrative schematic comparing compounding context in a naive loop with bounded injected context in the REM loop.">
+      </div>
+      <figcaption>Illustrative schematic, not a benchmark run. The labels show the shape of compounding versus bounded injected context.</figcaption>
+    </figure>
 
-<section id="status"><div class="wrap">
-<p class="eyebrow">Honest status</p><h2>Read-side win shipped. Horizon proof next.</h2><p class="lead">REM's direction is now context budget over agent horizon. The agent-horizon harness is the next milestone, and no multiplier has been measured yet.</p>
-<div class="status-grid"><article class="panel"><h3>Shipped</h3><ul><li>Budget-bounded sparse read assembly.</li><li>Background NPU compaction with committed keep-up evidence.</li><li>Measured contention budget for NPU placement.</li></ul></article>
-<article class="panel"><h3>Next milestone</h3><p class="lead">Replay identical long tasks through naive, truncate, and REM memory policies; record the budget line; then test a state-card handoff before a hard failure.</p><a class="btn ghost" href="docs/agent-horizon-harness-charter.md">Read the harness charter</a></article></div>
-</div></section>
+    <div class="callout"><b>Canonical example:</b> a long water-quality audit must retain an early limit while opening report after report. Read the full <a href="TEACHING.md#6-one-task-end-to-end">Lesson 4 worked example</a>.</div>
+  </div>
+</section>
 
-<footer><div class="wrap footgrid"><div><div style="color:var(--muted);font-weight:600">REM — Resident Externalized Memory</div><div>Bounded local-agent context · NPU-offloaded maintenance · MIT</div></div><div style="text-align:right"><a href="https://github.com/boxwrench/REM">github.com/boxwrench/REM</a><br><a href="docs/npu-placement-benchmark.md">Methodology &amp; caveats</a> · <a href="docs/direction-review-2026-07-03.md">Direction review</a></div></div></footer>
+<!-- ============ CONCURRENCY ============ -->
+<section id="concurrency">
+  <div class="wrap">
+    <p class="eyebrow">The placement question</p>
+    <h2>Does running on the NPU actually leave the GPU alone?</h2>
+    <p class="lead">The same compaction workload ran on the <b>NPU</b> and on <b>spare CPU cores</b>, each concurrently with an interactive iGPU model. Across <b>3 runs × N=20</b>, NPU placement imposed a slightly smaller foreground cost.</p>
+
+    <div class="legend">
+      <span><i class="dot npu"></i> NPU placement</span>
+      <span><i class="dot cpu"></i> CPU control</span>
+    </div>
+
+    <div class="panel">
+      <div class="cmp">
+        <!-- decode loss: lower better -->
+        <div>
+          <h3>iGPU decode loss</h3>
+          <p class="note">lower is better — how much the foreground model slows</p>
+          <div class="bar-row">
+            <div class="lbl"><span class="who">NPU</span><span class="val" style="color:var(--npu)">~3.8%</span></div>
+            <div class="track"><div class="fill npu" style="width:79%"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="lbl"><span class="who">CPU</span><span class="val" style="color:var(--cpu)">~4.8%</span></div>
+            <div class="track"><div class="fill cpu" style="width:100%"></div></div>
+          </div>
+          <div class="winner npu-loss">NPU placement contends slightly less</div>
+        </div>
+
+        <div>
+          <h3>What the result means</h3>
+          <p class="note">a placement result, not a latency trick</p>
+          <p>Background memory work can use otherwise-idle NPU compute while leaving the iGPU focused on the foreground model.</p>
+        </div>
+
+        <div>
+          <h3>The shared-memory caveat</h3>
+          <p class="note">separate compute does not mean separate bandwidth</p>
+          <p>The NPU and iGPU still share one unified-memory bus, so the measured decode loss is real and belongs in the operating budget.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>The honest read:</b> this is a <b>placement</b> win, not a “contention-free” claim. The NPU shares the unified-memory bus; it simply imposed a smaller measured decode loss than the CPU control.</div>
+  </div>
+</section>
+
+<!-- ============ KEEP-UP / THROUGHPUT ============ -->
+<section id="keepup">
+  <div class="wrap">
+    <p class="eyebrow">The keep-up question</p>
+    <h2>Can it drain memory faster than the agent fills it?</h2>
+    <p class="lead">A background memory layer is viable only if it keeps up. The committed compactor probe drains at <b>~73 tok/s</b> while the example transcript grows at <b>~30 tok/s</b>: a <b>~2.5× keep-up margin</b>.</p>
+
+    <div class="gauges">
+      <div class="gauge">
+        <div class="scn">compaction drain</div>
+        <div class="hx ok">~73</div>
+        <div class="det">tokens processed per second</div>
+        <div class="meter"><i style="width:100%"></i></div>
+      </div>
+      <div class="gauge">
+        <div class="scn">example transcript growth</div>
+        <div class="hx">~30</div>
+        <div class="det">tokens added per second</div>
+        <div class="meter"><i style="width:41%"></i></div>
+      </div>
+      <div class="gauge">
+        <div class="scn">steady-state headroom</div>
+        <div class="hx ok">~2.5×</div>
+        <div class="det">drain rate divided by growth rate</div>
+        <div class="meter"><i style="width:100%"></i></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:22px">
+      <div class="cmp">
+        <div>
+          <h3>Prompt size</h3>
+          <p class="note">RSB-3, lower is better</p>
+          <div class="bar-row"><div class="lbl"><span class="who">Baseline</span><span class="val">27,386</span></div><div class="track"><div class="fill cpu" style="width:100%"></div></div></div>
+          <div class="bar-row"><div class="lbl"><span class="who">REM</span><span class="val" style="color:var(--npu)">14,341</span></div><div class="track"><div class="fill npu" style="width:52.4%"></div></div></div>
+          <div class="winner">47.6% fewer tokens</div>
+        </div>
+        <div>
+          <h3>Prompt prefill</h3>
+          <p class="note">after context assembly</p>
+          <div class="bar-row"><div class="lbl"><span class="who">Baseline</span><span class="val">34.16 s</span></div><div class="track"><div class="fill cpu" style="width:100%"></div></div></div>
+          <div class="bar-row"><div class="lbl"><span class="who">REM</span><span class="val" style="color:var(--npu)">0.12 s</span></div><div class="track"><div class="fill npu" style="width:1%"></div></div></div>
+        </div>
+        <div>
+          <h3>Swap accounting</h3>
+          <p class="note">include the KV re-prefill tax</p>
+          <div class="bar-row"><div class="lbl"><span class="who">Re-prefill tax</span><span class="val">30.27 s</span></div></div>
+          <div class="bar-row"><div class="lbl"><span class="who">Net saved</span><span class="val" style="color:var(--good)">+3.77 s</span></div></div>
+          <div class="winner">positive after the full tax</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>The context wall is observed:</b> naive assembly overflowed at <b>37k–58k tokens</b> against a <b>~32–40k window</b>, producing <span class="mono">context_overflow</span> <b>0/5</b>. Async helps only while the drain keeps up.</div>
+  </div>
+</section>
+
+<!-- ============ THERMAL ============ -->
+<section id="thermal">
+  <div class="wrap">
+    <p class="eyebrow">The sustained-load question</p>
+    <h2>Does background maintenance stay operational over time?</h2>
+    <p class="lead">The repository keeps the full thermal traces and sustained-load methodology. This public summary keeps its figures to the dispatch brief's sanctioned set; the underlying artifacts remain available for audit.</p>
+
+    <div class="panel">
+      <div class="cmp">
+        <div>
+          <h3>Telemetry</h3>
+          <p class="note">measure the shared SoC, not an invented NPU sensor</p>
+          <p>The NPU lives on the monolithic die, so the methodology uses the available SoC control-temperature signal and preserves the raw trace.</p>
+        </div>
+        <div>
+          <h3>Hardware envelope</h3>
+          <p class="note">the tested unified-memory box</p>
+          <p><b>50 TOPS XDNA 2 NPU</b>, <b>40 RDNA 3.5 CUs</b>, and up to <b>128 GB</b> unified memory.</p>
+        </div>
+        <div>
+          <h3>Memory path</h3>
+          <p class="note">the shared resource that placement must respect</p>
+          <p>About <b>256 GB/s theoretical</b> bandwidth, with <b>~212 GB/s measured</b> on the test system.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>Want the trace?</b> Read the <a href="docs/npu-placement-benchmark.md">full methodology and caveats</a>; the landing page stays concise without discarding the auditable source.</div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2>A tiered memory sidecar in front of the model</h2>
+    <p class="lead">A sidecar sits in front of the foreground model's chat endpoint. It keeps memory in tiers and assembles a budget-bounded context for each request. When the verbatim tier crosses a threshold, compaction fires on the NPU in the background — extracting load-bearing facts from the oldest span and replacing it with a summary, never blocking the foreground turn.</p>
+
+    <div class="flow">
+      <div class="tier">
+        <h4>Verbatim<span class="tag">recent</span></h4>
+        <p>The most recent turns, kept word-for-word. Highest fidelity, highest token cost.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="tier">
+        <h4>Summaries</h4>
+        <p>Older spans compacted into smaller prose summaries by the NPU, while load-bearing facts are filed separately.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="tier">
+        <h4>Facts ledger<span class="tag">durable</span></h4>
+        <p>Load-bearing facts extracted and filed so they survive compaction even after the prose is gone.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:34px; font-size:18px">The metaphor maps</h3>
+    <table class="metaphor">
+      <thead><tr><th>Brain</th><th style="text-align:left">REM</th></tr></thead>
+      <tbody>
+        <tr><td>Awake, doing tasks</td><td style="text-align:left">iGPU running the big foreground model</td></tr>
+        <tr><td>Hippocampus consolidating during sleep</td><td style="text-align:left">NPU compacting + filing memory in the background</td></tr>
+        <tr><td>Working memory (volatile, recent)</td><td style="text-align:left">the compaction channel: verbatim → summaries → facts</td></tr>
+        <tr><td>Long-term semantic memory (durable)</td><td style="text-align:left">a markdown / wiki memory store</td></tr>
+        <tr><td>The body scheduling sleep vs. wake</td><td style="text-align:left">a contention-aware scheduler</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ DEMONSTRATED vs OPEN ============ -->
+<section id="status">
+  <div class="wrap">
+    <p class="eyebrow">Honest status</p>
+    <h2>Read-side win shipped. Horizon proof next.</h2>
+    <p class="lead">REM has reoriented around context budget over agent horizon. The read-side is working; the <a href="docs/agent-horizon-harness-charter.md">agent-horizon harness</a> is the next milestone, and no horizon multiplier has been measured yet.</p>
+
+    <div class="cols">
+      <div class="panel done">
+        <h3 style="margin-top:0; color:var(--good)">✓ Demonstrated on a Strix Halo box</h3>
+        <ul>
+          <li><b>Bounded read assembly is shipped.</b> The sidecar selects a fit-to-budget view instead of injecting the whole store.</li>
+          <li><b>Compaction keeps up.</b> ~73 tok/s drain against ~30 tok/s example growth gives a ~2.5× margin.</li>
+          <li><b>Prompt work falls.</b> RSB-3 shrank 47.6%, from 27,386 to 14,341 tokens; the full prefill accounting still saved +3.77 s.</li>
+          <li><b>Placement has a measured budget.</b> ~3.8% iGPU decode loss versus ~4.8% for the CPU control across 3 runs × N=20.</li>
+        </ul>
+      </div>
+      <div class="panel open">
+        <h3 style="margin-top:0; color:var(--warn)">▸ Next milestone</h3>
+        <ul>
+          <li><b>Measure the horizon multiplier.</b> Replay identical long tasks through naive, truncate, and REM arms; this result does not exist yet.</li>
+          <li><b>Prove graceful stop.</b> Freeze a state card and hand off before a hard context failure.</li>
+          <li><b>Confirm OpenEnv fit.</b> Validate fat-observation, ≥100-step task worlds before adopting the interface.</li>
+          <li><b>Hold correctness as a floor.</b> More steps count only if the task grader does not regress.</li>
+        </ul>
+        <a class="btn ghost" style="margin-top:18px" href="docs/agent-horizon-harness-charter.md">Read the harness charter</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap footgrid">
+    <div>
+      <div style="color:var(--muted); font-weight:600">REM — Resident Externalized Memory</div>
+      <div>NPU-offloaded agent-memory compaction · a feasibility study · MIT</div>
+    </div>
+    <div style="text-align:right">
+      <a href="https://github.com/boxwrench/REM">github.com/boxwrench/REM</a><br>
+      <a href="docs/npu-placement-benchmark.md">Full methodology &amp; caveats</a> ·
+      <a href="https://github.com/boxwrench/xdna-top">xdna-top monitor</a>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
