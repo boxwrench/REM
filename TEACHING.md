@@ -641,3 +641,66 @@ Two things this buys us:
 > also calls a small model, and models can wander. So that step has to be recorded and
 > replayed too, or otherwise pinned down — or the "only the memory changed" promise
 > quietly breaks. This is now logged in the harness risk register.
+
+## 6. One task, end to end
+
+Imagine an agent auditing a folder of roughly 200 water-quality lab reports. Its job is
+to produce a filing that flags every limit violation. This is an **illustrative task**
+for the next harness, not a benchmark result: it takes more than 100 steps, each opened
+report adds a large block of text, and a rule learned near the beginning still matters
+near the end.
+
+The three things from §1 now have concrete jobs:
+
+*   The **environment is the game world**: the report folder, the audit rules, and a
+    grader that already knows the correct violations. `reset()` hands the agent the
+    folder and an empty filing. `step("open report_047")` returns that report's text;
+    `step("record: Site B TTHM Q3 = 0.091, exceeds limit")` records a finding; and
+    `state()` tracks which reports have been opened and filed.
+*   The fixed **~2B model is the player — the brain**. At each step it reads the papers
+    on its desk and chooses the next action.
+*   **REM is the player's notebook.** Early in the run it keeps the rule “TTHM limit =
+    0.080 mg/L, quarterly monitoring” while allowing the full text of report #3 to be
+    summarized away.
+
+Why is the desk — the **context budget** — the whole game? A naive loop puts every
+report's full text back on the desk at every step. In this illustrative scenario, the
+desk is full around report #40. Simply keeping only the newest reports fits, but by
+report #187 it has forgotten the rule from report #3 and reaches the wrong verdict.
+REM's intended behavior is to keep the desk bounded *and* keep that rule alive, so the
+agent can reach report #187 and judge it correctly.
+
+<table><tr><td bgcolor="#07111f">
+<img src="docs/assets/compounding-context-vs-rem-loop.svg"
+     alt="Schematic comparison: naive injected context compounds until overflow, while REM injects a bounded memory slice at each step.">
+</td></tr></table>
+
+*Illustrative schematic — the token labels show the shape of compounding versus bounded
+injected context, not measurements from the water-audit task.*
+
+> 🔎 **Plain-language.** Without REM, the brain keeps every page it has ever seen on a
+> small desk. Truncation clears the desk by throwing away old pages. REM instead files
+> the bulky pages and puts only the useful notes back on the desk each turn.
+
+> ✅ **Editor's note.** The drawing's 6k → 14k → 26k → 44k path is schematic. The real
+> naive-loop observation in the committed battery was overflow at **37k–58k tokens**
+> against a **~32–40k window** (`context_overflow`, 0/5). The agent-horizon harness is
+> not built yet, so “REM finishes all 200 while naive stops near 40” — an illustrative
+> **5× horizon multiplier target** — is a next-milestone hypothesis, not a measured win.
+
+**OpenEnv packages the world, not the memory.** It gives this audit the same
+`reset()` / `step()` / `state()` shape on another machine. A Mac or NVIDIA owner can
+install the environment, point it at a local model, and run the same grader without
+rebuilding the audit. OpenEnv never decides what REM remembers.
+
+**The tape makes the comparison fair and cheap.** Record each step, observation, and
+action once in an append-only event-sourcing log. Then replay the identical tape through
+naive, truncate, and REM policies so memory is the only changing variable. Branch the
+illustrative tape at step 100 and ask, “do you still know the limit from step 3?” That
+catches truncation's loss before the bad verdict appears.
+
+**A bounded run should also stop cleanly.** In the illustrative scenario, if the budget
+gauge crosses 80% at step 150, REM freezes a **state card** — goal, progress, key facts,
+and open items — and touches base instead of crashing later. A fresh session can receive
+that card and continue the remaining work. The intended product promise is therefore:
+REM extends the agent's horizon **and tells the user before that horizon runs out**.
