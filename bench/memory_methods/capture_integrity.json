@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-02T17:35:11.476053+00:00",
+  "generated_at": "2026-07-02T17:37:22.438312+00:00",
   "manifest": "bench/memory_methods/development_manifest.json",
   "summary": {
     "expected": 30,
     "available": 10,
     "valid": 10,
     "invalid": 0,
-    "in_progress": 0,
-    "missing": 20
+    "in_progress": 1,
+    "missing": 19
   },
   "question_ids": {
     "valid": [
@@ -24,9 +24,10 @@
       "affe2881"
     ],
     "invalid": [],
-    "in_progress": [],
+    "in_progress": [
+      "gpt4_45189cb4"
+    ],
     "missing": [
-      "gpt4_45189cb4",
       "gpt4_fe651585_abs",
       "gpt4_7a0daae1",
       "9a707b82",
@@ -849,7 +850,7 @@
       "question_id": "gpt4_45189cb4",
       "category": "temporal-reasoning",
       "state_file": "bench/memory_methods/states/gpt4_45189cb4_state.json",
-      "status": "missing",
+      "status": "in_progress",
       "path_c_required": true,
       "errors": [],
       "warnings": [],
