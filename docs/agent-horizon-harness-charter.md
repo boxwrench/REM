@@ -33,6 +33,10 @@ is real and already observed: unbounded assembly hit 37k–58k tokens against a
 Tokens-per-step over an N-step task is unmeasured because the harness doesn't exist.
 This charter creates it.
 
+The canonical eval/bench illustration is the water-audit task in
+[TEACHING Lesson 4 §6](../TEACHING.md#6-one-task-end-to-end); its schematic is the
+bench's context-growth illustration, not a measured harness result.
+
 ## 3. What exists to build on (do not rebuild these)
 
 | Piece | Where | Status |
