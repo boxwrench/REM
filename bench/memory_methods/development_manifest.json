@@ -530,7 +530,23 @@
       "gold_recency": 0.08333333333333333,
       "distributed_evidence": true,
       "n_sessions": 49,
-      "state_file": "bench/memory_methods/states/gpt4_45189cb4_state.json"
+      "state_file": "bench/memory_methods/states/gpt4_45189cb4_state.json",
+      "capture": {
+        "ingest_secs": 4635.2,
+        "assembled_total_tokens": 76028,
+        "captured_at": 1783038778.1136708,
+        "extraction": {
+          "attempts": 473,
+          "strict_parse": 453,
+          "repaired": 20,
+          "retried": 0,
+          "retry_success": 0,
+          "loops_detected": 0,
+          "loops_salvaged": 0,
+          "truncations": 8,
+          "failures": 0
+        }
+      }
     },
     {
       "question_id": "gpt4_fe651585_abs",
@@ -574,7 +590,23 @@
       "gold_recency": 0.18,
       "distributed_evidence": true,
       "n_sessions": 51,
-      "state_file": "bench/memory_methods/states/gpt4_fe651585_abs_state.json"
+      "state_file": "bench/memory_methods/states/gpt4_fe651585_abs_state.json",
+      "capture": {
+        "ingest_secs": 4844.0,
+        "assembled_total_tokens": 51213,
+        "captured_at": 1783043622.1297688,
+        "extraction": {
+          "attempts": 450,
+          "strict_parse": 419,
+          "repaired": 28,
+          "retried": 0,
+          "retry_success": 0,
+          "loops_detected": 3,
+          "loops_salvaged": 3,
+          "truncations": 7,
+          "failures": 0
+        }
+      }
     },
     {
       "question_id": "gpt4_7a0daae1",
@@ -616,7 +648,23 @@
       "gold_recency": 0.1875,
       "distributed_evidence": true,
       "n_sessions": 65,
-      "state_file": "bench/memory_methods/states/gpt4_7a0daae1_state.json"
+      "state_file": "bench/memory_methods/states/gpt4_7a0daae1_state.json",
+      "capture": {
+        "ingest_secs": 5337.6,
+        "assembled_total_tokens": 69706,
+        "captured_at": 1783048959.8045983,
+        "extraction": {
+          "attempts": 513,
+          "strict_parse": 492,
+          "repaired": 21,
+          "retried": 0,
+          "retry_success": 0,
+          "loops_detected": 0,
+          "loops_salvaged": 0,
+          "truncations": 12,
+          "failures": 0
+        }
+      }
     },
     {
       "question_id": "9a707b82",

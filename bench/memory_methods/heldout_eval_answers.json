@@ -1,0 +1,125 @@
+{
+  "answered": true,
+  "results": [
+    {
+      "qid": "gpt4_45189cb4",
+      "category": "temporal-reasoning",
+      "question": "What is the order of the sports events I watched in January?",
+      "gold": "First, I attended a NBA game at the Staples Center, then I watched the College Football National Championship game, and finally, I watched the NFL playoffs.",
+      "arms": {
+        "current": {
+          "ctx_tokens": 13272,
+          "answers": [
+            "The memory does not contain information about the order of sports events watched in January.",
+            "The memory does not contain information about the order of sports events watched in January.",
+            "The memory does not contain information about the order of sports events watched in January."
+          ]
+        },
+        "sparse": {
+          "ctx_tokens": 5140,
+          "answers": [
+            "There is no information in the conversation memory about the order of sports events watched in January.",
+            "There is no information in the conversation memory about the order of sports events watched in January.",
+            "There is no information in the conversation memory about the order of sports events watched in January."
+          ]
+        },
+        "oracle": {
+          "ctx_tokens": 8690,
+          "answers": [
+            "The sports events watched in January were the College Football National Championship game where Georgia took down Alabama 33-18, and the NFL playoffs Divisional Round game where the Kansas City Chiefs defeated the Buffalo Bills.",
+            "The sports events watched in January were the College Football National Championship game where Georgia took down Alabama 33-18, and the NFL playoffs Divisional Round game where the Kansas City Chiefs defeated the Buffalo Bills.",
+            "The sports events watched in January were the College Football National Championship game where Georgia took down Alabama 33-18, and the NFL playoffs Divisional Round game where the Kansas City Chiefs defeated the Buffalo Bills."
+          ]
+        },
+        "candidate": {
+          "ctx_tokens": 5106,
+          "answers": [
+            "There is no information in the conversation memory about the order of sports events watched in January.",
+            "There is no information in the conversation memory about the order of sports events watched in January.",
+            "There is no information in the conversation memory about the order of sports events watched in January."
+          ]
+        }
+      }
+    },
+    {
+      "qid": "gpt4_fe651585_abs",
+      "category": "temporal-reasoning",
+      "question": "Who became a parent first, Tom or Alex?",
+      "gold": "The information provided is not enough. You mentioned Alex becoming a parent in January, but you didn't mention anything about Tom.",
+      "arms": {
+        "current": {
+          "ctx_tokens": 12707,
+          "answers": [
+            "Alex's experience involved supporting birth mothers and providing updates about her background.",
+            "Alex's experience involved supporting birth mothers and providing updates about her background.",
+            "Alex's experience involved supporting birth mothers and providing updates about her background."
+          ]
+        },
+        "sparse": {
+          "ctx_tokens": 3967,
+          "answers": [
+            "Alex's experience involved supporting birth mothers and providing updates about her background.",
+            "Alex's experience involved supporting birth mothers and providing updates about her background.",
+            "Alex's experience involved supporting birth mothers and providing updates about her background."
+          ]
+        },
+        "oracle": {
+          "ctx_tokens": 7843,
+          "answers": [
+            "Alex adopted a baby girl from China in January.",
+            "Alex adopted a baby girl from China in January.",
+            "Alex adopted a baby girl from China in January."
+          ]
+        },
+        "candidate": {
+          "ctx_tokens": 3967,
+          "answers": [
+            "Alex's experience involved supporting birth mothers and providing updates about her background.",
+            "Alex's experience involved supporting birth mothers and providing updates about her background.",
+            "Alex's experience involved supporting birth mothers and providing updates about her background."
+          ]
+        }
+      }
+    },
+    {
+      "qid": "gpt4_7a0daae1",
+      "category": "temporal-reasoning",
+      "question": "How many weeks passed between the day I bought my new tennis racket and the day I received it?",
+      "gold": "1 week",
+      "arms": {
+        "current": {
+          "ctx_tokens": 13170,
+          "answers": [
+            "The information provided does not contain the number of weeks passed between the day you bought your new tennis racket and the day you received it.",
+            "The information provided does not contain the number of weeks passed between the day you bought your new tennis racket and the day you received it.",
+            "The information provided does not contain the number of weeks passed between the day you bought your new tennis racket and the day you received it."
+          ]
+        },
+        "sparse": {
+          "ctx_tokens": 4320,
+          "answers": [
+            "The facts ledger indicates the tennis racket purchase date was 2023/03/10 (Fri) and the date received before was March 15th.",
+            "The facts ledger indicates the tennis racket purchase date was 2023/03/10 (Fri) and the date received before was March 15th.",
+            "The facts ledger indicates the tennis racket purchase date was 2023/03/10 (Fri) and the date received before was March 15th."
+          ]
+        },
+        "oracle": {
+          "ctx_tokens": 7962,
+          "answers": [
+            "The memory does not contain the date you bought your new tennis racket and the date you received it, so I cannot answer how many weeks passed between those days.",
+            "The memory does not contain the date you bought your new tennis racket and the date you received it, so I cannot answer how many weeks passed between those days.",
+            "The memory does not contain the date you bought your new tennis racket and the date you received it, so I cannot answer how many weeks passed between those days."
+          ]
+        },
+        "candidate": {
+          "ctx_tokens": 4320,
+          "answers": [
+            "The facts ledger indicates the tennis racket purchase date was 2023/03/10 (Fri) and the date received before was March 15th.",
+            "The facts ledger indicates the tennis racket purchase date was 2023/03/10 (Fri) and the date received before was March 15th.",
+            "The facts ledger indicates the tennis racket purchase date was 2023/03/10 (Fri) and the date received before was March 15th."
+          ]
+        }
+      }
+    }
+  ]
+}
