@@ -1027,6 +1027,13 @@ def validate_and_repair_items(parsed: Any, turns: list["Turn"]) -> list[FactEntr
 
             # Validate/repair source_turn_id
             source_turn_id = item.get("source_turn_id")
+            if isinstance(source_turn_id, str):
+                # Models sometimes emit "Turn 3" / "turn_3" instead of 3; recover the
+                # integer so a valid fact is not dropped for a cosmetic prefix. A
+                # non-numeric string finds no match and falls through to text mapping.
+                _m = re.search(r"\d+", source_turn_id)
+                if _m:
+                    source_turn_id = _m.group(0)
             try:
                 if source_turn_id is not None:
                     source_turn_id = int(source_turn_id)
