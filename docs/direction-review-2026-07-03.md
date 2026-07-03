@@ -26,35 +26,75 @@ Three facts, all traceable to the close-out doc:
    explicit tool-use." As of this review, stronger local models are already on disk:
    qwen2.5-32B-instruct-q8 (ollama), gemma-4-26B/31B and qwen3.6-27B/35B (lemonade),
    with ~76 GB RAM free. The trigger is satisfied. Nobody has run the experiment yet.
+   Note the trigger names *two* branches — a stronger answerer **or** explicit tool-use —
+   and only the tool-use branch preserves REM's context/pp/RAM budget. Upsizing the
+   answerer spends exactly the budget REM exists to protect (see next section).
 
 Constraints shaping the decision: solo developer directing AI coding agents, part-time
 bandwidth, one Ryzen AI box (XDNA NPU + Radeon iGPU, ~128 GB RAM), no cloud/API budget.
 The target for the next step: a 2–4 week part-time milestone that ends in something
 usable or decisively informative.
 
+## What REM is optimizing (the constraint that ranks these)
+
+REM exists for long-horizon task capability on one box: let a small, fast, on-NPU model
+stay coherent across a long task without the working context growing until it blows the
+window, exhausts RAM, or drags prompt-processing latency. The scarce resource is *context
+budget over time* — tokens injected per step, and total working-context size held flat
+(ideally sub-linear) as a task runs to N steps, at a fixed pp-latency and RAM ceiling.
+Long-term recall alone is table stakes; vector stores and RAG already do it. REM's
+differentiator is a cheap, bounded working state that a weak local model can ride for a
+long horizon.
+
+That makes correctness a **constraint, not the objective**. "Did a bigger model answer
+more temporal questions" is a QA score; "did REM let the 2B stay coherent over a long
+task without the context ballooning" is the actual game. The directions below are ranked
+by that constraint: an option that spends context/pp/RAM budget to buy a benchmark point
+ranks *below* an option that holds the budget and still clears the task. Any change to
+the answerer must therefore report a budget line (tokens-into-context/step, pp-latency,
+peak RAM), not just an accuracy number.
+
 ## The four directions considered
 
-### 1. Lift the answerer ceiling (chosen)
+### 1. Clear the temporal wall while holding the context budget (chosen)
 
-**What:** Point the frozen 30-item held-out harness (`evals/memory_methods/heldout_eval.py`)
-at the larger local models, oracle arm first. Capture and extraction stay on the NPU 2B;
-only the answerer role is swapped.
+**The wall:** temporal items (ordering, abstention, date arithmetic) score 0/3 for every
+arm including oracle — perfect evidence in, wrong answer out. The ~2B on-NPU answerer
+can't reason over even correct evidence. This ceiling must be cleared for long-horizon
+work: a task that can't order its own history won't stay coherent over many steps.
 
-**Why it wins:** It executes the close-out doc's revisit trigger directly, with assets
-already paid for — frozen items, an oracle arm that isolates reasoning from retrieval,
-downloaded models. Every outcome is decisive. If a 26–32B model clears temporal
-reasoning, REM's retrieval finally has a reasoner that can use it, and dogfooding
-becomes a fair test. If every local model fails, that closes the question for this
-hardware and tool-use scaffolding (a date-delta calculator, an explicit ordering step)
-becomes the clear next probe.
+**Primary probe — tool-scaffolding (keeps the thesis intact):** give the 2B answerer a
+deterministic date-delta / ordering / abstention step it calls, instead of asking the
+model to do the arithmetic in-weights. This lifts correctness *without* growing the
+model, the injected context, or pp latency — the only branch that clears the wall while
+respecting the budget REM exists to protect. There is direct evidence it bites: the
+close-out §A scaffold already rescued abstention 0→1. Reliable tool calls at ~2B are the
+known risk; the day-1–2 work below is to make them robust and tested.
 
-**Honest cost:** wall-clock. A 32B answerer on iGPU/CPU will be slower than the 2B on
-NPU. How much slower is unmeasured; it gets measured alongside accuracy in the same
-sweep. Effort: small — days, not weeks.
+**Secondary, gated — a larger answerer as a measured-cost experiment (not a default):**
+the stronger local models on disk (qwen2.5-32B, gemma-4-26B/31B, etc.) are worth exactly
+*one* sweep — to bound the oracle-reasoning ceiling, i.e. learn whether the temporal task
+is solvable at all on this hardware. But upsizing the shipped answerer runs directly
+against REM's point: a 26–32B model on iGPU/CPU is slower pp and heavier RAM, the exact
+failure modes REM removes. So this arm is an experiment to bound the ceiling, not a
+promotion path. It only becomes a promotion candidate if it clears the budget gate below
+— which, on this hardware, it is not expected to.
 
-**Decision rule, committed before results:** ≥2/3 on temporal-with-oracle AND held-out
-KU sparse ≥ current → promote that model to the answerer role. Otherwise → tool-scaffold
-probe.
+**Honest cost:** tool-scaffold is days of design + tests, budget-neutral by construction.
+The model sweep is a single measured run; its pp-latency and RAM cost get recorded, not
+waved past.
+
+**Decision rule, committed before results:** promote a change to the shipped answerer
+only if it clears **all** of:
+- temporal-with-oracle ≥2/3, AND held-out KU sparse ≥ current (correctness constraint),
+- tokens-into-context per step ≤ the current 2B path, AND answerer pp-latency within a
+  pre-committed multiple of the 2B-on-NPU baseline, AND peak RAM within the box's
+  headroom (budget gate).
+
+Tool-scaffolding on the 2B is expected to pass the budget gate by construction; the
+larger-model arm is expected to fail it and therefore stays an informative experiment,
+not a promotion. If neither clears temporal ≥2/3, the wall is a reasoning limit for this
+hardware and the next probe is a richer deterministic scaffold — still on the small model.
 
 ### 2. Dogfood REM as a daily memory layer (queued behind 1)
 
@@ -107,24 +147,28 @@ how to resume it if the KU held-out validation (direction 3) shows the headroom 
 | Day | Item | Owner | Output |
 |-----|------|-------|--------|
 | 1 | Disable the stale `rem-supersession-heldout-audit` scheduled task (close-out §5) | me | confirmed off |
-| 1 | Verify candidate answerers serve; note rough tok/s: qwen2.5-32B (ollama), gemma-4-26B/31B (lemonade) | me + agent | model/endpoint/tok-s table |
-| 1–2 | Add `--answerer-endpoint` (OpenAI-compatible URL + model) to `heldout_eval.py`; smoke-test on ollama | agent | eval runs on a non-flm endpoint; suite 267 green |
-| 2–3 | Run 3 frozen temporal items, oracle arm first, per candidate; then 10 KU items (sparse vs current) on the best temporal performer | agent | `heldout_answerer_sweep.json` + results table |
-| 3 | Write the decision rule into the results doc *before* reading results | me | rule on record |
-| 4 | Fold the abstention scaffold instruction into the shipped answer prompt (close-out §A calls this out as cheap; it rescued abstention 0→1) | agent | prompt updated, tests green |
-| 5 | Go/no-go memo: chosen answerer or no-go, accuracy + latency, week-2 plan | me | memo appended to the close-out doc as "Revisit A: executed" |
+| 1 | Add budget instrumentation to `heldout_eval.py`: log tokens-into-context/step, answerer pp-latency, peak RAM per arm | agent | every arm reports a budget line, not just accuracy |
+| 1–2 | Build the deterministic temporal tool (date-delta + ordering + abstention) callable by the 2B; unit-test standalone | agent | tool + tests green; suite 267 green |
+| 2 | Run 3 frozen temporal items on the 2B **with** the tool, oracle arm first | agent | temporal-with-tool result + budget line |
+| 2–3 | One gated model sweep: add `--answerer-endpoint` (OpenAI-compatible), run the same 3 temporal items on qwen2.5-32B / gemma-4-26B to bound the oracle-reasoning ceiling; record pp-latency + RAM | agent | `heldout_answerer_sweep.json` incl. budget columns |
+| 3 | Write the decision rule (incl. the budget gate) into the results doc *before* reading results | me | rule on record |
+| 4 | Fold the abstention scaffold instruction into the shipped answer prompt (close-out §A; rescued abstention 0→1) | agent | prompt updated, tests green |
+| 5 | Go/no-go memo: chosen temporal fix, accuracy **and** budget (tokens/pp/RAM), week-2 plan | me | memo appended to the close-out doc as "Revisit A: executed" |
 
 ## Where community help would actually move this
 
 Concrete, self-contained asks — each one lands even without context on the rest:
 
-- **Run the answerer sweep on your hardware.** The harness takes an OpenAI-compatible
-  endpoint (after the day-1–2 change above). If you have a different GPU/NPU and a 7–70B
-  local model, your temporal-with-oracle numbers extend the answer beyond one box.
-  The frozen items and arms make results comparable.
-- **Tool-use scaffolding for small models.** If the sweep no-goes, the next probe is a
-  deterministic date-delta/ordering tool step callable by a ~2B model. Prior art or a
+- **Tool-use scaffolding for small models (the front-runner).** The primary temporal fix
+  is a deterministic date-delta/ordering/abstention tool step callable by a ~2B model,
+  because it clears the wall without spending context/pp/RAM budget. Prior art or a
   working pattern for reliable tool calls at that size would save weeks.
+- **Run the sweep on your hardware — and report the budget, not just accuracy.** The
+  harness takes an OpenAI-compatible endpoint (after the day-1–2 change above). If you
+  have a different GPU/NPU and a 7–70B local model, your temporal-with-oracle numbers
+  *plus* tokens-into-context/step, pp-latency and peak RAM extend the answer beyond one
+  box. Accuracy without the budget line doesn't tell us whether the model is viable for
+  long-horizon work; the frozen items and arms make results comparable.
 - **A cheap typed identity judge** (Wall B's revisit trigger). The scaffold
   (`TypedIdentityMatcher`, `make_gemma_slot_judge`) is built and parked; the labeled
   sentinel families are frozen as a regression set. This is a well-bounded ML problem
