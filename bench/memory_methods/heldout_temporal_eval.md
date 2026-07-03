@@ -43,6 +43,22 @@ validating the wrong thing for the decision at hand. Stopped at 3 held-out state
 - To validate the KU read-side win on held-out data, capture held-out *KU* items
   (LongMemEval-S pool beyond the manifest), not temporal/multi.
 
+## Follow-up: cheap reasoning-scaffold answer prompt (probe, same evidence)
+Re-ran the 3 items with a scaffold system prompt (list events by timestamp for order;
+find both dates and compute for arithmetic; if a named entity isn't in memory, say not
+enough info), on sparse + oracle. Harness: `evals/memory_methods/temporal_scaffold_probe.py`;
+answers: `temporal_scaffold_probe.json`. Result vs the 0/3 base:
+- **Abstention: RESCUED.** Sparse now cleanly abstains ("not enough information to
+  determine who became a parent first"); oracle correctly reasons Tom is never
+  mentioned. This category was purely prompt-addressable.
+- **Ordering: still fails.** The model engages but sparse doesn't surface the events
+  and oracle names only one — retrieval + reasoning bound.
+- **Arithmetic: still fails.** It now hunts for both dates and reasons, but tangles on
+  an ambiguous "received" date rather than computing 1 week.
+=> ~1/3 with the scaffold vs 0/3 base. Takeaway: an abstention/"say-not-enough-info"
+instruction is a cheap real win worth folding into the shipped answer prompt; ordering
+and date-arithmetic stay model/retrieval bound and are not worth chasing with memory work.
+
 ## Caveats
 n=3, all temporal-reasoning (no multi-session item was reached — those may be more
 lookup-like and read-relevant). Strict grading. The flm serving window had shrunk to
