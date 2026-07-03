@@ -51,14 +51,23 @@ section{padding:56px 0;border-bottom:1px solid var(--line)}section:nth-of-type(e
 <div class="callout"><b>Canonical example:</b> a long water-quality audit must retain an early limit while opening report after report. Read the full <a href="TEACHING.md#6-one-task-end-to-end">Lesson 4 worked example</a>.</div>
 </div></section>
 
-<section id="evidence"><div class="wrap">
-<p class="eyebrow">Committed evidence</p><h2>What is measured now</h2><p class="lead">These figures are artifact-backed. They establish bounded assembly and viable NPU placement; they do not yet establish an agent-horizon multiplier.</p>
-<div class="evidence-grid">
-<article class="panel"><h3>Compaction keeps up</h3><p>The committed probe drains at <b>~73 tok/s</b> while the example transcript grows at <b>~30 tok/s</b>: a <b>~2.5×</b> margin.</p></article>
-<article class="panel"><h3>Prompt work falls</h3><p>RSB-3 prompt size fell <b>47.6%</b>, from <b>27,386</b> to <b>14,341 tokens</b>. Prefill moved from <b>34.16 s</b> to <b>0.12 s</b>; after a <b>30.27 s</b> re-prefill tax, net savings were <b>+3.77 s</b>.</p></article>
-<article class="panel"><h3>Placement is bounded</h3><p>Concurrent NPU compaction cost <b>~3.8%</b> iGPU decode versus <b>~4.8%</b> for the CPU control, across <b>3 runs × N=20</b>.</p></article>
-<article class="panel"><h3>The context wall is observed</h3><p>Naive assembly overflowed at <b>37k–58k tokens</b> against a <b>~32–40k window</b>, producing <span class="mono">context_overflow</span> <b>0/5</b>.</p></article>
-</div></div></section>
+<section id="concurrency"><div class="wrap">
+<p class="eyebrow">The placement question</p><h2>Does NPU memory work leave the foreground model room?</h2>
+<p class="lead">Concurrent NPU compaction cost <b>~3.8%</b> iGPU decode versus <b>~4.8%</b> for the CPU control, across <b>3 runs × N=20</b>. This is a measured contention budget, not a contention-free claim.</p>
+<div class="evidence-grid"><article class="panel"><h3>NPU concurrent</h3><p><b>~3.8%</b> iGPU decode loss.</p></article><article class="panel"><h3>CPU control</h3><p><b>~4.8%</b> iGPU decode loss.</p></article></div>
+</div></section>
+
+<section id="keepup"><div class="wrap">
+<p class="eyebrow">The keep-up question</p><h2>Can compaction drain context faster than the run creates it?</h2>
+<p class="lead">The committed probe drains at <b>~73 tok/s</b> while the example transcript grows at <b>~30 tok/s</b>: a <b>~2.5× keep-up margin</b>.</p>
+<div class="evidence-grid"><article class="panel"><h3>Prompt work falls</h3><p>RSB-3 prompt size fell <b>47.6%</b>, from <b>27,386</b> to <b>14,341 tokens</b>. Prefill moved from <b>34.16 s</b> to <b>0.12 s</b>; after a <b>30.27 s</b> re-prefill tax, net savings were <b>+3.77 s</b>.</p></article><article class="panel"><h3>The context wall is observed</h3><p>Naive assembly overflowed at <b>37k–58k tokens</b> against a <b>~32–40k window</b>, producing <span class="mono">context_overflow</span> <b>0/5</b>.</p></article></div>
+</div></section>
+
+<section id="thermal"><div class="wrap">
+<p class="eyebrow">The sustained-load question</p><h2>Does background maintenance stay operational over time?</h2>
+<p class="lead">The repository retains its committed sustained-load artifacts and methodology. This concept refresh does not restate figures outside the dispatch brief's sanctioned set.</p>
+<a class="btn ghost" href="docs/npu-placement-benchmark.md">Inspect methodology &amp; artifacts</a>
+</div></section>
 
 <section id="how"><div class="wrap">
 <p class="eyebrow">How it works</p><h2>A tiered notebook in front of the model</h2><p class="lead">The sidecar preserves recent text, compacts older material, and assembles only what fits the next request's context budget.</p>
