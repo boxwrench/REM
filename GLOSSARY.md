@@ -147,6 +147,37 @@ Ghumare) adding confidence scoring, lifecycle, knowledge graph, hybrid search.
 **Obsidian** — markdown PKM app; a vault is plain `.md` files with `[[backlinks]]`
 and a graph view. Used here as the on-disk substrate for the semantic store (B).
 
+**Horizon multiplier** — *Technical:* maximum agent steps inside a fixed window, RAM,
+and prompt-processing-latency budget with REM, divided by the naive arm's maximum.
+*Plain language:* how much farther the same brain can work before its desk fills up;
+this is a target for the unbuilt harness, not a measured REM result. See the
+[Lesson 4 worked example](TEACHING.md#6-one-task-end-to-end).
+
+**Environment (agent)** — *Technical:* the task-world that emits observations, accepts
+actions, tracks state, and scores an agent run. *Plain language:* the game world — its
+level, rules, and score counter — while the model is the player and REM is the player's
+notebook. See [Lesson 4](TEACHING.md#lesson-4--what-is-an-environment-and-why-would-rem-ship-its-tasks-as-one).
+
+**OpenEnv** — *Technical:* a shareable, service-shaped interface for packaging an agent
+environment behind `reset()`, `step()`, and `state()`; it does not provide memory.
+*Plain language:* a standard socket that lets different agents and machines run the
+same task-world without rebuilding it. See [Lesson 4 §2](TEACHING.md#2-why-put-a-standard-on-the-world-at-all).
+
+**Event sourcing (tape/replay)** — *Technical:* an append-only log of each observation,
+action, and state transition that can be replayed or branched under another memory
+policy. *Plain language:* a DVR for an agent run: record once, rewind, and compare memory
+settings without re-running the world. See [Lesson 4 §5](TEACHING.md#5-its-partner-idea-record-the-tape-once-replay-it-cheaply).
+
+**Injected context / context budget** — *Technical:* injected context is the text REM
+assembles for the model on a step; the context budget is the hard token allowance that
+assembly must fit. *Plain language:* the papers placed on the brain's desk, and the
+desk's fixed usable size. See the [Lesson 4 worked example](TEACHING.md#6-one-task-end-to-end).
+
+**State card** — *Technical:* a compact checkpoint containing the goal, progress, key
+facts, and open items so a fresh session can resume before a hard context failure.
+*Plain language:* a handoff note that says what is done, what matters, and what comes
+next. See the [Lesson 4 worked example](TEACHING.md#6-one-task-end-to-end).
+
 **RSB-3** — our Reasoning Stress Battery context-window probe: ~26K-token CA
 drinking-water regulations + a 3-part TTHM needle question. REM's memory-fidelity
 test rig (does compacted/filed memory still answer it correctly?).
