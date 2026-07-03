@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "mode": "LIVE",
+  "repetitions": 3,
+  "promotion_rule": {
+    "require_fact_signature_equivalence": true,
+    "require_nonempty_summary": true,
+    "require_episode_median_faster": true,
+    "require_episode_npu_calls": 1,
+    "require_legacy_npu_calls": 2
+  },
+  "median_wall_seconds": {
+    "legacy_two_call": 4.221012,
+    "episode_card": 3.695942
+  },
+  "checks": {
+    "all_compacted": true,
+    "fact_signature_equivalence": false,
+    "nonempty_summaries": true,
+    "call_counts": true,
+    "episode_median_faster": true
+  },
+  "promote": false,
+  "runs": [
+    {
+      "mode": "legacy_two_call",
+      "compacted": true,
+      "wall_seconds": 8.027971,
+      "npu_elapsed_seconds": 8.018802,
+      "npu_calls": 2,
+      "summary": "As a memory compaction assistant, I summarize the conversation turns as follows:\n\nThe conversation began with a user stating their current French press ratio was one tablespoon per 6 ounces. I noted this information and added it to the facts ledger. Later, the user corrected their ratio to one tablespoon per 5 ounces, which I also added to the facts ledger.",
+      "fact_signatures": [
+        [
+          "decision",
+          3,
+          "french press ratio.ratio",
+          "1 tablespoon per 5 ounces",
+          "active",
+          "ratio-new",
+          "2024-02-01"
+        ],
+        [
+          "number",
+          1,
+          "french press ratio.ratio",
+          "1 tablespoon per 6 ounces",
+          "stale",
+          "ratio-old",
+          "2024-01-01"
+        ]
+      ],
+      "repetition": 0
+    },
+    {
+      "mode": "episode_card",
+      "compacted": true,
+      "wall_seconds": 3.686688,
+      "npu_elapsed_seconds": 3.685655,
+      "npu_calls": 1,
+      "summary": "French press ratio correction",
+      "fact_signatures": [
+        [
+          "quote",
+          1,
+          "french press ratio.ratio",
+          "one tablespoon per 6 ounces",
+          "active",
+          "ratio-old",
+          "2024-01-01"
+        ]
+      ],
+      "repetition": 0
+    },
+    {
+      "mode": "episode_card",
+      "compacted": true,
+      "wall_seconds": 3.695942,
+      "npu_elapsed_seconds": 3.69535,
+      "npu_calls": 1,
+      "summary": "French press ratio correction",
+      "fact_signatures": [
+        [
+          "quote",
+          1,
+          "french press ratio.ratio",
+          "one tablespoon per 6 ounces",
+          "active",
+          "ratio-old",
+          "2024-01-01"
+        ]
+      ],
+      "repetition": 1
+    },
+    {
+      "mode": "legacy_two_call",
+      "compacted": true,
+      "wall_seconds": 4.221012,
+      "npu_elapsed_seconds": 4.22049,
+      "npu_calls": 2,
+      "summary": "As a memory compaction assistant, I summarize the conversation turns as follows:\n\nThe conversation began with a user stating their current French press ratio was one tablespoon per 6 ounces. I noted this information and added it to the facts ledger. Later, the user corrected their ratio to one tablespoon per 5 ounces, which I also added to the facts ledger.",
+      "fact_signatures": [
+        [
+          "decision",
+          3,
+          "french press ratio.ratio",
+          "1 tablespoon per 5 ounces",
+          "active",
+          "ratio-new",
+          "2024-02-01"
+        ],
+        [
+          "number",
+          1,
+          "french press ratio.ratio",
+          "1 tablespoon per 6 ounces",
+          "stale",
+          "ratio-old",
+          "2024-01-01"
+        ]
+      ],
+      "repetition": 1
+    },
+    {
+      "mode": "legacy_two_call",
+      "compacted": true,
+      "wall_seconds": 4.202968,
+      "npu_elapsed_seconds": 4.202604,
+      "npu_calls": 2,
+      "summary": "As a memory compaction assistant, I summarize the conversation turns as follows:\n\nThe conversation began with a user stating their current French press ratio was one tablespoon per 6 ounces. I noted this information and added it to the facts ledger. Later, the user corrected their ratio to one tablespoon per 5 ounces, which I also added to the facts ledger.",
+      "fact_signatures": [
+        [
+          "decision",
+          3,
+          "french press ratio.ratio",
+          "1 tablespoon per 5 ounces",
+          "active",
+          "ratio-new",
+          "2024-02-01"
+        ],
+        [
+          "number",
+          1,
+          "french press ratio.ratio",
+          "1 tablespoon per 6 ounces",
+          "stale",
+          "ratio-old",
+          "2024-01-01"
+        ]
+      ],
+      "repetition": 2
+    },
+    {
+      "mode": "episode_card",
+      "compacted": true,
+      "wall_seconds": 3.703044,
+      "npu_elapsed_seconds": 3.702138,
+      "npu_calls": 1,
+      "summary": "French press ratio correction",
+      "fact_signatures": [
+        [
+          "quote",
+          1,
+          "french press ratio.ratio",
+          "one tablespoon per 6 ounces",
+          "active",
+          "ratio-old",
+          "2024-01-01"
+        ]
+      ],
+      "repetition": 2
+    }
+  ]
+}
