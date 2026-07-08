@@ -13,7 +13,7 @@
 
 **What this is.** Honest, reproducible numbers for deciding *what to run where* on
 an AMD Strix Halo APU — XDNA2 NPU + gfx1151 iGPU + CPU sharing one unified
-~212 GB/s memory bus. The engines are **compute-isolated but bandwidth-shared**,
+unified memory bus (256 GB/s theoretical, ~212–215 GB/s achieved). The engines are **compute-isolated but bandwidth-shared**,
 so the whole story is memory-bandwidth contention. Built and reproduced with our
 own monitor, **xdna-top** (which exists because amd-smi is broken on gfx1151).
 
@@ -38,7 +38,7 @@ to any particular application.
 - **XRT version**: 2.21.75
 - **NPU firmware**: 1.1.2.65
 - **FLM/Lemonade version**: FLM v0.9.39
-- **Unified memory**: 128 GB LPDDR5x (unified bus bandwidth ~212 GB/s)
+- **Unified memory**: 128 GB LPDDR5x-8000, 256-bit bus (256 GB/s theoretical, ~212–215 GB/s achieved)
 
 ## Engines under test
 - **NPU** — FLM/Lemonade OpenAI-compatible endpoint (port 13306).

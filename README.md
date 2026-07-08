@@ -69,6 +69,11 @@ memory policy; and a state card can hand off goal, progress, key facts, and open
 before the context budget is exhausted. See
 [Lesson 4 §6](TEACHING.md#6-one-task-end-to-end).
 
+New to this hardware? [`docs/hardware-context.md`](docs/hardware-context.md) covers
+what the NPU is, how it relates to the CPU and iGPU it shares the chip with, and
+which of its behaviors you can actually observe — enough to evaluate REM's
+placement claim or to build your own NPU use-case on the same foundation.
+
 ## Run it
 
 ```bash
