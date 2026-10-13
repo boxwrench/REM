@@ -1,0 +1,4 @@
+#!/bin/sh
+# /usr/lib/systemd/system-sleep/npu-hold: re-apply the GPU+NPU safety settings after resume.
+[ "$1" = post ] && /usr/local/sbin/npu-hold.sh
+exit 0
