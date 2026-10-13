@@ -146,9 +146,11 @@ clean, with or without the NPU running.
 - Whether the hang trigger is FCLK *switching* or a low FCLK *level*. We're testing
   a lower fixed FCLK, which would make the workaround cheaper and give AMD a precise
   target.
-- Using the NPU for real work during prefill. It runs the GEMMs a prefill
-  needs at ~21 TFLOPS under load, against ~15 TFLOPS effective for the iGPU on the same
-  shapes. REM's compaction on the NPU and prompt offload can take turns on it.
+- Using the NPU for real work during prefill. On a large mixture-of-experts model
+  it measured only +0.1–1.7%. Dense models, encoders, and a separate job beside the
+  main model look like better fits: see
+  [npu-prefill-offload-fit.md](npu-prefill-offload-fit.md). REM's compaction on the
+  NPU and prompt offload can take turns on it.
 
 ## Credits
 
