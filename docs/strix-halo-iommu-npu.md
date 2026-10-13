@@ -46,10 +46,14 @@ and roughly 7.5% of your iGPU prefill.
 
 ## 2. PerfOpt removes the cost
 
-AMD's IOMMU "PerfOpt" series (Mario Limonciello) lets an iGPU in an identity
+AMD's IOMMU "PerfOpt" series by **Mario Limonciello** (AMD) lets an iGPU in an identity
 domain bypass the IOMMU, by switching off its ATS/PRI/PASID after init. It is
 queued in the IOMMU tree for **Linux 7.4**, on by default, with
-`amdgpu.iommu_perfopt=0` to disable it. Public benchmarks so far measured the iGPU
+`amdgpu.iommu_perfopt=0` to disable it. The two commits we built from:
+[`6e87850d1a8f`](https://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git/commit/?id=6e87850d1a8f)
+("iommu/amd: Add PerfOpt IOMMU performance optimization support") and
+[`e74db71a3530`](https://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git/commit/?id=e74db71a3530)
+("drm/amdgpu: Enable PerfOpt IOMMU perf optimization when GPU in identity domain"). Public benchmarks so far measured the iGPU
 alone. We tested it with the NPU in use.
 
 | GPU prefill | `amd_iommu=off` (6.17) | `iommu=pt` (6.17) | **`iommu=pt` + PerfOpt (7.3-rc6 + iommu `next`)** |
@@ -143,3 +147,12 @@ kernel. This section will be updated when that's closed.
 - Using the NPU for real work during prefill. It runs the GEMMs a prefill
   needs at ~21 TFLOPS under load, against ~15 TFLOPS effective for the iGPU on the same
   shapes. REM's compaction on the NPU and prompt offload can take turns on it.
+
+## Credits
+
+- **Mario Limonciello** (AMD) wrote the PerfOpt series. The IOMMU result above is
+  his work. We only built it and measured it with the NPU in use.
+- **[gufo](https://github.com/mikealanni/gufo)** (mikealanni) found and documented
+  the fabric-clock hold, and wrote the NPU bfp8 GEMM used in our soak.
+- The reporters in [amd/xdna-driver#1605](https://github.com/amd/xdna-driver/issues/1605)
+  wrote down the GPU+NPU hang in detail.
