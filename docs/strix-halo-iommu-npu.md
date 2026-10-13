@@ -134,10 +134,11 @@ the first 64.5 minutes alongside it.
 | NPU throughput with the GPU busy | ~21 TFLOPS steady (27.5 alone) |
 | GPU throughput with the NPU busy | prefill −5 to −7% from shared memory bandwidth |
 
-Some of the model's output in that run had a text defect: a newline after the
-first digit of numbers. Replays of the same requests, with and without the NPU
-running, came out clean, so it is being traced in the serving layer, not the
-kernel. This section will be updated when that's closed.
+A text defect in some of the model's output during that run (a newline after the
+first digit of numbers) turned out to be unrelated to the kernel or NPU. The box's
+serving layer was an old checkout that tokenized GLM's numbers the Qwen way, a bug
+already fixed upstream. With the current serving layer, the same requests come out
+clean, with or without the NPU running.
 
 ## What's next
 
