@@ -36,6 +36,11 @@ of *which* engine carries a job most cheaply.
 - **This box, exactly:** Ubuntu 24.04, kernel 6.17.0-35-generic, XRT 2.21.75, NPU
   firmware 1.1.2.65, FLM v0.9.39.
 
+> **Kernel and IOMMU:** the NPU needs the IOMMU on, which costs the iGPU ~7.5% prefill on a
+> stock kernel; the PerfOpt work queued for Linux 7.4 removes that cost. Running the iGPU and
+> the NPU together needs a held fabric clock to avoid hangs. Measurements, the test kernel and
+> the settings: **[strix-halo-iommu-npu.md](strix-halo-iommu-npu.md)**.
+
 ---
 
 ## What the NPU actually is

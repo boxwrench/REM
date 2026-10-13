@@ -1,0 +1,12 @@
+[Unit]
+Description=Strix Halo GPU+NPU safety settings (fabric clock hold, NPU performance mode, NPU no runtime suspend)
+After=systemd-modules-load.service
+Wants=systemd-modules-load.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 5
+ExecStart=/usr/local/sbin/npu-hold.sh
+
+[Install]
+WantedBy=multi-user.target
