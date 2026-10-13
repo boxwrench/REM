@@ -98,8 +98,9 @@ visible (`GRUB_TIMEOUT_STYLE=menu`, `GRUB_TIMEOUT=5`) for rollback.
 GPU + NPU load together has been reported to **hard-hang** Strix Halo. NPU firmware timeouts and
 Data Fabric deferred-error machine checks (MC28) are described in
 [amd/xdna-driver#1605](https://github.com/amd/xdna-driver/issues/1605), where a
-newer kernel alone did not help. [gufo](https://github.com/mikealanni/gufo),
-which runs an NPU GEMM next to its GPU engine, documents the workaround. **Hold the
+newer kernel alone did not help. Mike Alani's [gufo fork](https://github.com/mikealanni/gufo)
+(NPU prefill offload for Qwen3.8 Flash-Next, being upstreamed as
+[gufo-org/gufo#568](https://github.com/gufo-org/gufo/pull/568)) found and documents the workaround. **Hold the
 fabric clock (FCLK) at a fixed level**, set the NPU's power mode to `performance`
 (not `turbo`), and keep the NPU out of runtime suspend:
 
@@ -121,7 +122,7 @@ own, at no measurable power cost.
 ### Our soak (PerfOpt kernel, settings above)
 
 71 minutes of real GPU work: the model writing a game over 8 turns, 9K–85K-token
-prompts. An NPU bfp8 GEMM (M4096 K2560 N1024, gufo's kernel) ran at 100% duty for
+prompts. An NPU bfp8 GEMM (M4096 K2560 N1024, Mike Alani's kernel) ran at 100% duty for
 the first 64.5 minutes alongside it.
 
 | | result |
@@ -153,7 +154,10 @@ clean, with or without the NPU running.
 
 - **Mario Limonciello** (AMD) wrote the PerfOpt series. The IOMMU result above is
   his work. We only built it and measured it with the NPU in use.
-- **[gufo](https://github.com/mikealanni/gufo)** (mikealanni) found and documented
-  the fabric-clock hold, and wrote the NPU bfp8 GEMM used in our soak.
+- **Mike Alani** ([mikealanni/gufo](https://github.com/mikealanni/gufo), a fork of
+  [gufo-org/gufo](https://github.com/gufo-org/gufo)) built the NPU prefill offload,
+  found and documented the fabric-clock hold, and wrote the NPU bfp8 GEMM used in our
+  soak. It is being upstreamed as
+  [gufo-org/gufo#568](https://github.com/gufo-org/gufo/pull/568).
 - The reporters in [amd/xdna-driver#1605](https://github.com/amd/xdna-driver/issues/1605)
   wrote down the GPU+NPU hang in detail.
