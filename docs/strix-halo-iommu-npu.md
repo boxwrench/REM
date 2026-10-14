@@ -73,6 +73,12 @@ alone. We tested it with the NPU in use.
 
 ### Building the test kernel (until 7.4 ships)
 
+**Prebuilt:** a `.deb` build of exactly this kernel (plus the NPU module, the `.config`
+and the full source) is attached to the
+[`perfopt-kernel-7.3.0-rc6` release](https://github.com/boxwrench/REM/releases/tag/perfopt-kernel-7.3.0-rc6).
+It is an unofficial test build for Debian/Ubuntu-family systems with Secure Boot off.
+Read the release notes before installing. To build it yourself:
+
 Nothing here is patched. It is the IOMMU maintainers' `next` branch, built as-is:
 
 ```sh
