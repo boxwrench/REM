@@ -5,6 +5,7 @@ Wants=systemd-modules-load.service
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 ExecStartPre=/bin/sleep 5
 ExecStart=/usr/local/sbin/npu-hold.sh
 
