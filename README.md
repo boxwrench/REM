@@ -72,7 +72,10 @@ before the context budget is exhausted. See
 New to this hardware? [`docs/hardware-context.md`](docs/hardware-context.md) covers
 what the NPU is, how it relates to the CPU and iGPU it shares the chip with, and
 which of its behaviors you can actually observe — enough to evaluate REM's
-placement claim or to build your own NPU use-case on the same foundation.
+placement claim or to build your own NPU use-case on the same foundation. The
+measured device envelope — rate by shape, the compiler gap, contention in both
+directions, and the safety settings — is in
+[`docs/strix-halo-npu-measured-map.md`](docs/strix-halo-npu-measured-map.md).
 
 ## Run it
 

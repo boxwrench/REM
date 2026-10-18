@@ -156,7 +156,9 @@ clean, with or without the NPU running.
   it measured only +0.1–1.7%. Dense models, encoders, and a separate job beside the
   main model look like better fits: see
   [npu-prefill-offload-fit.md](npu-prefill-offload-fit.md). REM's compaction on the
-  NPU and prompt offload can take turns on it.
+  NPU and prompt offload can take turns on it. The measured device envelope behind
+  that discussion (rate by shape, compiler gap, contention, safety) is in
+  [strix-halo-npu-measured-map.md](strix-halo-npu-measured-map.md).
 
 ## Credits
 
