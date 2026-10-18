@@ -12,6 +12,31 @@ IOMMU PerfOpt series, `iommu=pt`, FCLK held at the top level.
 
 ---
 
+## Update (2026-10-17): the dense-model row did not survive contact
+
+The outlook below predicted +10–25% for dense models. We later built that split on
+a dense 27B hybrid model (Qwen3.8-27B class) in a llama.cpp-based fork: the NPU
+took part of each FFN's intermediate channels and the iGPU computed the rest. It
+was numerically clean (perplexity 6.191 vs 6.218) and still **6–8% slower** at
+4K/8K/32K (measured −6.2 / −7.6 / −6.2%). Only **~43% of the NPU's time was
+hidden**: the synchronous design made the GPU wait for the half it needed next,
+and the per-call copy cost was exposed.
+
+So the +10–25% was not an engine result; it was a gain model that assumed the whole
+NPU slice hides under GPU work. The measured GPU-side ceiling was real (skipping
+the NPU calls but keeping the split arithmetic was +8.5% at 4K), which is why the
+next design must give the GPU work it can do while the NPU result is still pending.
+gufo's deferred-consumer offload (rows consumed later) measured +7.8–9.6% prefill
+on Qwen3.8 Flash-Next in their engine; we started that port on the 27B and did not
+finish it. **Dense prefill is open only with deferred consumers; the synchronous
+split is closed.** The tables below are kept as the dated reasoning they were, with
+the affected rows marked.
+
+The full measured envelope, including contention and the safety settings, is in
+[strix-halo-npu-measured-map.md](strix-halo-npu-measured-map.md).
+
+---
+
 ## 1. What we measured
 
 The test model was GLM-5.3-Flash (321B mixture-of-experts) in
@@ -54,10 +79,10 @@ and bfp8 is approximate, so every candidate still needs a quality check.
 
 | Likely to fit | Why | Rough guess |
 |---|---|---|
-| Dense transformers, ~4B–32B | Prefill is mostly large fixed-shape GEMMs; the NPU could take ~40% of them | +10–25% prefill at long prompts after contention |
-| Small hidden size (e.g. 2560) | The iGPU is least efficient on small GEMMs, so the NPU is relatively stronger | Probably the best ratio |
-| Encoders: embeddings, rerankers, Whisper, vision towers | Pure GEMM work, fixed shapes, no token generation | Good fit, especially as a separate job |
-| A separate model next to the main one | No splitting, no waiting: the only cost is contention (REM measured −3.8% iGPU decode, [npu-placement-benchmark.md](npu-placement-benchmark.md)) | The most practical use today |
+| Dense transformers, ~4B–32B | **Revised 2026-10-17: only with deferred consumers.** A synchronous split measured −6..−8% (see the update above). Prefill is mostly large fixed-shape GEMMs, but the GPU must not need the NPU's half immediately | +10–25% only if the offload overlaps; not measured as an engine result |
+| Small hidden size (e.g. 2560) | The iGPU is least efficient on small GEMMs, so the NPU is relatively stronger | Unconfirmed on this box; still the best ratio on paper |
+| Encoders: embeddings, rerankers, Whisper, vision towers | Pure GEMM work, fixed shapes, no token generation | Good fit on paper; never run beside the main model here |
+| A separate background job next to the main one | No splitting, no waiting: the only cost is contention (REM measured −3.8% iGPU decode, [npu-placement-benchmark.md](npu-placement-benchmark.md)) | The most practical use today |
 
 | Unlikely to fit | Why |
 |---|---|
@@ -66,20 +91,26 @@ and bfp8 is approximate, so every candidate still needs a quality check.
 | Short prompts | The fixed per-call cost dominates |
 
 The +10–25% figure assumes ~70% of prefill is offloadable GEMM, the NPU holds
-~0.8× the iGPU's rate under contention, and every projection is offloaded. None
-of that is measured yet.
+~0.8× the iGPU's rate under contention, and every projection is offloaded. The
+last assumption is the one that failed: the synchronous 27B split measured −6..−8%
+because the result was needed immediately. Treat the figure as an overlap-dependent
+ceiling, not a prediction.
 
 **Rule of thumb before building anything:** profile the model's prefill on the
 iGPU alone. If large dense GEMMs are more than ~60% of it, a one-GEMM prototype is
-worth building. Below ~30%, skip it.
+worth building. Below ~30%, skip it. Then check whether the offloaded rows have a
+deferred consumer; if they do not, expect the copies and contention to eat the
+gain.
 
 ## What's next
 
-- Profile one dense model's prefill on the iGPU to test the rule above.
+- **Done since this page was written:** the dense-27B profile found 58–80% of
+  prefill in offloadable dense GEMMs, depending on prompt length and ubatch, and the synchronous split still lost 6–8%.
+  The open next step is the deferred-consumer version, not another profile.
 - Measure a separate encoder job (speech-to-text or embeddings) on the NPU next to
-  a model on the iGPU.
+  a model on the iGPU. Still unmeasured.
 - Mike Alani's Qwen kernel (hidden size 2560) already fits the "small hidden size"
-  row; porting that path is the main prefill-offload target.
+  row; the deferred-consumer design is the part worth borrowing.
 
 ## Credits
 

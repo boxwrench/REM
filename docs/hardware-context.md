@@ -113,6 +113,8 @@ executing my job?"* — and to turn the answer into reproducible evidence.
   and the [README](../README.md)'s "what's demonstrated vs. open" section.
 - **Which models can use the NPU for prefill:** [npu-prefill-offload-fit.md](npu-prefill-offload-fit.md)
   (measured on a large MoE, plus a model-fit outlook).
+- **The measured NPU envelope:** [strix-halo-npu-measured-map.md](strix-halo-npu-measured-map.md)
+  (rate by shape, compiler gap, contention, and the safety settings).
 
 If REM's pattern fits a workload you have — anything latency-tolerant you'd rather
 keep off the iGPU — this hardware will likely carry it well. The telemetry to
