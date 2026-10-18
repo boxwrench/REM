@@ -72,8 +72,12 @@ the vendor-side build achieves.
 
 ### Per-call cost
 
-- Host A-encode plus C-decode: **~0.86 ms per call** (GLM 32K q/k/v shapes). This
-  is what kills one-call-per-GEMM designs; calls must be batched per layer chunk.
+- Host A-encode plus C-decode through XRT: **~0.86 ms per call** (GLM 32K q/k/v shapes). This
+  is what kills one-call-per-GEMM designs on that path; calls must be batched per layer chunk.
+- Through HRX (AMD FastFlow-SDK) the dispatch cost drops by an order of magnitude: **66 µs** for a
+  single dispatch and **~18 µs** per dispatch when chained (2026-10-18).
+- Switching between two xclbins costs **~2–3 ms**; two instruction streams on the same xclbin
+  alternate for free, so a whole model can run from one resident program.
 - A compact return (147 KB) from NPU-owned memory: **8.5 µs**.
 - Warm launch: 2–60 µs; first call after load: 0.87–3.7 ms.
 - Effective B (weight) streaming in the small-M fixture: 6–22 GB/s. There is no
@@ -166,6 +170,7 @@ copy fault appears, retry with `HSA_ENABLE_SDMA=0` before debugging
 | Dense prefill, synchronous split | **No** | A dense 27B hybrid model in a llama.cpp-based fork, FFN split by intermediate channels: output correct (PPL 6.191 vs 6.218), speed **−6.2% / −7.6% / −6.2%** at 4K / 8K / 32K. Only ~43% of NPU time was hidden; the GPU needed the offloaded half immediately. |
 | Dense prefill, deferred consumers | **Open** | Not yet measured here. The idea is to offload rows the GPU consumes later. gufo measured **+7.8–9.6%** prefill on Qwen3.8 Flash-Next in their engine with this design; our port was started and not finished. This is the only prefill lead with measured upside elsewhere. |
 | A second, latency-tolerant job beside the iGPU | **Yes** | On a 6.17/XRT 2.21.75 stack, a background generation job did ~3× the throughput of 4 CPU cores at ~3× total-board perf/watt, with 3.8% iGPU decode loss vs 4.8% for the CPU arm. See the [placement benchmark](npu-placement-benchmark.md). |
+| Whole-model background decode (MoE writer) | **Yes, runs** | Hy-Memory-30B-A3B with every linear layer on the NPU as a fused 4-bit GEMV in one resident program: **9.4 tok/s** decode, greedy output matching llama.cpp Q4_K_M on the check prompt ([NPU Wrench](https://github.com/boxwrench/npu-wrench), 2026-10-18). Weight streaming is data-movement bound at ~22 GB/s. iGPU contention not yet measured. |
 | Encoders / side models (STT, embeddings) | **Untested** | Desk analysis only; never run beside the main model on this box. No measurement either way. |
 
 ## What this does not establish
